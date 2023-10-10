@@ -1,10 +1,10 @@
 {
   "name": "DevContainer for Haskell (GHC, Stack, Cabal, HIE, LSP, DAP, etc.)",
-  "remoteUser": "vscode",
+  "remoteUser": "matteo2001",
   "runArgs": [],
   "build": {
     "args": {
-      "USERNAME": "vscode",
+      "USERNAME": "matteo2001",
       "GHC_VERSION": "9.6.3",
       "CABAL_VERSION": "recommended",
       "HLS_VERSION": "recommended",
@@ -36,7 +36,6 @@
         "haskell.indentationRules.enabled": true,
         "haskell.liquidOn": false,
         "haskell.checkParents": "CheckOnSave",
-        "haskell.manageHLS": "GHCup",
         "haskell.maxCompletions": 40,
         "haskell.openDocumentationInHackage": false,
         "haskell.openSourceInHackage": false,
