@@ -1,0 +1,19 @@
+:set prompt "\ESC[1;34m%s\n\ESC[0;95mλ> \ESC[m"
+:set +t
+:set +m
+:set +s
+
+:set editor vim
+
+:set -Wall
+:set -ferror-spans
+:set -freverse-errors
+:set -fprint-expanded-synonyms
+:set -fprint-explicit-foralls
+:set -fprint-explicit-kinds
+:set -ignore-package pretty-simple -package pretty-simple
+-- :set -fobject-code
+
+:def hlint const . return $ ":! hlint \"src\""
+:def hoogle \s -> return $ ":! hoogle --count=15 \"" ++ s ++ "\""
+:def package \ m -> return $ ":! ghc-pkg --simple-output find-module " ++ m
