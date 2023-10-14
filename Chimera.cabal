@@ -51,12 +51,33 @@ extra-doc-files:    CHANGELOG.md
 -- Extra source files to be distributed with the package, such as examples, or a tutorial module.
 -- extra-source-files:
 
+flag debug
+    description: Enable debug mode
+    default: False
+
+flag profiling
+    description: Enable profiling
+    default: False
+
 common warnings
     ghc-options: -Wall
 
+common optimizations
+    ghc-options: -O2 -threaded -rtsopts -with-rtsopts=-N -flate-dmd-anal -flate-specialise -fllvm -pgmP clang -pgmc clang -pgma clang -pgmlc llc-15 -pgmlo opt-15 -optlc-O3 -optl-fuse-ld=gold
+    ld-options:  -fuse-ld=gold -flto -O3
+
+common debug
+    if flag(profiling){
+        ghc-options: -prof -fprof-auto -fprof-cafs -rtsopts
+    }
+    if flag(debug){
+        ghc-options: -O0 -g
+    }
+
+
 executable Chimera
-    -- Import common warning flags.
-    import:           warnings
+    import:  warnings, optimizations
+    import:  debug
 
     -- .hs or .lhs file containing the Main module.
     main-is:          Main.hs
@@ -69,6 +90,7 @@ executable Chimera
 
     -- Other library packages from which modules are imported.
     build-depends:    base ^>=4.18.1.0
+                      , text
 
     -- Directories containing source files.
     hs-source-dirs:   app
