@@ -13,8 +13,6 @@ ENV USERNAME=matteo2001 \
     HLS_VERSION=${HLS_VERSION} \
     LLVM_VERSION=${LLVM_VERSION}
 
-RUN ulimit -n 8192
-
 RUN pacman-key --init
 RUN pacman -Syu --noconfirm
 RUN pacman -S --noconfirm --needed base-devel bash curl git gnupg libffi icu gmp ncurses numactl lsb-release procps wget xz z3 zlib vim
@@ -34,9 +32,6 @@ FROM base as llvm
 RUN pacman -S --noconfirm --needed llvm clang lldb lld polly
 
 FROM llvm as haskell
-
-USER ${USER_UID}:${USER_GID}
-WORKDIR /home/${USERNAME}
 
 RUN curl --proto '=https' --tlsv1.2 -sSf https://get-ghcup.haskell.org | sh
 
