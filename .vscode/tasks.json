@@ -31,14 +31,7 @@
       },
       "type": "shell",
       "label": "haskell test",
-      "command": "cabal test"
-    },
-    {
-      // F6
-      "isBackground": true,
-      "type": "shell",
-      "label": "haskell watch",
-      "command": "stack build --test --no-run-tests --file-watch"
+      "command": "cabal run tests -- --rerun"
     }
   ]
 }
