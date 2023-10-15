@@ -1,4 +1,4 @@
-cabal-version:      3.4
+cabal-version:      3.0
 -- The cabal-version field refers to the version of the .cabal specification,
 -- and can be different from the cabal-install (the tool) version and the
 -- Cabal (the library) version you are using. As such, the Cabal (the library)
@@ -63,7 +63,7 @@ common warnings
     ghc-options: -Wall
 
 common optimizations
-    ghc-options: -O2 -threaded -rtsopts -with-rtsopts=-N -flate-dmd-anal -flate-specialise -fllvm -pgmP clang -pgmc clang -pgma clang -pgmlc llc-15 -pgmlo opt-15 -optlc-O3 -optl-fuse-ld=gold
+    ghc-options: -O2 -threaded -flate-dmd-anal -flate-specialise -fllvm -pgmP clang -pgmc clang -pgma clang -pgmlc llc-15 -pgmlo opt-15 -optlc-O3 -optl-fuse-ld=gold
     ld-options:  -fuse-ld=gold -flto -O3
 
 common debug
@@ -74,10 +74,49 @@ common debug
         ghc-options: -O0 -g
     }
 
+library myprelude
+    import:  warnings, optimizations
+    import:  debug
+    exposed-modules:  Prelude
+    reexported-modules: BasePrelude
+
+    -- Modules included in this library.
+    -- other-modules:
+
+    -- LANGUAGE extensions used by modules in this package.
+    -- other-extensions:
+
+    -- Other library packages from which modules are imported.
+    build-depends:    base
+    default-extensions: NoImplicitPrelude
+    default-language: GHC2021
+    hs-source-dirs:   prelude
+    mixins:           base (Prelude as BasePrelude)
+                      , base hiding (Prelude)
+
+library
+    import:  warnings, optimizations
+    import:  debug
+    exposed-modules: Library
+    hs-source-dirs:   src
+    reexported-modules: Prelude
+
+    -- Modules included in this library.
+    -- other-modules:
+
+    -- LANGUAGE extensions used by modules in this package.
+    -- other-extensions:
+
+    -- Other library packages from which modules are imported.
+    build-depends:    myprelude
+
+
+    default-language: GHC2021
 
 executable Chimera
     import:  warnings, optimizations
     import:  debug
+    ghc-options: -rtsopts -with-rtsopts=-N
 
     -- .hs or .lhs file containing the Main module.
     main-is:          Main.hs
@@ -89,8 +128,7 @@ executable Chimera
     -- other-extensions:
 
     -- Other library packages from which modules are imported.
-    build-depends:    base ^>=4.18.1.0
-                      , text
+    build-depends:    Chimera
 
     -- Directories containing source files.
     hs-source-dirs:   app
