@@ -1,4 +1,4 @@
-cabal-version:      3.0
+cabal-version:      3.4
 -- The cabal-version field refers to the version of the .cabal specification,
 -- and can be different from the cabal-install (the tool) version and the
 -- Cabal (the library) version you are using. As such, the Cabal (the library)
@@ -92,7 +92,7 @@ library myprelude
     default-language: GHC2021
     hs-source-dirs:   prelude
     mixins:           base (Prelude as BasePrelude)
-                      , base hiding (Prelude)
+                        , base hiding (Prelude)
 
 library
     import:  warnings, optimizations
@@ -129,6 +129,7 @@ executable Chimera
 
     -- Other library packages from which modules are imported.
     build-depends:    Chimera
+                        , Chimera:myprelude
 
     -- Directories containing source files.
     hs-source-dirs:   app
