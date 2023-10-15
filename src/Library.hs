@@ -1,4 +1,5 @@
 module Library (
-    test
+    test,
 ) where
+
 import Prelude as P

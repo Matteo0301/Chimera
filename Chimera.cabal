@@ -46,7 +46,8 @@ category:           Game
 build-type:         Simple
 
 -- Extra doc files to be distributed with the package, such as a CHANGELOG or a README.
-extra-doc-files:    CHANGELOG.md
+extra-doc-files:    CHANGELOG.md, README.md
+homepage:           https://github.com/Matteo0301/Chimera
 
 -- Extra source files to be distributed with the package, such as examples, or a tutorial module.
 -- extra-source-files:
@@ -136,10 +137,11 @@ executable Chimera
     -- Base language which the package is written in.
     default-language: GHC2021
 
-test-suite Chimera-test
-    type:       exitcode-stdio-1.0
+test-suite chimera-test
     import:  warnings, optimizations
     import:  debug
+    type:       exitcode-stdio-1.0
+    
     ghc-options: -threaded -rtsopts -with-rtsopts=-N
 
     -- .hs or .lhs file containing the Main module.
@@ -166,4 +168,15 @@ test-suite Chimera-test
 
     -- Base language which the package is written in.
     default-language: GHC2021
-```
+
+
+benchmark chimera-benchmark
+    import:  warnings, optimizations
+    import:  debug
+    type:       exitcode-stdio-1.0
+    hs-source-dirs:   bench
+    main-is:          Bench.hs
+    build-depends:    base
+                      , criterion
+                      , Chimera
+    default-language: GHC2021

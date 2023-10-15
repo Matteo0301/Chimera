@@ -31,7 +31,14 @@
       },
       "type": "shell",
       "label": "haskell test",
-      "command": "cabal run tests -- --rerun"
+      "command": "cabal build tests && cabal run tests -- --rerun"
+    },
+    {
+      // F6
+      "group": "test",
+      "type": "shell",
+      "label": "haskell benchmark",
+      "command": "cabal bench"
     },
     {
       // F6
