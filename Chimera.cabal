@@ -60,12 +60,23 @@ flag profiling
     description: Enable profiling
     default: False
 
+flag llvm
+    description: Enable llvm
+    default: True
+
 common warnings
     ghc-options: -Wall
 
+
 common optimizations
-    ghc-options: -O2 -threaded -flate-dmd-anal -flate-specialise -fllvm -pgmP clang -pgmc clang -pgma clang -pgmlc llc-15 -pgmlo opt-15 -optlc-O3 -optl-fuse-ld=gold
+    ghc-options: -O2 -threaded -flate-dmd-anal -flate-specialise
     ld-options:  -fuse-ld=gold -flto -O3
+
+common llvm
+    if flag(llvm){
+        ghc-options: -fllvm  -pgmP clang -pgmc clang -pgma clang -pgmlc llc -pgmlo opt -optlc-O3 -optlc-mcpu=native -optlo-O3 -optlo-mcpu=native -fuse-ld=lld
+        ld-options:  -fuse-ld=lld -flto -O3
+    }
 
 common debug
     if flag(profiling){
