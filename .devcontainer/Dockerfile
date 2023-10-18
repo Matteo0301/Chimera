@@ -2,12 +2,12 @@ FROM debian:bullseye-slim as base
 
 ENV LANG C.UTF-8
 
-ARG GHC_VERSION=latest
+ARG GHC_VERSION=9.6.3
 ARG CABAL_VERSION=latest
 ARG HLS_VERSION=latest
 ARG LLVM_VERSION=15
 
-ENV USERNAME=matteo2001 \
+ENV USERNAME=vscode \
     USER_UID=1000 \
     USER_GID=1000 \
     DEBIAN_FRONTEND=noninteractive \
@@ -53,12 +53,17 @@ RUN curl --proto '=https' --tlsv1.2 -sSf https://get-ghcup.haskell.org | sh
 
 FROM ghcup as tooling
 
+# RUN ghcup install ghc ${GHC_VERSION} --set
+# RUN ghcup install cabal ${CABAL_VERSION} --set
+# RUN ghcup install hls ${HLS_VERSION} --set
+
 # Update Cabal.
 RUN cabal update && cabal new-install cabal-install
 
+
 # Configure cabal
-RUN cabal user-config update -f && \
-    sed -i 's/-- ghc-options:/ghc-options: -haddock/g' ~/.cabal/config
+# RUN cabal user-config update -f && \
+#     sed -i 's/-- ghc-options:/ghc-options: -haddock/g' ~/.cabal/config
 
 FROM tooling as packages
 

@@ -1,13 +1,13 @@
 {
   "name": "DevContainer for Haskell (GHC, Stack, Cabal, HIE, LSP, DAP, etc.)",
-  "remoteUser": "matteo2001",
+  "remoteUser": "vscode",
   "runArgs": [],
   "build": {
     "args": {
-      "USERNAME": "matteo2001",
+      "USERNAME": "vscode",
       "GHC_VERSION": "9.6.3",
-      "CABAL_VERSION": "recommended",
-      "HLS_VERSION": "recommended",
+      "CABAL_VERSION": "latest",
+      "HLS_VERSION": "latest",
       "LLVM_VERSION": "15"
     },
     "context": "..",
@@ -16,15 +16,15 @@
   "customizations": {
     "vscode": {
       "extensions": [
-		"haskell.haskell",
-		"phoityne.phoityne-vscode",
-		"eriksik2.vscode-ghci",
-		"jcanero.hoogle-vscode",
-		"visortelle.haskell-spotlight",
-		"vadimcn.vscode-lldb",
-		"hediet.debug-visualizer",
-		"justusadam.language-haskell"
-	],
+        "haskell.haskell",
+        "phoityne.phoityne-vscode",
+        "eriksik2.vscode-ghci",
+        "jcanero.hoogle-vscode",
+        "visortelle.haskell-spotlight",
+        "vadimcn.vscode-lldb",
+        "hediet.debug-visualizer",
+        "justusadam.language-haskell"
+      ],
       "settings": {
         "files.exclude": {
           "**/*.olean": true,
