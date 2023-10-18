@@ -62,7 +62,7 @@ flag profiling
 
 flag llvm
     description: Enable llvm
-    default: True
+    default: False
 
 common warnings
     ghc-options: -Wall
