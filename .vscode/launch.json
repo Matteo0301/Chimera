@@ -17,7 +17,7 @@
             "mainArgs": "",
             "ghciPrompt": "H>>= ",
             "ghciInitialPrompt": "> ",
-            "ghciCmd": "cabal repl -w ghci-dap --repl-no-load --builddir=${workspaceFolder}/.vscode/dist-cabal-repl",
+            "ghciCmd": "cabal repl Chimera -w ghci-dap --repl-no-load --builddir=${workspaceFolder}/.vscode/dist-cabal-repl --repl-options=-fprint-evld-with-show",
             "ghciEnv": {},
             "logFile": "${workspaceFolder}/.vscode/phoityne.log",
             "logLevel": "WARNING",
