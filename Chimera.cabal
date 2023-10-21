@@ -89,8 +89,7 @@ common debug
 library myprelude
     import:  warnings, optimizations
     import:  debug
-    exposed-modules:  Prelude
-    reexported-modules: BasePrelude
+    reexported-modules: Prelude
 
     -- Modules included in this library.
     -- other-modules:
@@ -99,12 +98,12 @@ library myprelude
     -- other-extensions:
 
     -- Other library packages from which modules are imported.
-    build-depends:    base
+    build-depends:    universum
+                      , linear-base
     default-extensions: NoImplicitPrelude
     default-language: GHC2021
-    hs-source-dirs:   prelude
-    mixins:           base (Prelude as BasePrelude)
-                        , base hiding (Prelude)
+    mixins:           universum (Universum as Prelude)
+                      , linear-base
 
 library
     import:  warnings, optimizations
