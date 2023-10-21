@@ -140,6 +140,7 @@ executable Chimera
     -- Other library packages from which modules are imported.
     build-depends:    Chimera
                         , Chimera:myprelude
+                        , text
 
     -- Directories containing source files.
     hs-source-dirs:   app

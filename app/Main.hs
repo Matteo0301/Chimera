@@ -1,7 +1,9 @@
 module Main where
 
+import Data.Text (pack, unpack)
+
 main :: IO ()
-main = fib 5 & print
+main = print . unpack . pack $ "Hello, World!"
 
 fib :: Int -> Int
 fib 0 = 1
