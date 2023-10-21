@@ -1,20 +1,17 @@
-name: Format
+name: Check ormat and lint
 on: push
 jobs:
   format:
     runs-on: ubuntu-latest
+    permissions:
+      # Needed to upload results to GitHub code scanning.
+      security-events: write
     steps:
       # Note that you must checkout your code before running haskell-actions/run-fourmolu
       - uses: actions/checkout@v3
       - uses: haskell-actions/run-fourmolu@v9
         with:
           version: "latest"
-          extra-args: "--mode inplace"
-      - name: Commit and push changes
-        shell: bash
-        run: |
-          git config user.name github-actions
-          git config user.email github-actions@github.com
-          git commit -a -m "Formatted code"
-          git push --force
-        continue-on-error: true
+      - uses: haskell-actions/hlint-scan@v1
+        with:
+          hints: "hlint.yaml"
