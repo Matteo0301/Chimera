@@ -1,3 +1,6 @@
+[![Haskell CI](https://github.com/Matteo0301/Chimera/actions/workflows/haskell.yml/badge.svg)](https://github.com/Matteo0301/Chimera/actions/workflows/haskell.yml)
+[![Haskell CI](https://github.com/Matteo0301/Chimera/actions/workflows/haskell.yml/badge.svg)](https://github.com/Matteo0301/Chimera/actions/workflows/haskell.yml)[![Scan code with HLint](https://github.com/Matteo0301/Chimera/actions/workflows/lint.yml/badge.svg)](https://github.com/Matteo0301/Chimera/actions/workflows/lint.yml)
+
 # Chimera
 An experimental chess engine written in haskell
 
