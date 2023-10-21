@@ -1,4 +1,4 @@
-name: Check ormat and lint
+name: Check format and lint
 on: push
 jobs:
   format:

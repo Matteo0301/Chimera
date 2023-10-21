@@ -14,7 +14,7 @@ main =
     defaultMain
         [ bgroup
             "fib"
-            [ bench "1" $ whnf fib 1
-            , bench "5" $ whnf fib 5
+            [ bench "1" $ whnf fib 1,
+              bench "5" $ whnf fib 5
             ]
         ]

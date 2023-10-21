@@ -166,7 +166,7 @@ test-suite chimera-test
 
     -- Other library packages from which modules are imported.
     build-depends:    Chimera
-                        , base
+                        , Chimera:myprelude
                         , tasty
                         , tasty-hunit
                         , tasty-quickcheck
