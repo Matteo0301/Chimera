@@ -9,7 +9,7 @@ jobs:
       - uses: haskell-actions/run-fourmolu@v9
         with:
           version: "latest"
-          extra-args: "-m inplace"
+          extra-args: "--mode inplace"
       - name: Commit and push changes
         shell: bash
         run: |
