@@ -46,9 +46,11 @@ jobs:
       run: cabal build --enable-tests --enable-benchmarks all
     - name: Run tests
       run: cabal configure --enable-tests --enable-benchmarks && cabal run tests -- --xml=junit.xml
+    - name: Run benchmarks
+      run: cabal run benchmarks -- --junit bench.xml
     - name: Publish Test Results
       uses: EnricoMi/publish-unit-test-result-action@v2
       if: always()
       with:
         files: |
-          .xml
+          *.xml
