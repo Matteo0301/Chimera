@@ -69,7 +69,7 @@ common warnings
 
 
 common optimizations
-    ghc-options: -O2 -threaded -flate-dmd-anal -flate-specialise
+    ghc-options: -threaded -flate-dmd-anal -flate-specialise
     ld-options:  -fuse-ld=gold -flto -O3
 
 common llvm
