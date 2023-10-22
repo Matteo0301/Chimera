@@ -173,6 +173,7 @@ test-suite chimera-test
                         , tasty-rerun
                         , falsify
                         , tasty-inspection-testing
+                        , tasty-ant-xml
 
     -- Directories containing source files.
     hs-source-dirs:   test

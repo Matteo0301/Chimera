@@ -1,14 +1,13 @@
-{-|
-Module      : !!! INSERT HASKELL MODULE NAME !!!
-Description : !!! INSERT MODULE SHORT DESCRIPTION !!!
-Copyright   : (c) 2023 Matteo Mariotti
-License     : GNU GPL v.3
-Maintainer  : matteomariotti0301@gmail.com
-Stability   : experimental
-Portability : POSIX
-
-!!! INSERT MODULE LONG DESCRIPTION !!!
--}
+-- \|
+-- Module      : !!! INSERT HASKELL MODULE NAME !!!
+-- Description : !!! INSERT MODULE SHORT DESCRIPTION !!!
+-- Copyright   : (c) 2023 Matteo Mariotti
+-- License     : GNU GPL v.3
+-- Maintainer  : matteomariotti0301@gmail.com
+-- Stability   : experimental
+-- Portability : POSIX
+--
+-- !!! INSERT MODULE LONG DESCRIPTION !!!
 import Criterion.Main
 
 -- The function we're benchmarking.

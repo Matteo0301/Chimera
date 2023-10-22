@@ -1,4 +1,4 @@
-name: Check icense headers
+name: Check license headers
 
 on:
   push:
