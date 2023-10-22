@@ -1,4 +1,4 @@
-name: Scan code with HLint
+name: Lint code
 on: [push, pull_request]
 
 jobs:

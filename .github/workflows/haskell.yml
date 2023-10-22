@@ -1,4 +1,4 @@
-name: Haskell tests and sanity checks
+name: Tests
 
 on:
   push:
@@ -40,22 +40,6 @@ jobs:
       run: cabal build --enable-tests --enable-benchmarks all
     - name: Run tests
       run: cabal configure --enable-tests --enable-benchmarks && cabal test all
-  hlint:
-    runs-on: ubuntu-latest
-    permissions:
-      # Needed to upload results to GitHub code scanning.
-      security-events: write
-    steps:
-      - uses: actions/checkout@v3
-      - uses: haskell-actions/hlint-scan@v1
-  format:
-    runs-on: ubuntu-latest
-    steps:
-      # Note that you must checkout your code before running haskell-actions/run-fourmolu
-      - uses: actions/checkout@v3
-      - uses: haskell-actions/run-fourmolu@v9
-        with:
-          version: "latest"
   license:
     runs-on: ubuntu-latest
     steps:
