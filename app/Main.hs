@@ -1,4 +1,4 @@
-{- |
+{-|
 Module      : Main
 Description : !!! INSERT MODULE SHORT DESCRIPTION !!!
 Copyright   : (c) 2023 Matteo Mariotti
