@@ -76,7 +76,12 @@ RUN cabal install \
     hlint \
     apply-refact \
     retrie \
-    fourmolu
+    fourmolu \
+    headroom
+
+RUN cd /tmp
+RUN git clone https://github.com/kowainik/stan.git
+RUN cd stan && cabal v2-build exe:stan && cp "$(cabal v2-exec --verbose=0 --offline sh -- -c 'command -v stan')" ~/.local/bin/stan
 
 
 ENV DEBIAN_FRONTEND=dialog

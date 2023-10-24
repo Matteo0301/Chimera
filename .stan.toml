@@ -1,0 +1,4 @@
+[[check]]
+type = "Include"
+filter = "all"
+scope = "all"
