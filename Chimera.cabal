@@ -100,7 +100,7 @@ library myprelude
     import:  warnings, optimizations
     import:  debug
     import: stan
-    reexported-modules: Prelude
+    reexported-modules: Prelude, Base
 
     -- Modules included in this library.
     -- other-modules:
@@ -109,19 +109,20 @@ library myprelude
     -- other-extensions:
 
     -- Other library packages from which modules are imported.
-    build-depends:    universum
-                      , linear-base
+    build-depends:    universum >= 1.8.2 && < 1.9
+                      , linear-base >= 0.4.0 && < 0.5
     default-extensions: NoImplicitPrelude
     default-language: GHC2021
-    mixins:           universum (Universum as Prelude)
-                      , linear-base
+    mixins:           universum (Universum as Prelude, Universum.Base as Base)
+                      , linear-base 
 
-library
+library bitboards
     import:  warnings, optimizations
     import:  debug
     import: stan
-    exposed-modules: Library
-    hs-source-dirs:   src
+    exposed-modules: Bitboard
+    hs-source-dirs:   src/bitboards
+    visibility: public
 
     -- Modules included in this library.
     -- other-modules:
@@ -131,6 +132,10 @@ library
 
     -- Other library packages from which modules are imported.
     build-depends:    Chimera:myprelude
+                      , base
+                      , universum
+
+    mixins:           base hiding (Prelude)
 
 
     default-language: GHC2021
@@ -151,9 +156,9 @@ executable Chimera
     -- other-extensions:
 
     -- Other library packages from which modules are imported.
-    build-depends:    Chimera
+    build-depends:    Chimera:bitboards
                         , Chimera:myprelude
-                        , text
+                        , text >= 2.0.2 && < 2.1
 
     -- Directories containing source files.
     hs-source-dirs:   app
@@ -179,7 +184,7 @@ test-suite chimera-test
     -- other-extensions:
 
     -- Other library packages from which modules are imported.
-    build-depends:    Chimera
+    build-depends:    Chimera:bitboards
                         , Chimera:myprelude
                         , tasty
                         , tasty-hunit
@@ -205,5 +210,5 @@ benchmark chimera-benchmark
     main-is:          Bench.hs
     build-depends:    base
                       , criterion
-                      , Chimera
+                      , Chimera:bitboards
     default-language: GHC2021
