@@ -1,0 +1,48 @@
+name: Static analysis
+
+on:
+  schedule:
+    - cron: '0 0 * * 0'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  test:
+
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v3
+    - uses: actions/setup-haskell@v1
+      with:
+        ghc-version: '9.6.3'
+        cabal-version: '3.10.1.0'
+
+    - name: Cache
+      uses: actions/cache@v3
+      env:
+        cache-name: cache-cabal
+      with:
+        path: |
+          ~/.cache/cabal
+          ~/.config/cabal
+          ~/.local/state/cabal
+          ~/.local/bin
+          dist-newstyle
+        key: ${{ runner.os }}-build-${{ hashFiles('**/*.cabal') }}
+        restore-keys: |
+          ${{ runner.os }}-build
+          ${{ runner.os }}
+
+    - name: Install dependencies
+      run: |
+        cabal update
+        cabal build --only-dependencies --enable-tests --enable-benchmarks
+    - name: Build
+      run: cabal build --flags="stan" all
+    - name: Build stan
+      run: '[ -f stan ] || git clone https://github.com/kowainik/stan.git && cd stan && cabal build exe:stan && mkdir -p ~/.local/bin &&  cp "$(cabal v2-exec --verbose=0 --offline sh -- -c "command -v stan")" ~/.local/bin/stan && cd ..'
+    - name: Run stan
+      run: stan
