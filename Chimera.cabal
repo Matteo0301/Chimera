@@ -100,7 +100,9 @@ library myprelude
     import:  warnings, optimizations
     import:  debug
     import: stan
+    exposed-modules: Bitboard
     reexported-modules: Prelude, Base
+    hs-source-dirs:   src/prelude
 
     -- Modules included in this library.
     -- other-modules:
@@ -111,16 +113,19 @@ library myprelude
     -- Other library packages from which modules are imported.
     build-depends:    universum >= 1.8.2 && < 1.9
                       , linear-base >= 0.4.0 && < 0.5
-    default-extensions: NoImplicitPrelude
+                      , base
+    default-extensions: OverloadedStrings
+                        , LinearTypes
     default-language: GHC2021
     mixins:           universum (Universum as Prelude, Universum.Base as Base)
                       , linear-base 
+                      , base hiding (Prelude)
 
 library bitboards
     import:  warnings, optimizations
     import:  debug
     import: stan
-    exposed-modules: Bitboard
+    exposed-modules: 
     hs-source-dirs:   src/bitboards
     visibility: public
 
@@ -132,10 +137,7 @@ library bitboards
 
     -- Other library packages from which modules are imported.
     build-depends:    Chimera:myprelude
-                      , base
                       , universum
-
-    mixins:           base hiding (Prelude)
 
 
     default-language: GHC2021
