@@ -19,7 +19,7 @@ ENV USERNAME=vscode \
 RUN ulimit -n 8192
 
 RUN apt-get update
-RUN apt-get install -y --no-install-recommends apt-utils bash build-essential ca-certificates curl gcc git gnupg libffi-dev libffi7 libgmp-dev libgmp-dev libgmp10 libicu-dev libncurses-dev libncurses5 libnuma1 libnuma-dev libtinfo5 lsb-release make procps software-properties-common sudo wget xz-utils z3 zlib1g-dev
+RUN apt-get install -y --no-install-recommends apt-utils bash build-essential ca-certificates curl gcc git gnupg libffi-dev libffi7 libgmp-dev libgmp-dev libgmp10 libicu-dev libncurses-dev libncurses5 libnuma1 libnuma-dev libtinfo5 lsb-release make procps software-properties-common sudo wget xz-utils z3 zlib1g-dev libpcre3 libpcre3-dev
 
 
 RUN groupadd --gid ${USER_GID} ${USERNAME} && \
@@ -76,12 +76,11 @@ RUN cabal install \
     hlint \
     apply-refact \
     retrie \
-    fourmolu \
-    headroom
+    fourmolu
 
-RUN cd /tmp
-RUN git clone https://github.com/kowainik/stan.git
-RUN cd stan && cabal v2-build exe:stan && cp "$(cabal v2-exec --verbose=0 --offline sh -- -c 'command -v stan')" ~/.local/bin/stan
+#RUN cd /tmp
+#RUN git clone https://github.com/kowainik/stan.git
+#RUN cd stan && cabal v2-build exe:stan && cp "$(cabal v2-exec --verbose=0 --offline sh -- -c 'command -v stan')" ~/.local/bin/stan
 
 
 ENV DEBIAN_FRONTEND=dialog

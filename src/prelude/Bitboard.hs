@@ -69,7 +69,7 @@ getSquare (Bitboard bb) = testBit bb . fromEnum
 {-|
     Sets the square at the given index as occupied-}
 setSquare :: Bitboard -> Square -> Bitboard
-setSquare (Bitboard bb) i = Bitboard $ bb .|. (1 `shiftL` fromEnum i)
+setSquare (Bitboard bb) i = Bitboard  bb <> (Bitboard(1 `shiftL` fromEnum i))
 
 {-|
     Operator version of 'setSquare'
