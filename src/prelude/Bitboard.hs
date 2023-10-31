@@ -12,7 +12,8 @@ This module export the 'Bitboard' type and the functions to operate on its squar
 {-# LANGUAGE OverloadedStrings #-}
 module Bitboard (
     Bitboard(..)
-    --, showBits
+    , Square(..)
+    , showBits
     , getSquare
     , setSquare
     , (<<>>)
@@ -22,19 +23,13 @@ module Bitboard (
 
 import Data.Bits ( Bits (..) )
 
-{-@ LIQUID "--reflect" @-}
-{-@ LIQUID "--ple" @-}
 
+{-@ LIQUID "--counter-examples" @-}
+{-@ LIQUID "--diff" @-}
 
-{-@ type Index = {v:Int | v >= 0 && v < 64} @-}
-{-@ type Population = {v:Int | v >= 2 && v <= 32} @-}
-{-@ type Board = {v:Word64 | (getPopulation v) >= 2 && (getPopulation v) <= 32} @-}
+{-@ type Board = Word64 @-}
 
-
-{-@ measure getPopulation :: Bitboard -> getPopulation @-}
-
-
-{-@ data Bitboard = Bitboard (bb :: Word64) @-}
+{-@ data Bitboard = Bitboard (bb :: {x:Word64 | getPopulation x >= 0 || getPopulation x <= 32 }) @-}
 {-|
     The 'Bitboard' type is a newtype wrapper around 'Word64' that represents a bitboard.
     The bitboard is a 64-bit integer where each bit represents a square on the board.
@@ -48,9 +43,6 @@ import Data.Bits ( Bits (..) )
 newtype Bitboard = Bitboard { bb :: Word64 }
     deriving (Eq)
 
-{-@ type Population = {v:Int | v >= 2 && v <= 32} @-}
-{-@ type ValidBitboard = {v:Bitboard | (getPopulation (bb v)) >= 2 && (getPopulation (bb v)) <= 32} @-}
-
 instance Semigroup Bitboard where
     (<>) :: Bitboard -> Bitboard -> Bitboard
     (Bitboard bb1) <> (Bitboard bb2) = Bitboard $ bb1 .|. bb2
@@ -58,23 +50,6 @@ instance Semigroup Bitboard where
 instance Monoid Bitboard where
     mempty :: Bitboard
     mempty = Bitboard 0
-    mappend :: Bitboard -> Bitboard -> Bitboard
-    mappend  = (<>)
-
-
-{- {-@ showBits :: Bitboard -> Text @-}
-{-|
-    Shows the bitboard in a square representation-}
-showBits :: Bitboard -> Text
-showBits (Bitboard bb) = showBits' bb 63 ""
-  where
-    {-@ assume showBits' :: Word64 -> Int -> Text -> Text @-}
-    showBits' :: Word64 -> Int -> Text -> Text
-    showBits' bb' i s
-        | i == 0 = s
-        | i `mod` 8 == 0 && i >= 0 && i< 64 = showBits' bb' (i - 1) (s <> (if testBit bb' i then "#\n" else ".\n"))
-        | otherwise = showBits' (bb') (i - 1) (s <> (if testBit bb' i then "#" else ".")) -}
-
 
 {-|
     The 'Square' type represents the index of a square on the board.-}
@@ -88,30 +63,49 @@ data Square = H1 | G1 | F1 | E1 | D1 | C1 | B1 | A1
             | H8 | G8 | F8 | E8 | D8 | C8 | B8 | A8
             deriving (Eq, Show, Enum)
 
-{-|
-    Checks if the square at the given index is occupied-}
-getSquare :: Bitboard -> Square -> Bool
-getSquare (Bitboard bb) = testBit bb . fromEnum
 
-{-|
-    Sets the square at the given index as occupied-}
-setSquare :: Bitboard -> Square -> Bitboard
-setSquare (Bitboard bb) i = Bitboard  bb <> (Bitboard(1 `shiftL` fromEnum i))
-
-{-|
-    Operator version of 'setSquare'
--}
-(<<>>) :: Bitboard -> Square -> Bitboard
-(<<>>) = setSquare
-
-{-|
-    Sets the square at the given index as unoccupied-}
-unsetSquare :: Bitboard -> Square -> Bitboard
-unsetSquare (Bitboard bb) i = Bitboard $ clearBit bb (fromEnum i)
-
-
-{-@ assume getPopulation :: Bitboard -> Population @-}
-{-|
-    Gets the number of squares occupied in the bitboard-}
+{-@ assume getPopulation :: Bitboard -> {x:Int | x>=0 || x<=64} @-}
+{-@ measure getPopulation :: Bitboard -> Int @-}
 getPopulation :: Bitboard -> Int
 getPopulation (Bitboard bb) = popCount bb
+
+{-@ getSquare :: Bitboard -> Square -> Bool @-}
+{-|
+    Returns whether the square is set in the bitboard-}
+getSquare :: Bitboard -> Square -> Bool
+getSquare (Bitboard bb) sq = testBit bb (fromEnum sq)
+
+{-@ assume setSquare :: x:Bitboard -> Square -> {y:Bitboard | getPopulation y = getPopulation x + 1 || getPopulation y = getPopulation x} @-}
+{-|
+    Sets the square in the bitboard-}
+setSquare :: Bitboard -> Square -> Bitboard
+setSquare (Bitboard bb) sq = Bitboard $ setBit bb (fromEnum sq)
+
+{-@ assume unsetSquare :: x:Bitboard -> Square -> {y:Bitboard | getPopulation y = getPopulation x - 1 || getPopulation y = getPopulation x} @-}
+{-|
+    Unsets the square in the bitboard-}
+unsetSquare :: Bitboard -> Square -> Bitboard
+unsetSquare (Bitboard bb) sq = Bitboard $ clearBit bb (fromEnum sq)
+
+{-@ (<<>>) :: Bitboard -> Square -> Bitboard @-}
+{-|
+    Returns the union of the two bitboards-}
+(<<>>) :: Bitboard -> Square -> Bitboard
+bb <<>> i = bb <> setSquare mempty i
+
+
+{-@ showBits :: Bitboard -> Text @-}
+{-|
+    Shows the bitboard in a square representation-}
+showBits :: Bitboard -> Text
+showBits (Bitboard bb) = showBits' 63
+    where
+        showBit :: Int -> Text
+        showBit i = let
+                        b = getSquare (Bitboard bb) (toEnum i)
+                    in if b then "#" else "."
+        line i = if i `mod` 8 == 0 then " " <> "" <> "\n" else ""
+        showBits' i
+            | i<0 || i>=64 = ""
+            | i==0 = showBit i <> line i <> "abcdefgh\n"
+            | otherwise = showBit i <> line i <> showBits' (i-1)
