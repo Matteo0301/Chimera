@@ -7,12 +7,13 @@
 -- Portability : POSIX
 --
 -- This is the module for the test suite of the project.
+
+import BitboardTest
 import Test.Tasty
 import Test.Tasty.Ingredients (composeReporters)
 import Test.Tasty.Ingredients.Basic
 import Test.Tasty.Ingredients.Rerun
 import Test.Tasty.Runners.AntXML
-import BitboardTest
 
 main :: IO ()
 main =

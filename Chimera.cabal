@@ -118,8 +118,9 @@ library utils
     import: stan
     import: liquid
     import: prelude
-    exposed-modules: Bitboard
+    exposed-modules: Bitboard, Random
     hs-source-dirs:   src/utils
+    build-depends: random
 
     -- Modules included in this library.
     -- other-modules:

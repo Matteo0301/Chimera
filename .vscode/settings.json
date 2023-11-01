@@ -3,6 +3,7 @@
         "Bitboard",
         "eriksik",
         "hediet",
+        "HLINT",
         "jcanero",
         "justusadam",
         "mappend",
@@ -12,6 +13,7 @@
         "POSIX",
         "Semigroup",
         "vadimcn",
-        "visortelle"
+        "visortelle",
+        "xorshift"
     ]
 }
