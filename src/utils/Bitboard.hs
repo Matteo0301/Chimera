@@ -20,13 +20,14 @@ module Bitboard (
     , (<<>>)
     , unsetSquare
     , getPopulation
+    , emptyBoard
 ) where
 
 import Data.Bits ( Bits (..) )
 
 
 {-@ LIQUID "--counter-examples" @-}
---{-@ LIQUID "--diff" @-}
+{-@ LIQUID "--diff" @-}
 
 {-@ type Board = Word64 @-}
 
@@ -36,21 +37,11 @@ import Data.Bits ( Bits (..) )
     The bitboard is a 64-bit integer where each bit represents a square on the board.
     The least significant bit represents the square h1, the most significant bit represents the square a8.
     The bitboard is stored in little endian order, so the first 8 bits represent the first row of the board.-}
-{-|
-    The 'Bitboard' type is a newtype wrapper around 'Word64' that represents a bitboard.
-    The bitboard is a 64-bit integer where each bit represents a square on the board.
-    The least significant bit represents the square h1, the most significant bit represents the square a8.
-    The bitboard is stored in little endian order, so the first 8 bits represent the first row of the board.-}
 newtype Bitboard = Bitboard Word64 
-    deriving (Eq)
+    deriving (Eq,Show)
 
-instance Semigroup Bitboard where
-    (<>) :: Bitboard -> Bitboard -> Bitboard
-    (Bitboard bb1) <> (Bitboard bb2) = Bitboard $ bb1 .|. bb2
-
-instance Monoid Bitboard where
-    mempty :: Bitboard
-    mempty = Bitboard 0
+emptyBoard :: Bitboard
+emptyBoard = Bitboard 0
 
 {-|
     The 'Square' type represents the index of a square on the board.-}
@@ -86,7 +77,7 @@ setSquare old@(Bitboard bb) sq = let
 
 {-@ assume unsetSquare :: x:Bitboard -> Square -> {y:Bitboard | if getPopulation x == 0 then getPopulation y = 0 else getPopulation y = getPopulation x - 1} @-}
 {-|
-    Unsets the square in the bitboard-}
+    Sets a certain square in the board as empty-}
 unsetSquare :: Bitboard -> Square -> Bitboard
 unsetSquare (Bitboard bb) sq = Bitboard $ clearBit bb (fromEnum sq)
 
@@ -99,7 +90,7 @@ bb <<>> i = setSquare bb i
 
 {-@ assume trySet :: Word64 -> Bitboard @-}
 {-|
-    Returns the bitboard if the population is between 2 and 32, otherwise returns the empty bitboard-}
+    Returns the bitboard if the population is between 0 and 32, otherwise returns the empty bitboard-}
 trySet :: Word64 -> Bitboard
 trySet x = let 
             bb = Bitboard x
@@ -109,7 +100,7 @@ trySet x = let
 
 {-@ showBits :: Bitboard -> Text @-}
 {-|
-    Shows the bitboard in a square representation-}
+    Shows the bitboard in a square representation, along with its numeric value-}
 showBits :: Bitboard -> Text
 showBits (Bitboard bb) = showBits' 63
     where

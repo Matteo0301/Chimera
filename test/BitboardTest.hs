@@ -14,6 +14,11 @@ instance Arbitrary Bitboard where
     arbitrary = do
         bb <- choose (0, 2 ^ (64::Int) - 1)
         suchThat (return $ trySet bb) (\x -> getPopulation x <= 32)
+    
+    shrink :: Bitboard -> [Bitboard]
+    shrink bb
+            | bb == emptyBoard = []
+            | otherwise = [unsetSquare bb x | x <- [A1 .. H8], getSquare bb x]
 
 instance Arbitrary Square where
     arbitrary :: Gen Square
@@ -29,13 +34,13 @@ set_get_bit =
     testGroup
         "Set/unset squares"
         [ QC.testProperty "set . get" $
-            \x -> getSquare (setSquare mempty x) x
+            \x -> getSquare (setSquare emptyBoard x) x
             , QC.testProperty "unset . set" $
-            \x -> unsetSquare (setSquare mempty x) x == mempty
+            \x -> unsetSquare (setSquare emptyBoard x) x == emptyBoard
             , QC.testProperty "set . unset" $
-            \x -> unsetSquare mempty x == mempty
+            \x -> unsetSquare emptyBoard x == emptyBoard
             , QC.testProperty "getPopulation . set" $
-            \x -> getPopulation (setSquare mempty x) == 1
+            \x -> getPopulation (setSquare emptyBoard x) == 1
         ]
 
 population_tests :: TestTree
@@ -43,11 +48,13 @@ population_tests =
     testGroup
         "Population tests"
         [ testCase "Population: empty" $
-            getPopulation mempty @?= 0
+            getPopulation emptyBoard @?= 0
             ,testCase "Population: A1" $
-            getPopulation (mempty<<>>A1) @?= 1
+            getPopulation (emptyBoard<<>>A1) @?= 1
             ,testCase "Population: D5" $
-            getPopulation (mempty<<>>D5) @?= 1
+            getPopulation (emptyBoard<<>>D5) @?= 1
             ,testCase "Population: white pawns" $
-            getPopulation (mempty <<>> A2 <<>> B2 <<>> C2 <<>> D2 <<>> E2 <<>> F2 <<>> G2 <<>> H2) @?= 8
+            getPopulation (emptyBoard <<>> A2 <<>> B2 <<>> C2 <<>> D2 <<>> E2 <<>> F2 <<>> G2 <<>> H2) @?= 8
+            , QC.testProperty "getPopulation<=32" $
+            \x -> getPopulation x <= 32
         ]
