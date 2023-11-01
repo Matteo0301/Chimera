@@ -6,13 +6,14 @@ import Test.Tasty.Runners (TestTree(TestGroup))
 import Bitboard
 import Test.Tasty.QuickCheck as QC
 import Test.Tasty
+import Test.Tasty.HUnit
 
 
 instance Arbitrary Bitboard where
     arbitrary :: Gen Bitboard
     arbitrary = do
-        bb <- choose (0, 2 ^ 64 - 1)
-        suchThat (return $ Bitboard bb) (\x -> getPopulation x <= 32)
+        bb <- choose (0, 2 ^ (64::Int) - 1)
+        suchThat (return $ trySet bb) (\x -> getPopulation x <= 32)
 
 instance Arbitrary Square where
     arbitrary :: Gen Square
@@ -21,7 +22,7 @@ instance Arbitrary Square where
         return $ toEnum s
 
 bb_tests :: TestTree
-bb_tests = TestGroup "Bitboard tests" [set_get_bit]
+bb_tests = TestGroup "Bitboard tests" [set_get_bit, population_tests]
 
 set_get_bit :: TestTree
 set_get_bit =
@@ -37,12 +38,16 @@ set_get_bit =
             \x -> getPopulation (setSquare mempty x) == 1
         ]
 
-{- population_tests :: TestTree
+population_tests :: TestTree
 population_tests =
     testGroup
         "Population tests"
-        [ testCase "List comparison (different length)" $
-            [1 :: Integer, 2, 3]
-                `compare` [1, 2]
-                @?= GT
-        ] -}
+        [ testCase "Population: empty" $
+            getPopulation mempty @?= 0
+            ,testCase "Population: A1" $
+            getPopulation (mempty<<>>A1) @?= 1
+            ,testCase "Population: D5" $
+            getPopulation (mempty<<>>D5) @?= 1
+            ,testCase "Population: white pawns" $
+            getPopulation (mempty <<>> A2 <<>> B2 <<>> C2 <<>> D2 <<>> E2 <<>> F2 <<>> G2 <<>> H2) @?= 8
+        ]

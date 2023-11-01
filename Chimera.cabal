@@ -100,17 +100,26 @@ common liquid
         ghc-options: -fplugin=LiquidHaskell
         build-depends: liquidhaskell == 0.9.2.5.0
     }
-    
+
+common prelude
+    build-depends:    universum >= 1.8.2 && < 1.9
+                      , linear-base >= 0.4.0 && < 0.5
+                      , base
+    default-extensions: OverloadedStrings
+                        , LinearTypes
+    mixins:           universum (Universum as Prelude, Universum.Base as Base)
+                      , linear-base 
+                      , base hiding (Prelude)
     
 
-library myprelude
+library utils
     import:  warnings, optimizations
     import:  debug
     import: stan
     import: liquid
+    import: prelude
     exposed-modules: Bitboard
-    reexported-modules: Prelude, Base
-    hs-source-dirs:   src/prelude
+    hs-source-dirs:   src/utils
 
     -- Modules included in this library.
     -- other-modules:
@@ -119,21 +128,16 @@ library myprelude
     -- other-extensions:
 
     -- Other library packages from which modules are imported.
-    build-depends:    universum >= 1.8.2 && < 1.9
-                      , linear-base >= 0.4.0 && < 0.5
-                      , base
-    default-extensions: OverloadedStrings
-                        , LinearTypes
+    
     default-language: GHC2021
-    mixins:           universum (Universum as Prelude, Universum.Base as Base)
-                      , linear-base 
-                      , base hiding (Prelude)
+    
 
 library bitboards
     import:  warnings, optimizations
     import:  debug
     import: stan
     import: liquid
+    import: prelude
     exposed-modules: 
     hs-source-dirs:   src/bitboards
     visibility: public
@@ -145,7 +149,7 @@ library bitboards
     -- other-extensions:
 
     -- Other library packages from which modules are imported.
-    build-depends:    Chimera:myprelude
+    build-depends:    Chimera:utils
                       , universum
 
 
@@ -156,6 +160,7 @@ executable Chimera
     import:  debug
     import: stan
     import: liquid
+    import: prelude
     ghc-options: -rtsopts -with-rtsopts=-N
 
     -- .hs or .lhs file containing the Main module.
@@ -169,7 +174,7 @@ executable Chimera
 
     -- Other library packages from which modules are imported.
     build-depends:    Chimera:bitboards
-                        , Chimera:myprelude
+                        , Chimera:utils
                         , text 
 
     -- Directories containing source files.
@@ -182,6 +187,7 @@ test-suite chimera-test
     import:  warnings, optimizations
     import:  debug
     import: stan
+    import: prelude
     type:       exitcode-stdio-1.0
     
     ghc-options: -threaded -rtsopts -with-rtsopts=-N
@@ -197,7 +203,7 @@ test-suite chimera-test
 
     -- Other library packages from which modules are imported.
     build-depends:    Chimera:bitboards
-                        , Chimera:myprelude
+                        , Chimera:utils
                         , tasty
                         , tasty-hunit
                         , tasty-quickcheck
@@ -217,7 +223,7 @@ benchmark chimera-benchmark
     import:  warnings, optimizations
     import:  debug
     import: stan
-    import: liquid
+    import: prelude
     type:       exitcode-stdio-1.0
     hs-source-dirs:   bench
     main-is:          Bench.hs
