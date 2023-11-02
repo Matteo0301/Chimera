@@ -133,14 +133,14 @@ library utils
     default-language: GHC2021
     
 
-library bitboards
+library magicBitboards
     import:  warnings, optimizations
     import:  debug
     import: stan
     import: liquid
     import: prelude
-    exposed-modules: 
-    hs-source-dirs:   src/bitboards
+    exposed-modules: Pawns
+    hs-source-dirs:   src/magicBitboards
     visibility: public
 
     -- Modules included in this library.
@@ -174,8 +174,7 @@ executable Chimera
     -- other-extensions:
 
     -- Other library packages from which modules are imported.
-    build-depends:    Chimera:bitboards
-                        , Chimera:utils
+    build-depends:    Chimera:utils
                         , text 
 
     -- Directories containing source files.
@@ -203,8 +202,7 @@ test-suite chimera-test
     -- other-extensions:
 
     -- Other library packages from which modules are imported.
-    build-depends:    Chimera:bitboards
-                        , Chimera:utils
+    build-depends:    Chimera:utils
                         , tasty
                         , tasty-hunit
                         , tasty-quickcheck
@@ -230,5 +228,4 @@ benchmark chimera-benchmark
     main-is:          Bench.hs
     build-depends:    base
                       , criterion
-                      , Chimera:bitboards
     default-language: GHC2021

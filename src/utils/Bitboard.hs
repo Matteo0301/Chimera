@@ -30,7 +30,7 @@ import Data.Bits (Bits (..))
 
 {-@ type Board = Word64 @-}
 
-{-@ data Bitboard = Bitboard (bb :: {x:Word64 | getPopulation x <= 32 }) @-}
+{-@ using (Bitboard) as {x:Bitboard| getPopulation x <= 32} @-}
 
 {-|
     The 'Bitboard' type is a newtype wrapper around 'Word64' that represents a bitboard.
