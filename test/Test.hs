@@ -19,7 +19,7 @@ main :: IO ()
 main =
     defaultMainWithIngredients
         [ rerunningTests
-            ((composeReporters antXMLRunner consoleTestReporter) : defaultIngredients)
+            (composeReporters antXMLRunner consoleTestReporter : defaultIngredients)
         ]
         tests
 

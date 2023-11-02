@@ -1,5 +1,3 @@
-{-# LANGUAGE OverloadedStrings #-}
-
 {-|
 Module      : Bitboard
 Description : Module for bitboards representation and operations
@@ -24,6 +22,7 @@ module Bitboard
     , emptyBoard
     ) where
 
+import Control.Exception
 import Data.Bits (Bits (..))
 
 {-@ LIQUID "--counter-examples" @-}
@@ -134,11 +133,11 @@ getSquare (Bitboard bb) sq = testBit bb (fromEnum sq)
     Sets the square in the bitboard. If the new bitboard has more that 32 squares occupied, returns the old one.
 -}
 setSquare :: Bitboard -> Square -> Bitboard
-setSquare old@(Bitboard bb) sq =
+setSquare (Bitboard bb) sq =
     let
         new = Bitboard $ setBit bb (fromEnum sq)
      in
-        if getPopulation new <= 32 then new else old
+        assert (getPopulation new <= 32) new
 
 {-@ assume unsetSquare :: x:Bitboard -> Square -> {y:Bitboard | if getPopulation x == 0 then getPopulation y = 0 else getPopulation y = getPopulation x - 1} @-}
 
@@ -159,7 +158,7 @@ bb <<>> i = setSquare bb i
 {-@ assume trySet :: Word64 -> Bitboard @-}
 
 {-|
-    Returns the bitboard if the population is between 0 and 32, otherwise returns the empty bitboard
+    Returns the bitboard if the population is between 0 and 32, otherwise returns the empty bitboard. This should only be used in tests.
 -}
 trySet :: Word64 -> Bitboard
 trySet x =
