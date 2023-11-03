@@ -1,4 +1,5 @@
-cabal-version:      3.4
+cabal-version:   3.4
+
 -- The cabal-version field refers to the version of the .cabal specification,
 -- and can be different from the cabal-install (the tool) version and the
 -- Cabal (the library) version you are using. As such, the Cabal (the library)
@@ -11,221 +12,233 @@ cabal-version:      3.4
 --   http://haskell.org/cabal/users-guide/
 --
 -- The name of the package.
-name:               Chimera
+name:            Chimera
 
 -- The package version.
 -- See the Haskell package versioning policy (PVP) for standards
 -- guiding when and how versions should be incremented.
 -- https://pvp.haskell.org
--- PVP summary:     +-+------- breaking API changes
---                  | | +----- non-breaking API additions
---                  | | | +--- code changes with no API change
-version:            0.1.0.0
+-- PVP summary:  +-+------- breaking API changes+
+--               | | +----- non-breaking API additions
+--               | | | +--- code changes with no API change
+version:         0.1.0.0
 
 -- A short (one-line) description of the package.
-synopsis:           An experimental chess engine written in Haskell
+synopsis:        An experimental chess engine written in Haskell
 
 -- A longer description of the package.
 -- description:
 
 -- The license under which the package is released.
-license:            GPL-3.0-or-later
+license:         GPL-3.0-or-later
 
 -- The file containing the license text.
-license-file:       LICENSE
+license-file:    LICENSE
 
 -- The package author(s).
-author:             Matteo
+author:          Matteo
 
 -- An email address to which users can send suggestions, bug reports, and patches.
-maintainer:         matteomariotti0301@gmail.com
+maintainer:      matteomariotti0301@gmail.com
 
 -- A copyright notice.
 -- copyright:
-category:           Game
-build-type:         Simple
+category:        Game
+build-type:      Simple
 
 -- Extra doc files to be distributed with the package, such as a CHANGELOG or a README.
-extra-doc-files:    CHANGELOG.md, README.md
-homepage:           https://github.com/Matteo0301/Chimera
+extra-doc-files:
+  CHANGELOG.md
+  README.md
+
+homepage:        https://github.com/Matteo0301/Chimera
 
 -- Extra source files to be distributed with the package, such as examples, or a tutorial module.
 -- extra-source-files:
 
 flag debug
-    description: Enable debug mode
-    default: False
+  description: Enable debug mode
+  default:     False
 
 flag profiling
-    description: Enable profiling
-    default: False
+  description: Enable profiling
+  default:     False
 
 flag llvm
-    description: Enable llvm
-    default: False
+  description: Enable llvm
+  default:     False
 
 flag stan
-    description: Enable stan
-    default: False
+  description: Enable stan
+  default:     False
 
 common stan
-    if flag(stan){
-        ghc-options:   -fwrite-ide-info -hiedir=.hie
-    }
+  if flag(stan)
+    ghc-options: -fwrite-ide-info -hiedir=.hie
 
 common warnings
-    ghc-options: -Wall
-
+  ghc-options: -Wall
 
 common optimizations
-    ghc-options: -threaded -flate-dmd-anal -flate-specialise
-    ld-options:  -fuse-ld=gold -flto -O3
+  ghc-options: -threaded -flate-dmd-anal -flate-specialise
+  ld-options:  -fuse-ld=gold -flto -O3
 
 common llvm
-    if flag(llvm){
-        ghc-options: -fllvm  -pgmP clang -pgmc clang -pgma clang -pgmlc llc -pgmlo opt -optlc-O3 -optlc-mcpu=native -optlo-O3 -optlo-mcpu=native -fuse-ld=lld
-        ld-options:  -fuse-ld=lld -flto -O3
-    }
+  if flag(llvm)
+    ghc-options:
+      -fllvm -pgmP clang -pgmc clang -pgma clang -pgmlc llc -pgmlo opt
+      -optlc-O3 -optlc-mcpu=native -optlo-O3 -optlo-mcpu=native
+      -fuse-ld=lld
+
+    ld-options:  -fuse-ld=lld -flto -O3
 
 common debug
-    if flag(profiling){
-        ghc-options: -prof -fprof-auto -fprof-cafs -rtsopts
-    }
-    if flag(debug){
-        ghc-options: -O0 -g
-    }
+  if flag(profiling)
+    ghc-options: -prof -fprof-auto -fprof-cafs -rtsopts
+
+  if flag(debug)
+    ghc-options: -O0 -g
 
 common liquid
-    if impl(ghc == 9.2.5){
-        ghc-options: -fplugin=LiquidHaskell
-        build-depends: liquidhaskell == 0.9.2.5.0
-    }
+  if impl(ghc ==9.2.5)
+    ghc-options:   -fplugin=LiquidHaskell
+    build-depends: liquidhaskell ==0.9.2.5.0
 
 common prelude
-    build-depends:    universum >= 1.8.2 && < 1.9
-                      , linear-base >= 0.4.0 && < 0.5
-                      , base
-    default-extensions: OverloadedStrings
-                        , LinearTypes
-    mixins:           universum (Universum as Prelude, Universum.Base as Base)
-                      , linear-base 
-                      , base hiding (Prelude)
-    
+  build-depends:
+    , base
+    , linear-base  >=0.4.0 && <0.5
+    , universum    >=1.8.2 && <1.9
+
+  default-extensions:
+    LinearTypes
+    OverloadedStrings
+
+  mixins:
+    universum (Universum as Prelude, Universum.Base as Base),
+    linear-base,
+    base hiding (Prelude)
 
 library utils
-    import:  warnings, optimizations
-    import:  debug
-    import: stan
-    import: liquid
-    import: prelude
-    exposed-modules: Bitboard, Random
-    hs-source-dirs:   src/utils
-    build-depends: random
+  import:           warnings, optimizations
+  import:           debug
+  import:           stan
+  import:           liquid
+  import:           prelude
+  exposed-modules:
+    Bitboard
+    Random
 
-    -- Modules included in this library.
-    -- other-modules:
+  hs-source-dirs:   src/utils
+  build-depends:    random
 
-    -- LANGUAGE extensions used by modules in this package.
-    -- other-extensions:
+  -- Modules included in this library.
+  -- other-modules:
 
-    -- Other library packages from which modules are imported.
-    
-    default-language: GHC2021
-    
+  -- LANGUAGE extensions used by modules in this package.
+  -- other-extensions:
+
+  -- Other library packages from which modules are imported.
+
+  default-language: GHC2021
 
 library magicBitboards
-    import:  warnings, optimizations
-    import:  debug
-    import: stan
-    import: liquid
-    import: prelude
-    exposed-modules: Pawns
-    hs-source-dirs:   src/magicBitboards
-    visibility: public
+  import:           warnings, optimizations
+  import:           debug
+  import:           stan
+  import:           liquid
+  import:           prelude
+  exposed-modules:  Pawns
+  hs-source-dirs:   src/magicBitboards
+  visibility:       public
 
-    -- Modules included in this library.
-    -- other-modules:
+  -- Modules included in this library.
+  -- other-modules:
 
-    -- LANGUAGE extensions used by modules in this package.
-    -- other-extensions:
+  -- LANGUAGE extensions used by modules in this package.
+  -- other-extensions:
 
-    -- Other library packages from which modules are imported.
-    build-depends:    Chimera:utils
-                      , universum
+  -- Other library packages from which modules are imported.
+  build-depends:
+    , Chimera:utils
+    , universum
 
-
-    default-language: GHC2021
+  default-language: GHC2021
 
 executable Chimera
-    import:  warnings, optimizations
-    import:  debug
-    import: stan
-    import: liquid
-    import: prelude
-    ghc-options: -rtsopts -with-rtsopts=-N
+  import:           warnings, optimizations
+  import:           debug
+  import:           stan
+  import:           liquid
+  import:           prelude
+  ghc-options:      -rtsopts -with-rtsopts=-N
 
-    -- .hs or .lhs file containing the Main module.
-    main-is:          Main.hs
+  -- .hs or .lhs file containing the Main module.
+  main-is:          Main.hs
 
-    -- Modules included in this executable, other than Main.
-    -- other-modules:
+  -- Modules included in this executable, other than Main.
+  -- other-modules:
 
-    -- LANGUAGE extensions used by modules in this package.
-    -- other-extensions:
+  -- LANGUAGE extensions used by modules in this package.
+  -- other-extensions:
 
-    -- Other library packages from which modules are imported.
-    build-depends:    Chimera:utils
-                        , text 
+  -- Other library packages from which modules are imported.
+  build-depends:
+    , Chimera:utils
+    , text
 
-    -- Directories containing source files.
-    hs-source-dirs:   app
+  -- Directories containing source files.
+  hs-source-dirs:   app
 
-    -- Base language which the package is written in.
-    default-language: GHC2021
+  -- Base language which the package is written in.
+  default-language: GHC2021
 
 test-suite chimera-test
-    import:  warnings
-    import:  debug
-    import: stan
-    import: prelude
-    type:       exitcode-stdio-1.0
-    
-    ghc-options: -threaded -rtsopts -with-rtsopts=-N -O0
+  import:           warnings
+  import:           debug
+  import:           stan
+  import:           prelude
+  import:           liquid
+  type:             exitcode-stdio-1.0
+  ghc-options:      -threaded -rtsopts -with-rtsopts=-N -O0
 
-    -- .hs or .lhs file containing the Main module.
-    main-is:          Test.hs
+  -- .hs or .lhs file containing the Main module.
+  main-is:          Test.hs
 
-    -- Modules included in this executable, other than Main.
-    other-modules: BitboardTest
+  -- Modules included in this executable, other than Main.
+  other-modules:    BitboardTest
 
-    -- LANGUAGE extensions used by modules in this package.
-    -- other-extensions:
+  -- LANGUAGE extensions used by modules in this package.
+  -- other-extensions:
 
-    -- Other library packages from which modules are imported.
-    build-depends:    Chimera:utils
-                        , tasty
-                        , tasty-hunit
-                        , tasty-quickcheck
-                        , tasty-rerun
-                        , falsify
-                        , tasty-inspection-testing
-                        , tasty-ant-xml
+  -- Other library packages from which modules are imported.
+  build-depends:
+    , Chimera:utils
+    , falsify
+    , tasty
+    , tasty-ant-xml
+    , tasty-hunit
+    , tasty-inspection-testing
+    , tasty-quickcheck
+    , tasty-rerun
 
-    -- Directories containing source files.
-    hs-source-dirs:   test
+  -- Directories containing source files.
+  hs-source-dirs:   test
 
-    -- Base language which the package is written in.
-    default-language: GHC2021
-
+  -- Base language which the package is written in.
+  default-language: GHC2021
 
 benchmark chimera-benchmark
-    import:  warnings, optimizations
-    import:  debug
-    import: stan
-    import: prelude
-    type:       exitcode-stdio-1.0
-    hs-source-dirs:   bench
-    main-is:          Bench.hs
-    build-depends:    base
-                      , criterion
-    default-language: GHC2021
+  import:           warnings, optimizations
+  import:           debug
+  import:           stan
+  import:           prelude
+  import:           liquid
+  type:             exitcode-stdio-1.0
+  hs-source-dirs:   bench
+  main-is:          Bench.hs
+  build-depends:
+    , Chimera:utils
+    , criterion
+
+  default-language: GHC2021
