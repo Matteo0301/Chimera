@@ -21,6 +21,7 @@ module Bitboard
     , unsetSquare
     , getPopulation
     , emptyBoard
+    , initialBoard
     ) where
 
 import Control.Exception
@@ -45,6 +46,9 @@ newtype Bitboard = Bitboard Word64
 
 emptyBoard :: Bitboard
 emptyBoard = Bitboard 0
+
+initialBoard :: Bitboard
+initialBoard = Bitboard 0xFFFF00000000FFFF
 
 {-|
     The 'Square' type represents the index of a square on the board.

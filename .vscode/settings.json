@@ -2,6 +2,7 @@
     "cSpell.words": [
         "Bitboard",
         "eriksik",
+        "foldl",
         "hediet",
         "HLINT",
         "jcanero",
@@ -14,6 +15,7 @@
         "Semigroup",
         "vadimcn",
         "visortelle",
+        "whnf",
         "xorshift"
     ]
 }
