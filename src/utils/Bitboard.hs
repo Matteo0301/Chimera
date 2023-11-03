@@ -24,6 +24,7 @@ module Bitboard
 
 import Control.Exception
 import Data.Bits (Bits (..))
+import System.Random
 
 {-@ LIQUID "--counter-examples" @-}
 {-@ LIQUID "--diff" @-}
@@ -160,17 +161,26 @@ unsetSquare (Bitboard bb) sq = Bitboard $ clearBit bb (fromEnum sq)
 bb <<>> i = setSquare bb i
 
 {-@ assume trySet :: Word64 -> Bitboard @-}
+{-# WARNING trySet "This function should be used only for testing" #-}
 
 {-|
     Returns the bitboard if the population is between 0 and 32, otherwise returns the empty bitboard. This should only be used in tests.
 -}
 trySet :: Word64 -> Bitboard
-trySet x =
+trySet x = Bitboard $ clearRandomBits x
+
+clearRandomBits :: Word64 -> Word64
+clearRandomBits x =
     let
-        bb = Bitboard x
-        pop = getPopulation bb
+        g = mkStdGen $ fromIntegral x
+        {-@ lazy clearRandomBits' @-}
+        clearRandomBits' 0 _ = 0
+        clearRandomBits' i x'
+            | i == 0 = 0
+            | popCount x' <= 32 = x'
+            | otherwise = clearRandomBits' (i - 1) $ clearBit x' (fst $ randomR (0, 63) g)
      in
-        if pop <= 32 then bb else Bitboard 1
+        clearRandomBits' (100 :: Int) x
 
 {-@ showBits :: Bitboard -> Text @-}
 
