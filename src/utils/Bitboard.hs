@@ -12,6 +12,7 @@ This module export the 'Bitboard' type and the functions to operate on its squar
 module Bitboard
     ( Bitboard
     , Square (..)
+    , Attack (..)
     , trySet
     , showBits
     , getSquare
@@ -40,7 +41,7 @@ import System.Random
     The bitboard is stored in little endian order, so the first 8 bits represent the first row of the board.
 -}
 newtype Bitboard = Bitboard Word64
-    deriving (Eq, Show)
+    deriving (Eq, Show, Bits)
 
 emptyBoard :: Bitboard
 emptyBoard = Bitboard 0
@@ -122,7 +123,7 @@ data Square
     Returns the number of squares occupied in the bitboard.
 -}
 getPopulation :: Bitboard -> Int
-getPopulation (Bitboard bb) = popCount bb
+getPopulation = popCount
 
 {-@ getSquare :: Bitboard -> Square -> Bool @-}
 
@@ -130,7 +131,7 @@ getPopulation (Bitboard bb) = popCount bb
     Returns whether the square is set in the bitboard
 -}
 getSquare :: Bitboard -> Square -> Bool
-getSquare (Bitboard bb) sq = testBit bb (fromEnum sq)
+getSquare bb sq = testBit bb (fromEnum sq)
 
 {-@ assume setSquare :: x:Bitboard -> Square -> {y:Bitboard | if getPopulation x == 32 then getPopulation y = 32 else getPopulation y = getPopulation x + 1} @-}
 
@@ -138,9 +139,9 @@ getSquare (Bitboard bb) sq = testBit bb (fromEnum sq)
     Sets the square in the bitboard. If the new bitboard has more that 32 squares occupied, returns the old one.
 -}
 setSquare :: Bitboard -> Square -> Bitboard
-setSquare (Bitboard bb) sq =
+setSquare bb sq =
     let
-        new = Bitboard $ setBit bb (fromEnum sq)
+        new = setBit bb (fromEnum sq)
      in
         assert (getPopulation new <= 32) new
 
@@ -150,7 +151,7 @@ setSquare (Bitboard bb) sq =
     Sets a certain square in the board as empty
 -}
 unsetSquare :: Bitboard -> Square -> Bitboard
-unsetSquare (Bitboard bb) sq = Bitboard $ clearBit bb (fromEnum sq)
+unsetSquare bb sq = clearBit bb (fromEnum sq)
 
 {-@ (<<>>) :: Bitboard -> Square -> Bitboard @-}
 
@@ -188,12 +189,12 @@ clearRandomBits x =
     Shows the bitboard in a square representation, along with its numeric value
 -}
 showBits :: Bitboard -> Text
-showBits (Bitboard bb) = showBits' 63
+showBits bb = showBits' 63
   where
     showBit :: Int -> Text
     showBit i =
         let
-            b = getSquare (Bitboard bb) (toEnum i)
+            b = getSquare bb (toEnum i)
          in
             if b then "# " else ". "
     line i = if i `mod` 8 == 0 then " " <> show (i `div` 8 + 1) <> "\n" else ""
@@ -202,3 +203,11 @@ showBits (Bitboard bb) = showBits' 63
         | i == 0 =
             showBit i <> line i <> "a b c d e f g h\n" <> "Value: " <> show bb <> "\n"
         | otherwise = showBit i <> line i <> showBits' (i - 1)
+
+{-|
+    Class for types that represent pieces on the board to calculate the attack squares.
+-}
+class Attack a where
+    -- |
+    --         Returns the squares attacked by the given piece on the board.
+    getAttacks :: Bitboard -> a -> Bitboard
