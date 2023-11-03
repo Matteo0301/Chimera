@@ -116,6 +116,10 @@ data Square
 
 {-@ assume getPopulation :: Bitboard -> {x:Int | x>=0 || x<=64} @-}
 {-@ measure getPopulation :: Bitboard -> Int @-}
+
+{-|
+    Returns the number of squares occupied in the bitboard.
+-}
 getPopulation :: Bitboard -> Int
 getPopulation (Bitboard bb) = popCount bb
 
