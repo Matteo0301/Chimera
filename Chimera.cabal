@@ -113,6 +113,8 @@ common prelude
   default-extensions:
     LinearTypes
     OverloadedStrings
+    DataKinds
+    TypeFamilies
 
   mixins:
     universum (Universum as Prelude, Universum.Base as Base),
@@ -126,8 +128,10 @@ library utils
   import:           liquid
   import:           prelude
   exposed-modules:
+    Common
     Bitboard
     Random
+    
 
   hs-source-dirs:   src/utils
   build-depends:    random

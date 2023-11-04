@@ -9,9 +9,10 @@ Portability : POSIX
 
 This module contains the representation of pawns using bitboards, with also the relevant attack tables.
 -}
-module Pawns (PawnBB (..), WhitePawnBB, BlackPawnBB) where
+module Pawns (PawnBB (..), WhitePawnBB (..), BlackPawnBB (..)) where
 
 import Bitboard
+import Common
 
 {-@ data PawnBB = PawnBB (bb :: {x:Bitboard | getPopulation x <= 8}) @-}
 
@@ -25,11 +26,17 @@ newtype PawnBB = PawnBB Bitboard
 {-|
     An alias for pawn bitboards with only white pawns. The first rank must not be occupied.
 -}
-type WhitePawnBB = PawnBB
+newtype WhitePawnBB = WhitePawnBB PawnBB
+
+instance HasSide WhitePawnBB where
+    getSide _ = White
 
 {-@ type BlackPawnBB = {x:PawnBB | not (getSquare bb A8) && not (getSquare bb B8) && not (getSquare bb C8) && not (getSquare bb D8) && not (getSquare bb E8) && not (getSquare bb F8) && not (getSquare bb G8) && not (getSquare bb H8)} @-}
 
 {-|
     An alias for pawn bitboards with only black pawns. The last rank must not be occupied.
 -}
-type BlackPawnBB = PawnBB
+newtype BlackPawnBB = BlackPawnBB PawnBB
+
+instance HasSide BlackPawnBB where
+    getSide _ = Black

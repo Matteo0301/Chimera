@@ -12,7 +12,6 @@ This module export the 'Bitboard' type and the functions to operate on its squar
 module Bitboard
     ( Bitboard
     , Square (..)
-    , Attack (..)
     , trySet
     , showBits
     , getSquare
@@ -26,6 +25,8 @@ module Bitboard
 
 import Control.Exception
 import Data.Bits (Bits (..))
+
+-- import Data.Bits_LHAssumptions
 import System.Random
 
 {-@ LIQUID "--counter-examples" @-}
@@ -120,8 +121,7 @@ data Square
     | A8
     deriving (Eq, Show, Enum)
 
--- {-@ assume getPopulation :: Bitboard -> Nat @-}
-{-@ measure getPopulation :: Bitboard -> {x:Int | x>=0 && x<=32} @-}
+{-@ measure getPopulation :: Bitboard -> Int @-}
 
 {-|
     Returns the number of squares occupied in the bitboard.
@@ -205,11 +205,3 @@ showBits bb = showBits' 63
         | i == 0 =
             showBit i <> line i <> "a b c d e f g h\n" <> "Value: " <> show bb <> "\n"
         | otherwise = showBit i <> line i <> showBits' (i - 1)
-
-{-|
-    Class for types that represent pieces on the board to calculate the attack squares.
--}
-class Attack a where
-    -- |
-    --         Returns the squares attacked by the given piece on the board.
-    getAttacks :: Bitboard -> a -> Bitboard
