@@ -1,10 +1,6 @@
-{-# LANGUAGE DataKinds #-}
-{-# LANGUAGE TypeFamilies #-}
-
 module Common
     ( SideToMove (..)
-    , HasSide (..)
-    , Attack (..)
+    , PieceBB (..)
     , AttackBB (..)
     ) where
 
@@ -15,20 +11,16 @@ import Bitboard
 -}
 data SideToMove = White | Black
 
-{-|
-    Class for types that represent the side to move.
--}
-class HasSide a where
-    -- |
-    --         Returns the side to move.
-    getSide :: a -> SideToMove
-
 -- \|
---    Class for types that represent pieces on the board to calculate the attack squares.
-class Attack a where
+--    Class that represent a bitboard for a specific type of piece.
+class PieceBB a where
     -- |
     --         Returns the squares attacked by the given piece on the board.
-    getAttacks :: Bitboard -> a -> SideToMove -> AttackBB
+    getAttacks :: Bitboard -> a -> AttackBB
+
+    -- |
+    --         Returns the side to move.
+    side :: SideToMove
 
 {-|
     Represents the squares attacked by a piece

@@ -115,6 +115,7 @@ common prelude
     OverloadedStrings
     DataKinds
     TypeFamilies
+    AllowAmbiguousTypes
 
   mixins:
     universum (Universum as Prelude, Universum.Base as Base),
