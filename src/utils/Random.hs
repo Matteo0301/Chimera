@@ -12,7 +12,6 @@ The implementation of a custom random number generator based on the xorshift32 a
 module Random (XORShift, mkRandom) where
 
 {-@ LIQUID "--counter-examples" @-}
-{-@ LIQUID "--diff" @-}
 
 import Data.Bits (Bits (..))
 import System.Random

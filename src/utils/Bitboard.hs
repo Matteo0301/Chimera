@@ -29,11 +29,11 @@ import Data.Bits (Bits (..))
 import System.Random
 
 {-@ LIQUID "--counter-examples" @-}
-{-@ LIQUID "--diff" @-}
 
 {-@ type Board = Word64 @-}
 
-{-@ using (Bitboard) as {x:Bitboard| getPopulation x <= 32} @-}
+-- {-@ assume popCount :: Word64 -> Nat @-}
+{-@ data Bitboard = Bitboard (bb::{x:Word64| getPopulation x <= 32}) @-}
 
 {-|
     The 'Bitboard' type is a newtype wrapper around 'Word64' that represents a bitboard.
@@ -42,7 +42,7 @@ import System.Random
     The bitboard is stored in little endian order, so the first 8 bits represent the first row of the board.
 -}
 newtype Bitboard = Bitboard Word64
-    deriving (Eq, Show, Bits)
+    deriving (Eq, Show)
 
 emptyBoard :: Bitboard
 emptyBoard = Bitboard 0
@@ -120,14 +120,14 @@ data Square
     | A8
     deriving (Eq, Show, Enum)
 
-{-@ assume getPopulation :: Bitboard -> {x:Int | x>=0 || x<=64} @-}
-{-@ measure getPopulation :: Bitboard -> Int @-}
+-- {-@ assume getPopulation :: Bitboard -> Nat @-}
+{-@ measure getPopulation :: Bitboard -> {x:Int | x>=0 && x<=32} @-}
 
 {-|
     Returns the number of squares occupied in the bitboard.
 -}
 getPopulation :: Bitboard -> Int
-getPopulation = popCount
+getPopulation (Bitboard bb) = popCount bb
 
 {-@ getSquare :: Bitboard -> Square -> Bool @-}
 
@@ -135,27 +135,27 @@ getPopulation = popCount
     Returns whether the square is set in the bitboard
 -}
 getSquare :: Bitboard -> Square -> Bool
-getSquare bb sq = testBit bb (fromEnum sq)
+getSquare (Bitboard bb) sq = testBit bb (fromEnum sq)
 
-{-@ assume setSquare :: x:Bitboard -> Square -> {y:Bitboard | if getPopulation x == 32 then getPopulation y = 32 else getPopulation y = getPopulation x + 1} @-}
+{-@ setSquare :: x:Bitboard -> Square -> {y:Bitboard | getPopulation x == 32 => getPopulation y = 32 && getPopulation x < 32 => getPopulation y = getPopulation x + 1} @-}
 
 {-|
     Sets the square in the bitboard. If the new bitboard has more that 32 squares occupied, returns the old one.
 -}
 setSquare :: Bitboard -> Square -> Bitboard
-setSquare bb sq =
+setSquare (Bitboard bb) sq =
     let
-        new = setBit bb (fromEnum sq)
+        new = Bitboard $ setBit bb (fromEnum sq)
      in
         assert (getPopulation new <= 32) new
 
-{-@ assume unsetSquare :: x:Bitboard -> Square -> {y:Bitboard | if getPopulation x == 0 then getPopulation y = 0 else getPopulation y = getPopulation x - 1} @-}
+{-@ assume unsetSquare :: x:Bitboard -> Square -> {y:Bitboard | getPopulation x == 0 => getPopulation y = 0 && getPopulation x <32 => getPopulation y = getPopulation x - 1} @-}
 
 {-|
     Sets a certain square in the board as empty
 -}
 unsetSquare :: Bitboard -> Square -> Bitboard
-unsetSquare bb sq = clearBit bb (fromEnum sq)
+unsetSquare (Bitboard bb) sq = Bitboard $ clearBit bb (fromEnum sq)
 
 {-@ (<<>>) :: Bitboard -> Square -> Bitboard @-}
 
@@ -165,7 +165,7 @@ unsetSquare bb sq = clearBit bb (fromEnum sq)
 (<<>>) :: Bitboard -> Square -> Bitboard
 bb <<>> i = setSquare bb i
 
-{-@ assume trySet :: Word64 -> Bitboard @-}
+{-@ trySet :: Word64 -> Bitboard @-}
 {-# WARNING trySet "This function should be used only for testing" #-}
 
 {-|
@@ -186,8 +186,6 @@ clearRandomBits x =
             | otherwise = clearRandomBits' (i - 1) $ clearBit x' (fst $ randomR (0, 63) g)
      in
         clearRandomBits' (100 :: Int) x
-
-{-@ showBits :: Bitboard -> Text @-}
 
 {-|
     Shows the bitboard in a square representation, along with its numeric value
