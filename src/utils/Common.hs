@@ -1,3 +1,14 @@
+{-|
+Module      : Common
+Description : Common utils
+Copyright   : (c) 2023 Matteo Mariotti
+License     : GNU GPL v.3
+Maintainer  : matteomariotti0301@gmail.com
+Stability   : experimental
+Portability : POSIX
+
+A collection of common utilities used in the project.
+-}
 module Common
     ( SideToMove (..)
     , PieceBB (..)

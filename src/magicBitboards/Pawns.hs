@@ -22,10 +22,10 @@ import Common
 -}
 newtype PawnBB (side :: SideToMove) = PawnBB Bitboard
 
-instance PieceBB (PawnBB White) where
-    getAttacks (PawnBB bb) = undefined
+instance PieceBB (PawnBB 'White) where
+    getAttacks = error "Not implemented"
     side = White
 
-instance PieceBB (PawnBB Black) where
-    getAttacks (PawnBB bb) = undefined
+instance PieceBB (PawnBB 'Black) where
+    getAttacks = error "Not implemented"
     side = Black
