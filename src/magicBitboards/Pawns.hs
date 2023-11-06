@@ -14,7 +14,7 @@ module Pawns (PawnBB (..)) where
 import Bitboard
 import Common
 
-{-@ data PawnBB a = PawnBB (bb :: {x:Bitboard | getPopulation x <= 8}) @-}
+{-@ data PawnBB a = PawnBB (bb :: {x:Bitboard | bbPop x <= 8}) @-}
 
 {-|
     The basic type for pawn bitboards. It is a wrapper around 'Bitboard' that represents a bitboard with at most 8 bits set.

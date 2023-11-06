@@ -38,8 +38,11 @@ import System.Random
 
 {-@ type Board = Word64 @-}
 
+{-@ measure bbPop :: Bitboard -> Pop @-}
+
 -- {-@ assume popCount :: Word64 -> Nat @-}
-{-@ data Bitboard = Bitboard (bb::{x:Word64| getPopulation x <= 32}) @-}
+{-@ data Bitboard = Bitboard (bb::Word64) @-}
+{-@ using (Bitboard) as ({x:Bitboard | bbPop x <= 32}) @-}
 
 {-|
     The 'Bitboard' type is a newtype wrapper around 'Word64' that represents a bitboard.
@@ -137,7 +140,7 @@ square2Index = toLinear fromEnum
 
 {-@ type Pop = {x:Int | x >= 0 && x<= 64} @-}
 {-@ type Index = {x:Int | x >= 0 && x<= 63} @-}
-{-@ measure getPopulation :: Bitboard -> Pop @-}
+{-@ assume getPopulation :: b:Bitboard -> {x:Pop | bbPop b = x} @-}
 
 {-|
     Returns the number of squares occupied in the bitboard.
@@ -161,7 +164,7 @@ getSquare (Bitboard bb) sq = testBit bb (square2Index sq)
 setSquare :: Bitboard %1 -> Square %1 -> Bitboard
 setSquare (Bitboard bb) sq = Bitboard $ setBit bb (square2Index sq)
 
-{-@ assume unsetSquare :: x:Bitboard -> Square -> {y:Bitboard | getPopulation x == 0 => getPopulation y = 0 && getPopulation x <32 => getPopulation y = getPopulation x - 1} @-}
+{-@ assume unsetSquare :: x:Bitboard -> Square -> {y:Bitboard | bbPop x == 0 => bbPop y = 0 && bbPop x < 32 => bbPop y = bbPop x - 1} @-}
 
 {-|
     Sets a certain square in the board as empty
