@@ -31,7 +31,7 @@ class PieceBB a where
 
     -- |
     --         Returns the side to move.
-    side :: SideToMove
+    side :: Proxy a -> SideToMove
 
 {-|
     Represents the squares attacked by a piece

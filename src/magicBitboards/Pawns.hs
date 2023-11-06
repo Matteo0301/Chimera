@@ -24,8 +24,8 @@ newtype PawnBB (side :: SideToMove) = PawnBB Bitboard
 
 instance PieceBB (PawnBB 'White) where
     getAttacks = error "Not implemented"
-    side = White
+    side _ = White
 
 instance PieceBB (PawnBB 'Black) where
     getAttacks = error "Not implemented"
-    side = Black
+    side _ = Black

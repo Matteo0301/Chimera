@@ -38,6 +38,9 @@ import System.Random
 
 {-@ type Board = Word64 @-}
 
+{-@ type Pop = {x:Int | x >= 0 && x<= 64} @-}
+{-@ type Index = {x:Int | x >= 0 && x<= 63} @-}
+
 {-@ measure bbPop :: Bitboard -> Pop @-}
 
 -- {-@ assume popCount :: Word64 -> Nat @-}
@@ -138,8 +141,6 @@ data Square
 square2Index :: Square %1 -> Int
 square2Index = toLinear fromEnum
 
-{-@ type Pop = {x:Int | x >= 0 && x<= 64} @-}
-{-@ type Index = {x:Int | x >= 0 && x<= 63} @-}
 {-@ assume getPopulation :: b:Bitboard -> {x:Pop | bbPop b = x} @-}
 
 {-|
