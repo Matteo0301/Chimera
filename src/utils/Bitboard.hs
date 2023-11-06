@@ -172,9 +172,9 @@ unsetSquare (Bitboard bb) sq = Bitboard $ clearBit bb (square2Index sq)
 {-@ (<<>>) :: Bitboard -> Square -> Bitboard @-}
 
 {-|
-    The operator version of 'setSquare'
+    The operator version of 'setSquare'. It doesn't have a linear type because it is meant to be used mainly for testing (so it's easier to use through folds and maps).
 -}
-(<<>>) :: Bitboard %1 -> Square %1 -> Bitboard
+(<<>>) :: Bitboard -> Square -> Bitboard
 bb <<>> i = setSquare bb i
 
 {-@ trySet :: Word64 -> Bitboard @-}
