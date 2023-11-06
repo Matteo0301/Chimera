@@ -21,10 +21,12 @@ module Bitboard
     , getPopulation
     , emptyBoard
     , initialBoard
+    , square2Index
     ) where
 
+import Bits
 import Control.Exception
-import Data.Bits (Bits (..))
+import Unsafe.Linear
 
 -- import Data.Bits_LHAssumptions
 import System.Random
@@ -42,7 +44,8 @@ import System.Random
     The least significant bit represents the square h1, the most significant bit represents the square a8.
     The bitboard is stored in little endian order, so the first 8 bits represent the first row of the board.
 -}
-newtype Bitboard = Bitboard Word64
+newtype Bitboard where
+    Bitboard :: Word64 %1 -> Bitboard
     deriving (Eq, Show)
 
 emptyBoard :: Bitboard
@@ -119,14 +122,24 @@ data Square
     | C8
     | B8
     | A8
-    deriving (Eq, Show, Enum)
+    deriving (Eq, Ord, Show, Enum)
 
-{-@ measure getPopulation :: Bitboard -> Int @-}
+{-|
+    Converts a square to its index in the bitboard.
+-}
+
+{-@ assume square2Index :: Square -> Index  @-}
+square2Index :: Square %1 -> Int
+square2Index = toLinear fromEnum
+
+{-@ type Pop = {x:Int | x >= 0 && x<= 64} @-}
+{-@ type Index = {x:Int | x >= 0 && x<= 63} @-}
+{-@ measure getPopulation :: Bitboard -> Pop @-}
 
 {-|
     Returns the number of squares occupied in the bitboard.
 -}
-getPopulation :: Bitboard -> Int
+getPopulation :: Bitboard %1 -> Int
 getPopulation (Bitboard bb) = popCount bb
 
 {-@ getSquare :: Bitboard -> Square -> Bool @-}
@@ -134,35 +147,36 @@ getPopulation (Bitboard bb) = popCount bb
 {-|
     Returns whether the square is set in the bitboard
 -}
-getSquare :: Bitboard -> Square -> Bool
-getSquare (Bitboard bb) sq = testBit bb (fromEnum sq)
+getSquare :: Bitboard %1 -> Square %1 -> Bool
+getSquare (Bitboard bb) sq = testBit bb (square2Index sq)
 
 {-@ setSquare :: x:Bitboard -> Square -> {y:Bitboard | getPopulation x == 32 => getPopulation y = 32 && getPopulation x < 32 => getPopulation y = getPopulation x + 1} @-}
 
 {-|
     Sets the square in the bitboard. If the new bitboard has more that 32 squares occupied, returns the old one.
 -}
-setSquare :: Bitboard -> Square -> Bitboard
-setSquare (Bitboard bb) sq =
-    let
-        new = Bitboard $ setBit bb (fromEnum sq)
-     in
-        assert (getPopulation new <= 32) new
+setSquare :: Bitboard %1 -> Square %1 -> Bitboard
+setSquare = toLinear2 setSquare'
+  where
+    new (Bitboard bb) sq = Bitboard $ setBit bb (square2Index sq)
+    setSquare' bb sq = assert (getPopulation (new bb sq) <= 32) (new bb sq)
 
 {-@ assume unsetSquare :: x:Bitboard -> Square -> {y:Bitboard | getPopulation x == 0 => getPopulation y = 0 && getPopulation x <32 => getPopulation y = getPopulation x - 1} @-}
 
 {-|
     Sets a certain square in the board as empty
 -}
-unsetSquare :: Bitboard -> Square -> Bitboard
-unsetSquare (Bitboard bb) sq = Bitboard $ clearBit bb (fromEnum sq)
+unsetSquare :: Bitboard %1 -> Square %1 -> Bitboard
+unsetSquare =
+    let unsetSquare' (Bitboard bb) sq = (Bitboard $ clearBit bb (square2Index sq))
+     in toLinear2 unsetSquare'
 
 {-@ (<<>>) :: Bitboard -> Square -> Bitboard @-}
 
 {-|
     The operator version of 'setSquare'
 -}
-(<<>>) :: Bitboard -> Square -> Bitboard
+(<<>>) :: Bitboard %1 -> Square %1 -> Bitboard
 bb <<>> i = setSquare bb i
 
 {-@ trySet :: Word64 -> Bitboard @-}
@@ -178,12 +192,15 @@ clearRandomBits :: Word64 -> Word64
 clearRandomBits x =
     let
         g = mkStdGen $ fromIntegral x
+        {-@ assume getRandom :: StdGen -> Index @-}
+        getRandom :: StdGen -> Int
+        getRandom g' = fst $ randomR (0, 63) g'
         {-@ lazy clearRandomBits' @-}
         clearRandomBits' 0 _ = 0
         clearRandomBits' i x'
             | i == 0 = 0
             | popCount x' <= 32 = x'
-            | otherwise = clearRandomBits' (i - 1) $ clearBit x' (fst $ randomR (0, 63) g)
+            | otherwise = clearRandomBits' (i - 1) $ clearBit x' (getRandom g)
      in
         clearRandomBits' (100 :: Int) x
 

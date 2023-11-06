@@ -132,6 +132,7 @@ library utils
     Common
     Bitboard
     Random
+    Bits
     
 
   hs-source-dirs:   src/utils
