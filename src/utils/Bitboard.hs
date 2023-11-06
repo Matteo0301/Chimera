@@ -1,3 +1,5 @@
+{-# LANGUAGE NoImplicitPrelude #-}
+
 {-|
 Module      : Bitboard
 Description : Module for bitboards representation and operations
@@ -25,8 +27,9 @@ module Bitboard
     ) where
 
 import Bits
-import Control.Exception
+import Prelude.Linear (($))
 import Unsafe.Linear
+import Prelude hiding (($))
 
 -- import Data.Bits_LHAssumptions
 import System.Random
@@ -150,16 +153,13 @@ getPopulation (Bitboard bb) = popCount bb
 getSquare :: Bitboard %1 -> Square %1 -> Bool
 getSquare (Bitboard bb) sq = testBit bb (square2Index sq)
 
-{-@ setSquare :: x:Bitboard -> Square -> {y:Bitboard | getPopulation x == 32 => getPopulation y = 32 && getPopulation x < 32 => getPopulation y = getPopulation x + 1} @-}
+-- {-@ setSquare :: x:Bitboard -> Square -> {y:Bitboard | getPopulation x == 32 => getPopulation y = 32 && getPopulation x < 32 => getPopulation y = getPopulation x + 1} @-}
 
 {-|
     Sets the square in the bitboard. If the new bitboard has more that 32 squares occupied, returns the old one.
 -}
 setSquare :: Bitboard %1 -> Square %1 -> Bitboard
-setSquare = toLinear2 setSquare'
-  where
-    new (Bitboard bb) sq = Bitboard $ setBit bb (square2Index sq)
-    setSquare' bb sq = assert (getPopulation (new bb sq) <= 32) (new bb sq)
+setSquare (Bitboard bb) sq = Bitboard $ setBit bb (square2Index sq)
 
 {-@ assume unsetSquare :: x:Bitboard -> Square -> {y:Bitboard | getPopulation x == 0 => getPopulation y = 0 && getPopulation x <32 => getPopulation y = getPopulation x - 1} @-}
 
@@ -167,9 +167,7 @@ setSquare = toLinear2 setSquare'
     Sets a certain square in the board as empty
 -}
 unsetSquare :: Bitboard %1 -> Square %1 -> Bitboard
-unsetSquare =
-    let unsetSquare' (Bitboard bb) sq = (Bitboard $ clearBit bb (square2Index sq))
-     in toLinear2 unsetSquare'
+unsetSquare (Bitboard bb) sq = Bitboard $ clearBit bb (square2Index sq)
 
 {-@ (<<>>) :: Bitboard -> Square -> Bitboard @-}
 
