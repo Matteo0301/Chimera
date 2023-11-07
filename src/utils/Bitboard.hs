@@ -14,6 +14,8 @@ This module export the 'Bitboard' type and the functions to operate on its squar
 module Bitboard
     ( Bitboard
     , Square (..)
+    , File (..)
+    , Rank (..)
     , trySet
     , showBits
     , getSquare
@@ -24,6 +26,11 @@ module Bitboard
     , emptyBoard
     , initialBoard
     , square2Index
+    , bb2Word
+    , maskFile
+    , maskRank
+    , file2Word
+    , rank2Word
     ) where
 
 import Bits
@@ -134,12 +141,49 @@ data Square
     deriving (Eq, Ord, Show, Enum)
 
 {-|
+    Represents the file of a square on the board.
+-}
+data File = FA | FB | FC | FD | FE | FF | FG | FH deriving (Eq, Ord, Show, Enum)
+
+{-|
+    Represents the rank of a square on the board.
+-}
+data Rank = R1 | R2 | R3 | R4 | R5 | R6 | R7 | R8 deriving (Eq, Ord, Show, Enum)
+
+{-|
+    Returns the pieces on the given file of the board.
+-}
+maskFile :: File -> Word64 -> Word64
+maskFile file bb = bb .&. (0x8080808080808080 `shiftR` fromEnum file)
+
+{-|
+    Converts a file to its corresponding bits on the board.
+-}
+file2Word :: File -> Word64
+file2Word file = 0x8080808080808080 `shiftR` fromEnum file
+
+{-|
+    Returns the pieces on the given rank of the board.
+-}
+maskRank :: Rank -> Word64 -> Word64
+maskRank rank bb = bb .&. (0xFF `shiftL` (8 * fromEnum rank))
+
+{-|
+    Converts a rank to its corresponding bits on the board.
+-}
+rank2Word :: Rank -> Word64
+rank2Word rank = 0xFF `shiftL` (8 * fromEnum rank)
+
+{-|
     Converts a square to its index in the bitboard.
 -}
 
 {-@ assume square2Index :: Square -> Index  @-}
 square2Index :: Square %1 -> Int
 square2Index = toLinear fromEnum
+
+bb2Word :: Bitboard %1 -> Word64
+bb2Word (Bitboard bb) = bb
 
 {-@ assume getPopulation :: b:Bitboard -> {x:Pop | bbPop b = x} @-}
 
@@ -209,13 +253,13 @@ clearRandomBits x =
 {-|
     Shows the bitboard in a square representation, along with its numeric value
 -}
-showBits :: Bitboard -> Text
+showBits :: Word64 -> Text
 showBits bb = showBits' 63
   where
     showBit :: Int -> Text
     showBit i =
         let
-            b = getSquare bb (toEnum i)
+            b = testBit bb i
          in
             if b then "# " else ". "
     line i = if i `mod` 8 == 0 then " " <> show (i `div` 8 + 1) <> "\n" else ""

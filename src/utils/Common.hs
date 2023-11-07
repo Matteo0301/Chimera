@@ -13,6 +13,7 @@ module Common
     ( SideToMove (..)
     , PieceBB (..)
     , AttackBB (..)
+    , GetSide (..)
     ) where
 
 import Bitboard
@@ -29,11 +30,16 @@ class PieceBB a where
     --         Returns the squares attacked by the given piece on the board.
     getAttacks :: Bitboard -> a -> AttackBB
 
-    -- |
-    --         Returns the side to move.
-    side :: Proxy a -> SideToMove
-
 {-|
     Represents the squares attacked by a piece
 -}
-newtype AttackBB = AttackBB Word64
+newtype AttackBB = AttackBB Word64 deriving (Eq, Show)
+
+class GetSide (a :: SideToMove) where
+    getSide :: Proxy a -> SideToMove
+
+instance GetSide 'White where
+    getSide _ = White
+
+instance GetSide 'Black where
+    getSide _ = Black
