@@ -34,9 +34,9 @@ module Bitboard
     ) where
 
 import Bits
-import Prelude.Linear (($))
+import Prelude.Linear (($), (*))
 import Unsafe.Linear
-import Prelude hiding (($))
+import Prelude hiding (($), (*))
 
 -- import Data.Bits_LHAssumptions
 import System.Random
@@ -165,14 +165,14 @@ file2Word file = 0x8080808080808080 `shiftR` fromEnum file
 {-|
     Returns the pieces on the given rank of the board.
 -}
-maskRank :: Rank -> Word64 -> Word64
-maskRank rank bb = bb .&. (0xFF `shiftL` (8 * fromEnum rank))
+maskRank :: Rank -> Word64 %1 -> Word64
+maskRank rank bb = bb .&. (0xFF `shiftL` (8 * toLinear fromEnum rank))
 
 {-|
     Converts a rank to its corresponding bits on the board.
 -}
-rank2Word :: Rank -> Word64
-rank2Word rank = 0xFF `shiftL` (8 * fromEnum rank)
+rank2Word :: Rank %1 -> Word64
+rank2Word rank = 0xFF `shiftL` (8 * toLinear fromEnum rank)
 
 {-|
     Converts a square to its index in the bitboard.
@@ -182,6 +182,9 @@ rank2Word rank = 0xFF `shiftL` (8 * fromEnum rank)
 square2Index :: Square %1 -> Int
 square2Index = toLinear fromEnum
 
+{-|
+    Converts a bitboard to its underlying 'Word64' representation.
+-}
 bb2Word :: Bitboard %1 -> Word64
 bb2Word (Bitboard bb) = bb
 

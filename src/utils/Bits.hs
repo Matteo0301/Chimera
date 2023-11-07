@@ -1,3 +1,14 @@
+{-|
+Module      : Bits
+Description : !!! INSERT MODULE SHORT DESCRIPTION !!!
+Copyright   : (c) 2023 Matteo Mariotti
+License     : GNU GPL v.3
+Maintainer  : matteomariotti0301@gmail.com
+Stability   : experimental
+Portability : POSIX
+
+!!! INSERT MODULE LONG DESCRIPTION !!!
+-}
 module Bits where
 
 import Data.Bits
@@ -42,7 +53,7 @@ testBit = toLinear2 Data.Bits.testBit
     Linear version of 'Data.Bits.xor'.
 -}
 xor :: (FiniteBits a, Movable a) => a %1 -> a %1 -> a
-xor = toLinear2 Data.Bits.xor
+xor = toLinear2 Prelude.xor
 
 {-|
     Linear version of 'Data.Bits.shiftL'.
