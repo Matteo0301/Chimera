@@ -111,11 +111,11 @@ common prelude
     , universum    >=1.8.2 && <1.9
 
   default-extensions:
+    AllowAmbiguousTypes
+    DataKinds
     LinearTypes
     OverloadedStrings
-    DataKinds
     TypeFamilies
-    AllowAmbiguousTypes
 
   mixins:
     universum (Universum as Prelude, Universum.Base as Base),
@@ -129,11 +129,10 @@ library utils
   import:           liquid
   import:           prelude
   exposed-modules:
-    Common
     Bitboard
-    Random
     Bits
-    
+    Common
+    Random
 
   hs-source-dirs:   src/utils
   build-depends:    random
@@ -142,7 +141,7 @@ library utils
   -- other-modules:
 
   -- LANGUAGE extensions used by modules in this package.
-  -- other-extensions:
+  other-extensions: NoImplicitPrelude
 
   -- Other library packages from which modules are imported.
 
@@ -162,7 +161,9 @@ library magicBitboards
   -- other-modules:
 
   -- LANGUAGE extensions used by modules in this package.
-  -- other-extensions:
+  other-extensions:
+    NoImplicitPrelude
+    ScopedTypeVariables
 
   -- Other library packages from which modules are imported.
   build-depends:
@@ -212,7 +213,9 @@ test-suite chimera-test
   main-is:          Test.hs
 
   -- Modules included in this executable, other than Main.
-  other-modules:    BitboardTest
+  other-modules:
+    BitboardTest
+    Spec
 
   -- LANGUAGE extensions used by modules in this package.
   -- other-extensions:
@@ -221,6 +224,7 @@ test-suite chimera-test
   build-depends:
     , Chimera:utils
     , falsify
+    , quickspec
     , tasty
     , tasty-ant-xml
     , tasty-hunit
@@ -243,10 +247,11 @@ benchmark chimera-benchmark
   type:             exitcode-stdio-1.0
   hs-source-dirs:   bench
   main-is:          Bench.hs
+
   -- Modules included in this executable, other than Main.
   other-modules:    BitboardBench
   build-depends:
     , Chimera:utils
-    , criterion
+    , tasty-bench
 
   default-language: GHC2021

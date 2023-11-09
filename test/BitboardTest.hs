@@ -34,7 +34,7 @@ set_get_bit :: TestTree
 set_get_bit =
     testGroup
         "Set/unset squares"
-        [ QC.testProperty "set . get" $
+        [ QC.testProperty "get . set" $
             \x -> getSquare (setSquare emptyBoard x) x,
           QC.testProperty "unset . set" $
             \x -> unsetSquare (setSquare emptyBoard x) x == emptyBoard,

@@ -4,8 +4,8 @@
 module BitboardBench (bitboard_benches) where
 
 import Bitboard
-import Criterion.Main
 import Prelude.Linear (forget)
+import Test.Tasty.Bench
 
 bitboard_benches :: Benchmark
 bitboard_benches =

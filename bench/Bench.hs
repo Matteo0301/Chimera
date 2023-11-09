@@ -10,7 +10,7 @@
 -- !!! INSERT MODULE LONG DESCRIPTION !!!
 
 import BitboardBench
-import Criterion.Main (defaultMain)
+import Test.Tasty.Bench
 
 -- Our benchmark harness.
 main :: IO ()
