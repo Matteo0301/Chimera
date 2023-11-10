@@ -13,6 +13,7 @@
         "olean",
         "POSIX",
         "Semigroup",
+        "Universum",
         "vadimcn",
         "visortelle",
         "whnf",

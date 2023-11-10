@@ -1,5 +1,3 @@
-{-# LANGUAGE NoImplicitPrelude #-}
-
 {-|
 Module      : Bitboard
 Description : Module for bitboards representation and operations
@@ -34,9 +32,7 @@ module Bitboard
     ) where
 
 import Bits
-import Prelude.Linear (($), (*))
 import Unsafe.Linear
-import Prelude hiding (($), (*))
 
 -- import Data.Bits_LHAssumptions
 import System.Random
@@ -64,9 +60,15 @@ newtype Bitboard where
     Bitboard :: Word64 %1 -> Bitboard
     deriving (Eq, Show)
 
+{-|
+    Represents the empty board.
+-}
 emptyBoard :: Bitboard
 emptyBoard = Bitboard 0
 
+{-|
+    Represents the starting position.
+-}
 initialBoard :: Bitboard
 initialBoard = Bitboard 0xFFFF00000000FFFF
 
@@ -171,7 +173,7 @@ maskRank rank bb = bb .&. (0xFF `shiftL` (8 * toLinear fromEnum rank))
 {-|
     Converts a rank to its corresponding bits on the board.
 -}
-rank2Word :: Rank %1 -> Word64
+rank2Word :: Rank -> Word64
 rank2Word rank = 0xFF `shiftL` (8 * toLinear fromEnum rank)
 
 {-|
@@ -265,6 +267,7 @@ showBits bb = showBits' 63
             b = testBit bb i
          in
             if b then "# " else ". "
+    line :: Int -> Text
     line i = if i `mod` 8 == 0 then " " <> show (i `div` 8 + 1) <> "\n" else ""
     showBits' i
         | i < 0 || i >= 64 = ""

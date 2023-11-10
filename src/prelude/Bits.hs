@@ -12,7 +12,7 @@ Portability : POSIX
 module Bits where
 
 import Data.Bits
-import Prelude.Linear
+import Universum qualified as U
 import Unsafe.Linear
 
 {-@ embed Int * as int @-}
@@ -53,7 +53,7 @@ testBit = toLinear2 Data.Bits.testBit
     Linear version of 'Data.Bits.xor'.
 -}
 xor :: (FiniteBits a, Movable a) => a %1 -> a %1 -> a
-xor = toLinear2 Prelude.xor
+xor = toLinear2 U.xor
 
 {-|
     Linear version of 'Data.Bits.shiftL'.

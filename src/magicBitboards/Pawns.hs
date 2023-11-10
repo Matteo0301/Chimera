@@ -1,6 +1,3 @@
-{-# LANGUAGE ScopedTypeVariables #-}
-{-# LANGUAGE NoImplicitPrelude #-}
-
 {-|
 Module      : Pawns
 Description : Pawn representation using bitboards
@@ -12,10 +9,7 @@ Portability : POSIX
 
 This module contains the representation of pawns using bitboards, with also the relevant attack tables.
 -}
-module Pawns (PawnBB (..)) where
-
-import Prelude.Linear (($))
-import Prelude hiding (($))
+module Pawns (PawnBB (..), showAttacks) where
 
 import Bitboard
 import Bits

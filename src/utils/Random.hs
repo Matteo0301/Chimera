@@ -13,27 +13,33 @@ module Random (XORShift, mkRandom) where
 
 {-@ LIQUID "--counter-examples" @-}
 
-import Data.Bits (Bits (..))
+import Bits
 import System.Random
 
+{-|
+    The representation of the algorithm used for random number generation.
+-}
 newtype XORShift = Random Word32
+
+{-|
+    Creates a random generator using the parameter as seed.
+-}
 
 {-@ mkRandom :: Word32 -> XORShift @-}
 mkRandom :: Word32 -> XORShift
 mkRandom = Random
 
-xorshift32 :: Word32 -> Word32
-xorshift32 x =
-    let
-        a = x `xor` (x `shiftL` 13)
-        b = a `xor` (a `shiftR` 17)
-        c = b `xor` (b `shiftL` 5)
-     in
-        c
-
 {-@ getRandom :: XORShift -> (Word32, XORShift) @-}
 getRandom :: XORShift -> (Word32, XORShift)
 getRandom (Random s) = (s, Random $ xorshift32 s)
+  where
+    xorshift32 x =
+        let
+            a = x `xor` (x `shiftL` 13)
+            b = a `xor` (a `shiftR` 17)
+            c = b `xor` (b `shiftL` 5)
+         in
+            c
 
 instance RandomGen XORShift where
     {-@ lazy genWord32 @-}
