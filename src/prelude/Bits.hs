@@ -90,3 +90,9 @@ clearBit = toLinear2 Data.Bits.clearBit
 {-@ assume complement :: x:a -> {y:a | pop y = 64 - pop x } @-}
 complement :: (FiniteBits a, Movable a) => a %1 -> a
 complement = toLinear Data.Bits.complement
+
+{-|
+    Gets the last bit set to 1 or returns 0 instead.
+-}
+lastBit :: (FiniteBits a, Movable a) => a -> a
+lastBit x = x Bits..&. (Bits.complement x)

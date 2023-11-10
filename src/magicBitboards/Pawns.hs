@@ -9,11 +9,13 @@ Portability : POSIX
 
 This module contains the representation of pawns using bitboards, with also the relevant attack tables.
 -}
-module Pawns (PawnBB (..), showAttacks) where
+module Pawns (PawnBB (..), showAttacks, getAttacks) where
 
 import Bitboard
 import Bits
 import Common
+import Data.Array.Destination
+import Data.Vector
 
 {- {-@ type Pop = {x:Int | x >= 0 && x<= 64} @-}
 {-@ type Index = {x:Int | x >= 0 && x<= 63} @-}
@@ -26,11 +28,10 @@ import Common
 -}
 newtype PawnBB (side :: SideToMove) = PawnBB Bitboard deriving (Eq, Show)
 
-instance PieceBB (PawnBB 'White) where
-    getAttacks = error "Not implemented"
-
-instance PieceBB (PawnBB 'Black) where
-    getAttacks = error "Not implemented"
+getAttacks :: forall a. (GetSide a) => Proxy a -> Square -> AttackBB
+getAttacks _ s = case getSide (Proxy :: Proxy a) of
+    White -> tableWhite ! (square2Index s)
+    Black -> tableBlack ! (square2Index s)
 
 maskPawnAttack :: forall a. (GetSide a) => PawnBB a -> AttackBB
 maskPawnAttack (PawnBB bb) =
@@ -44,6 +45,22 @@ maskPawnAttack (PawnBB bb) =
             Black -> not_h_file (initial `shiftR` 7) .|. not_a_file (initial `shiftR` 9)
      in
         attacks
+
+tableWhite :: Vector (AttackBB)
+tableWhite = alloc 64 $ \newArr -> fromFunction fillFunction newArr
+  where
+    fillFunction :: Int -> AttackBB
+    fillFunction i
+        | i < 0 || i >= 64 = AttackBB 0
+        | otherwise = maskPawnAttack @'White (PawnBB (emptyBoard <<>> (toEnum i)))
+
+tableBlack :: Vector (AttackBB)
+tableBlack = alloc 64 $ \newArr -> fromFunction fillFunction newArr
+  where
+    fillFunction :: Int -> AttackBB
+    fillFunction i
+        | i < 0 || i >= 64 = AttackBB 0
+        | otherwise = maskPawnAttack @'Black (PawnBB (emptyBoard <<>> (toEnum i)))
 
 showAttacks :: AttackBB -> Text
 showAttacks (AttackBB bb) = showBits bb

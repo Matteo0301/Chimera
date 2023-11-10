@@ -11,7 +11,6 @@ A collection of common utilities used in the project.
 -}
 module Common
     ( SideToMove (..)
-    , PieceBB (..)
     , AttackBB (..)
     , GetSide (..)
     ) where
@@ -23,18 +22,14 @@ import Bitboard
 -}
 data SideToMove = White | Black
 
--- \|
---    Class that represent a bitboard for a specific type of piece.
-class PieceBB a where
-    -- |
-    --         Returns the squares attacked by the given piece on the board.
-    getAttacks :: Bitboard -> a -> AttackBB
-
 {-|
     Represents the squares attacked by a piece
 -}
 newtype AttackBB = AttackBB Word64 deriving (Eq, Show)
 
+{-|
+    Class to extract the value of the side to move from the corresponding type.
+-}
 class GetSide (a :: SideToMove) where
     getSide :: Proxy a -> SideToMove
 

@@ -128,7 +128,10 @@ library prelude
     Bits
     Prelude
 
-  reexported-modules: Unsafe.Linear
+  reexported-modules:
+    Unsafe.Linear
+    , Data.Array.Destination
+
   build-depends:
     , base
     , linear-base  >=0.4.0 && <0.5
@@ -161,6 +164,8 @@ library magicBitboards
   exposed-modules: Pawns
   hs-source-dirs:  src/magicBitboards
   visibility:      public
+
+  build-depends:   vector
 
   -- Other library packages from which modules are imported.
   build-depends:   Chimera:{prelude, utils}
