@@ -125,10 +125,10 @@ library prelude
   import:             extensions
   hs-source-dirs:     src/prelude
   exposed-modules:
-    Bits
-    Prelude
     Bitboard
+    Bits
     Common
+    Prelude
     Random
 
   reexported-modules:
@@ -138,11 +138,10 @@ library prelude
   build-depends:
     , base
     , linear-base  >=0.4.0 && <0.5
-    , universum    >=1.8.2 && <1.9
     , random
+    , universum    >=1.8.2 && <1.9
 
   mixins:             base hiding (Prelude)
-
 
 library magicBitboards
   import:          warnings, optimizations
@@ -153,7 +152,6 @@ library magicBitboards
   exposed-modules: Pawns
   hs-source-dirs:  src/magicBitboards
   visibility:      public
-
   build-depends:   vector
 
   -- Other library packages from which modules are imported.
@@ -173,7 +171,7 @@ executable Chimera
 
   hs-source-dirs: app
 
-test-suite chimera-test
+test-suite test
   import:         warnings
   import:         debug
   import:         stan
@@ -199,7 +197,7 @@ test-suite chimera-test
 
   hs-source-dirs: test
 
-benchmark chimera-benchmark
+benchmark benchmark
   import:           warnings, optimizations
   import:           debug
   import:           stan
