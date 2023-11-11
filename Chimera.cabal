@@ -127,6 +127,9 @@ library prelude
   exposed-modules:
     Bits
     Prelude
+    Bitboard
+    Common
+    Random
 
   reexported-modules:
     Unsafe.Linear
@@ -136,24 +139,10 @@ library prelude
     , base
     , linear-base  >=0.4.0 && <0.5
     , universum    >=1.8.2 && <1.9
+    , random
 
   mixins:             base hiding (Prelude)
 
-library utils
-  import:          warnings, optimizations
-  import:          debug
-  import:          stan
-  import:          liquid
-  import:          extensions
-  exposed-modules:
-    Bitboard
-    Common
-    Random
-
-  hs-source-dirs:  src/utils
-  build-depends:
-    , Chimera:prelude
-    , random
 
 library magicBitboards
   import:          warnings, optimizations
@@ -168,7 +157,7 @@ library magicBitboards
   build-depends:   vector
 
   -- Other library packages from which modules are imported.
-  build-depends:   Chimera:{prelude, utils}
+  build-depends:   Chimera:prelude
 
 executable Chimera
   import:         warnings, optimizations
@@ -179,7 +168,7 @@ executable Chimera
   ghc-options:    -rtsopts -with-rtsopts=-N
   main-is:        Main.hs
   build-depends:
-    , Chimera:{prelude, utils}
+    , Chimera:prelude
     , text
 
   hs-source-dirs: app
@@ -198,7 +187,7 @@ test-suite chimera-test
     Spec
 
   build-depends:
-    , Chimera:{prelude, utils}
+    , Chimera:prelude
     , falsify
     , quickspec
     , tasty
@@ -221,7 +210,7 @@ benchmark chimera-benchmark
   main-is:          Bench.hs
   other-modules:    BitboardBench
   build-depends:
-    , Chimera:{prelude, utils}
+    , Chimera:prelude
     , tasty-bench
 
   default-language: GHC2021
