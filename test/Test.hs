@@ -9,6 +9,9 @@
 -- This is the module for the test suite of the project.
 
 import BitboardTest
+import PawnsTest
+import QuickSpec
+import Spec
 import Test.Tasty
 import Test.Tasty.Ingredients (composeReporters)
 import Test.Tasty.Ingredients.Basic
@@ -23,5 +26,9 @@ main =
         ]
         tests
 
+{- main :: IO ()
+main =
+    quickSpec sig -}
+
 tests :: TestTree
-tests = testGroup "Tests" [bb_tests]
+tests = testGroup "Tests" [bb_tests, pawns_tests]

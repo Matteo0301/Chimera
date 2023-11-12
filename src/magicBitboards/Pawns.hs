@@ -9,7 +9,7 @@ Portability : POSIX
 
 This module contains the representation of pawns using bitboards, with also the relevant attack tables.
 -}
-module Pawns (PawnBB (..), showAttacks, getAttacks) where
+module Pawns (PawnBB (..), showAttacks, getAttacks, tableWhite, tableBlack) where
 
 import Bitboard
 import Bits
@@ -28,10 +28,13 @@ import Data.Vector
 -}
 newtype PawnBB (side :: SideToMove) = PawnBB Bitboard deriving (Eq, Show)
 
+{-# INLINE getAttacks #-}
+{-# SPECIALIZE getAttacks :: Proxy 'White -> Square -> AttackBB #-}
+{-# SPECIALIZE getAttacks :: Proxy 'Black -> Square -> AttackBB #-}
 getAttacks :: forall a. (GetSide a) => Proxy a -> Square -> AttackBB
 getAttacks _ s = case getSide (Proxy :: Proxy a) of
-    White -> tableWhite ! (square2Index s)
-    Black -> tableBlack ! (square2Index s)
+    White -> tableWhite ! square2Index s
+    Black -> tableBlack ! square2Index s
 
 maskPawnAttack :: forall a. (GetSide a) => PawnBB a -> AttackBB
 maskPawnAttack (PawnBB bb) =
@@ -46,21 +49,21 @@ maskPawnAttack (PawnBB bb) =
      in
         attacks
 
-tableWhite :: Vector (AttackBB)
+tableWhite :: Vector AttackBB
 tableWhite = alloc 64 $ \newArr -> fromFunction fillFunction newArr
   where
     fillFunction :: Int -> AttackBB
     fillFunction i
         | i < 0 || i >= 64 = AttackBB 0
-        | otherwise = maskPawnAttack @'White (PawnBB (emptyBoard <<>> (toEnum i)))
+        | otherwise = maskPawnAttack @'White (PawnBB (emptyBoard <<>> toEnum i))
 
-tableBlack :: Vector (AttackBB)
+tableBlack :: Vector AttackBB
 tableBlack = alloc 64 $ \newArr -> fromFunction fillFunction newArr
   where
     fillFunction :: Int -> AttackBB
     fillFunction i
         | i < 0 || i >= 64 = AttackBB 0
-        | otherwise = maskPawnAttack @'Black (PawnBB (emptyBoard <<>> (toEnum i)))
+        | otherwise = maskPawnAttack @'Black (PawnBB (emptyBoard <<>> toEnum i))
 
 showAttacks :: AttackBB -> Text
 showAttacks (AttackBB bb) = showBits bb

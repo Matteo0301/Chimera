@@ -143,7 +143,7 @@ library prelude
 
   mixins:             base hiding (Prelude)
 
-library magicBitboards
+library magic-bitboards
   import:          warnings, optimizations
   import:          debug
   import:          stan
@@ -175,7 +175,7 @@ test-suite test
   import:         warnings
   import:         debug
   import:         stan
-  import:         liquid
+  --import:         liquid
   import:         extensions
   type:           exitcode-stdio-1.0
   ghc-options:    -threaded -rtsopts -with-rtsopts=-N -O0
@@ -183,9 +183,13 @@ test-suite test
   other-modules:
     BitboardTest
     Spec
+    PawnsTest
+    Types
 
   build-depends:
     , Chimera:prelude
+    , Chimera:magic-bitboards
+    , vector
     , falsify
     , quickspec
     , tasty
@@ -201,7 +205,7 @@ benchmark benchmark
   import:           warnings, optimizations
   import:           debug
   import:           stan
-  import:           liquid
+  --import:           liquid
   import:           extensions
   type:             exitcode-stdio-1.0
   hs-source-dirs:   bench
@@ -209,6 +213,7 @@ benchmark benchmark
   other-modules:    BitboardBench
   build-depends:
     , Chimera:prelude
+    , Chimera:magic-bitboards
     , tasty-bench
 
   default-language: GHC2021

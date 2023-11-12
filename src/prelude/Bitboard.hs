@@ -58,7 +58,7 @@ import System.Random
 -}
 newtype Bitboard where
     Bitboard :: Word64 %1 -> Bitboard
-    deriving (Eq, Show)
+    deriving (Eq, Show, Ord)
 
 {-|
     Represents the empty board.
