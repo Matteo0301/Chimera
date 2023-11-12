@@ -153,6 +153,11 @@ library magic-bitboards
   hs-source-dirs:  src/magicBitboards
   visibility:      public
   build-depends:   vector
+                   , template-haskell
+  
+  other-modules:
+    Pawns.Pawns
+    Pawns.PawnsTH
 
   -- Other library packages from which modules are imported.
   build-depends:   Chimera:prelude
