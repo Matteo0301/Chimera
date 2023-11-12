@@ -5,7 +5,6 @@ module Pawns.PawnsTH where
 import Bitboard
 import Common
 import Data.Vector
-import Language.Haskell.TH
 import Pawns.Pawns
 
 tableWhite :: Vector AttackBB
