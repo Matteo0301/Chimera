@@ -21,6 +21,7 @@ module Common
     , maskRank
     , rank2Word
     , square2Index
+    , Piece (..)
     ) where
 
 import Bits
@@ -164,3 +165,9 @@ instance GetSide 'White where
 
 instance GetSide 'Black where
     getSide _ = Black
+
+{-|
+    Class to extract the attacks of a piece from the corresponding type.
+-}
+class Piece a where
+    getAttacks :: Proxy a -> Square -> AttackBB

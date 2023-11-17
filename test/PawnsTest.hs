@@ -18,7 +18,7 @@ import Test.Tasty.QuickCheck as Qc
 import Types
 
 goal :: AttackBB
-goal = getAttacks (Proxy :: Proxy 'White) A1
+goal = getAttacks (Proxy :: Proxy (PawnBB 'White)) A1
 
 reference :: AttackBB
 reference = tableWhite ! square2Index A1
@@ -34,9 +34,9 @@ pawns_property =
     testGroup
         "Pawns property"
         [ Qc.testProperty "getAttacks" $
-            \s -> getAttacks (Proxy :: Proxy 'White) s == tableWhite ! square2Index s,
+            \s -> getAttacks (Proxy :: Proxy (PawnBB 'White)) s == tableWhite ! square2Index s,
           Qc.testProperty "attacks number" $
-            \s -> case getAttacks (Proxy :: Proxy 'White) s of
+            \s -> case getAttacks (Proxy :: Proxy (PawnBB 'White)) s of
                 AttackBB bb -> popCount bb <= 2
         ]
 
