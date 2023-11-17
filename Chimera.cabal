@@ -128,11 +128,12 @@ library prelude
     Bitboard
     Bits
     Common
-    Prelude
     Random
 
   reexported-modules:
-    Unsafe.Linear
+    Prelude
+    , Unsafe.Linear
+    , Prelude.Linear
     , Data.Array.Destination
 
   build-depends:
@@ -141,7 +142,7 @@ library prelude
     , random
     , universum    >=1.8.2 && <1.9
 
-  mixins:             base hiding (Prelude)
+  mixins:             base hiding (Prelude), universum (Universum as Prelude)
 
 library magic-bitboards
   import:          warnings, optimizations

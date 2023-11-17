@@ -1,3 +1,5 @@
+{-# LANGUAGE NoImplicitPrelude #-}
+
 {-|
 Module      : Random
 Description : Custom random number generator
@@ -14,7 +16,9 @@ module Random (XORShift, mkRandom) where
 {-@ LIQUID "--counter-examples" @-}
 
 import Bits
+import Prelude.Linear (($))
 import System.Random
+import Prelude hiding (xor, ($))
 
 {-|
     The representation of the algorithm used for random number generation.

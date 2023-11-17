@@ -1,3 +1,5 @@
+{-# LANGUAGE NoImplicitPrelude #-}
+
 {-|
 Module      : Pawns
 Description : Pawn representation using bitboards
@@ -16,6 +18,8 @@ import Bits
 import Common
 import Data.Array.Destination
 import Data.Vector
+import Prelude.Linear (($))
+import Prelude hiding (($))
 
 {-@ LIQUID "--no-termination" @-}
 

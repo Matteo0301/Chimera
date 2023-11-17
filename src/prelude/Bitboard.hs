@@ -1,3 +1,5 @@
+{-# LANGUAGE NoImplicitPrelude #-}
+
 {-|
 Module      : Bitboard
 Description : Module for bitboards representation and operations
@@ -37,7 +39,9 @@ import Unsafe.Linear
 -- import Data.Bits_LHAssumptions
 
 import Common
+import Prelude.Linear (($))
 import System.Random
+import Prelude hiding (($))
 
 {-@ LIQUID "--counter-examples" @-}
 
