@@ -1,0 +1,6 @@
+packages : Chimera.cabal
+tests : True
+benchmarks : True
+
+flags: +optimizations +stan
+optimization: 2

@@ -1,7 +1,7 @@
 {-# LANGUAGE NoImplicitPrelude #-}
 
 {-|
-Module      : Pawns
+Module      : Pawns.Pawns
 Description : Pawn representation using bitboards
 Copyright   : (c) 2023 Matteo Mariotti
 License     : GNU GPL v.3
@@ -11,7 +11,7 @@ Portability : POSIX
 
 This module contains the representation of pawns using bitboards, with also the relevant attack tables.
 -}
-module Pawns.Pawns (PawnBB (..), showAttacks, allocTable) where
+module Pawns.Internal (PawnBB (..), showAttacks, allocTable) where
 
 import Bitboard
 import Bits

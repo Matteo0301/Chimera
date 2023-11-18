@@ -157,7 +157,7 @@ library magic-bitboards
                    , template-haskell
   
   other-modules:
-    Pawns.Pawns
+    Pawns.Internal
     Pawns.PawnsTH
 
   -- Other library packages from which modules are imported.
@@ -204,6 +204,7 @@ test-suite test
     , tasty-inspection-testing
     , tasty-quickcheck
     , tasty-rerun
+    , tasty-expected-failure
 
   hs-source-dirs: test
 
