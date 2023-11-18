@@ -150,7 +150,7 @@ library magic-bitboards
   import:          stan
   import:          liquid
   import:          extensions
-  exposed-modules: Pawns, Knights
+  exposed-modules: Pawns, Knights, King
   hs-source-dirs:  src/magicBitboards
   visibility:      public
   build-depends:   vector
@@ -161,6 +161,8 @@ library magic-bitboards
     Pawns.PawnsTH
     Knights.Internal
     Knights.KnightsTH
+    King.Internal
+    King.KingTH
 
   -- Other library packages from which modules are imported.
   build-depends:   Chimera:prelude

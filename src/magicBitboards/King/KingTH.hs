@@ -2,27 +2,27 @@
 {-# OPTIONS_GHC -Wno-orphans #-}
 
 {-|
-Module      : Knights.KnightsTH
-Description : Template Haskell functions for Knights module
+Module      : King.KingTH
+Description : Template Haskell functions for King module
 Copyright   : (c) 2023 Matteo Mariotti
 License     : GNU GPL v.3
 Maintainer  : matteomariotti0301@gmail.com
 Stability   : experimental
 Portability : POSIX
 
-This module is a wrapper around Knights.Internal to provide Template Haskell functions.
+This module is a wrapper around King.Internal to provide Template Haskell functions.
 -}
-module Knights.KnightsTH where
+module King.KingTH where
 
 import Bitboard
-import Common (AttackBB, Piece (..))
+import Common
 import Data.Vector
-import Knights.Internal
+import King.Internal
 
 table :: Vector AttackBB
 table = $([|allocTable|])
 
-instance Piece KnightBB where
+instance Piece KingBB where
     {-# INLINE getAttacks #-}
-    getAttacks :: Proxy KnightBB -> Square -> AttackBB
+    getAttacks :: Proxy KingBB -> Square -> AttackBB
     getAttacks _ s = table ! square2Index s

@@ -1,7 +1,7 @@
 {-# LANGUAGE NoImplicitPrelude #-}
 
 {-|
-Module      : Pawns.Pawns
+Module      : Pawns.Internal
 Description : Pawn representation using bitboards
 Copyright   : (c) 2023 Matteo Mariotti
 License     : GNU GPL v.3
