@@ -1,3 +1,6 @@
+{-# LANGUAGE DataKinds #-}
+{-# LANGUAGE KindSignatures #-}
+
 {-|
 Module      : Common
 Description : Common utils

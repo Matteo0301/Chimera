@@ -1,3 +1,5 @@
+{-# OPTIONS_GHC -Wno-unused-imports #-}
+
 {-|
 Module      : King
 Description : Knight representation using bitboards
@@ -11,5 +13,6 @@ This module contains the representation of king using bitboards, with also the r
 -}
 module King (module P) where
 
-import King.Internal as P hiding (allocTable)
+import Bitboard
+import King.Internal as P hiding (KingBBWrapped (..), allocTable)
 import King.KingTH as P

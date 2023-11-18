@@ -1,13 +1,15 @@
+{-# LANGUAGE DataKinds #-}
+
 {-|
 Module      : Bits
-Description : !!! INSERT MODULE SHORT DESCRIPTION !!!
+Description : Module for bit manipulation functions
 Copyright   : (c) 2023 Matteo Mariotti
 License     : GNU GPL v.3
 Maintainer  : matteomariotti0301@gmail.com
 Stability   : experimental
 Portability : POSIX
 
-!!! INSERT MODULE LONG DESCRIPTION !!!
+Wrappers around the standard bit functions to make them linear and add liquidhaskell annotations.
 -}
 module Bits where
 
@@ -95,4 +97,4 @@ complement = toLinear Data.Bits.complement
     Gets the last bit set to 1 or returns 0 instead.
 -}
 lastBit :: (FiniteBits a, Movable a) => a -> a
-lastBit x = x Bits..&. (Bits.complement x)
+lastBit x = x Bits..&. Bits.complement x

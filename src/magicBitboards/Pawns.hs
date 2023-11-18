@@ -1,3 +1,5 @@
+{-# OPTIONS_GHC -Wno-unused-imports #-}
+
 {-|
 Module      : Pawns
 Description : Pawn representation using bitboards
@@ -11,5 +13,6 @@ This module contains the representation of pawns using bitboards, with also the 
 -}
 module Pawns (module P) where
 
-import Pawns.Internal as P hiding (allocTable)
+import Bitboard
+import Pawns.Internal as P hiding (PawnBBWrapped (..), allocTable)
 import Pawns.PawnsTH as P

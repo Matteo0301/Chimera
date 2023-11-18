@@ -115,7 +115,9 @@ common extensions
     ScopedTypeVariables
     TypeFamilies
 
-  other-extensions:   NoImplicitPrelude
+  other-extensions:
+    InstanceSigs
+    NoImplicitPrelude
 
 library prelude
   import:             warnings, optimizations
@@ -142,7 +144,9 @@ library prelude
     , random
     , universum    >=1.8.2 && <1.9
 
-  mixins:             base hiding (Prelude), universum (Universum as Prelude)
+  mixins:
+    base hiding (Prelude),
+    universum (Universum as Prelude)
 
 library magic-bitboards
   import:          warnings, optimizations
@@ -150,19 +154,24 @@ library magic-bitboards
   import:          stan
   import:          liquid
   import:          extensions
-  exposed-modules: Pawns, Knights, King
+  exposed-modules:
+    King
+    Knights
+    Pawns
+
   hs-source-dirs:  src/magicBitboards
   visibility:      public
-  build-depends:   vector
-                   , template-haskell
-  
+  build-depends:
+    , template-haskell
+    , vector
+
   other-modules:
-    Pawns.Internal
-    Pawns.PawnsTH
-    Knights.Internal
-    Knights.KnightsTH
     King.Internal
     King.KingTH
+    Knights.Internal
+    Knights.KnightsTH
+    Pawns.Internal
+    Pawns.PawnsTH
 
   -- Other library packages from which modules are imported.
   build-depends:   Chimera:prelude
@@ -185,6 +194,7 @@ test-suite test
   import:         warnings
   import:         debug
   import:         stan
+
   --import:         liquid
   import:         extensions
   type:           exitcode-stdio-1.0
@@ -192,23 +202,22 @@ test-suite test
   main-is:        Test.hs
   other-modules:
     BitboardTest
-    Spec
     PawnsTest
+    Spec
     Types
 
   build-depends:
-    , Chimera:prelude
-    , Chimera:magic-bitboards
-    , vector
+    , Chimera:{magic-bitboards, prelude}
     , falsify
     , quickspec
     , tasty
     , tasty-ant-xml
+    , tasty-expected-failure
     , tasty-hunit
     , tasty-inspection-testing
     , tasty-quickcheck
     , tasty-rerun
-    , tasty-expected-failure
+    , vector
 
   hs-source-dirs: test
 
@@ -216,6 +225,7 @@ benchmark benchmark
   import:           warnings, optimizations
   import:           debug
   import:           stan
+
   --import:           liquid
   import:           extensions
   type:             exitcode-stdio-1.0
@@ -223,8 +233,7 @@ benchmark benchmark
   main-is:          Bench.hs
   other-modules:    BitboardBench
   build-depends:
-    , Chimera:prelude
-    , Chimera:magic-bitboards
+    , Chimera:{magic-bitboards, prelude}
     , tasty-bench
 
   default-language: GHC2021

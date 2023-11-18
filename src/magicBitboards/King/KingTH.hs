@@ -1,3 +1,4 @@
+{-# LANGUAGE InstanceSigs #-}
 {-# LANGUAGE TemplateHaskell #-}
 {-# OPTIONS_GHC -Wno-orphans #-}
 
@@ -21,6 +22,14 @@ import King.Internal
 
 table :: Vector AttackBB
 table = $([|allocTable|])
+
+{-@ data KingBB = KingBB KingBBWrapped @-}
+
+{-|
+    The basic type for knight bitboards. It is a wrapper around 'Bitboard' that represents a bitboard with at most 10 bits set.
+    The phantom type parameter specifies the side to move.
+-}
+newtype KingBB = KingBB KingBBWrapped deriving (Eq, Show)
 
 instance Piece KingBB where
     {-# INLINE getAttacks #-}

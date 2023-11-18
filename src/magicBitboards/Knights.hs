@@ -1,3 +1,5 @@
+{-# OPTIONS_GHC -Wno-unused-imports #-}
+
 {-|
 Module      : Knights
 Description : Knight representation using bitboards
@@ -11,5 +13,6 @@ This module contains the representation of knight using bitboards, with also the
 -}
 module Knights (module P) where
 
-import Knights.Internal as P hiding (allocTable)
+import Bitboard
+import Knights.Internal as P hiding (KnightBBWrapped (..), allocTable)
 import Knights.KnightsTH as P
