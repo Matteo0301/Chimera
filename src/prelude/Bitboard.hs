@@ -36,7 +36,8 @@ module Bitboard
     ) where
 
 import Bits
-import Unsafe.Linear
+
+-- import Unsafe.Linear
 
 -- import Data.Bits_LHAssumptions
 
@@ -47,6 +48,8 @@ import Prelude hiding (($))
 
 {-@ LIQUID "--counter-examples" @-}
 
+{-@ type Pop = {x:Int | x >= 0 && x<= 64} @-}
+{-@ type Index = {x:Int | x >= 0 && x<= 63} @-}
 {-@ measure bbPop :: Bitboard -> Pop @-}
 
 -- {-@ assume popCount :: Word64 -> Nat @-}
