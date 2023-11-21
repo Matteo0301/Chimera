@@ -5,7 +5,7 @@
   "build": {
     "args": {
       "USERNAME": "vscode",
-      "GHC_VERSION": "9.6.3",
+      "GHC_VERSION": "9.2.8",
       "CABAL_VERSION": "latest",
       "HLS_VERSION": "latest",
       "LLVM_VERSION": "15"
