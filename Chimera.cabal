@@ -53,6 +53,8 @@ extra-doc-files:
 
 homepage:        https://github.com/Matteo0301/Chimera
 
+tested-with: GHC ==9.2.8
+
 -- Extra source files to be distributed with the package, such as examples, or a tutorial module.
 -- extra-source-files:
 
