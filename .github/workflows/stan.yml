@@ -43,6 +43,6 @@ jobs:
     - name: Build
       run: cabal build --flags="stan" all
     - name: Build stan
-      run: '[ -f stan ] || git clone https://github.com/kowainik/stan.git && cd stan && cabal build exe:stan && mkdir -p ~/.local/bin &&  cp "$(cabal v2-exec --verbose=0 --offline sh -- -c "command -v stan")" ~/.local/bin/stan && cd ..'
+      run: '[ -f stan ] || git clone https://github.com/kowainik/stan.git && cd stan && cabal v2-build exe:stan && mkdir -p ~/.local/bin &&  cp "$(cabal v2-exec --verbose=0 --offline sh -- -c "command -v stan")" ~/.local/bin/stan && cd ..'
     - name: Run stan
       run: stan
