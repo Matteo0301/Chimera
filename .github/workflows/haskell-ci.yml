@@ -35,19 +35,29 @@ jobs:
             allow-failure: false
       fail-fast: false
     steps:
+      - name: restore cache
+        uses: actions/cache/restore@v3
+        with:
+          key: ${{ runner.os }}-${{ matrix.compiler }}-${{ github.sha }}
+          path: |
+            ~/.cache/cabal
+            ~/.config/cabal
+            ~/.local/state/cabal
+            ~/.local/bin
+            dist-newstyle
+          restore-keys: ${{ runner.os }}-${{ matrix.compiler }}-
       - name: apt
         run: |
           apt-get update
           apt-get install -y --no-install-recommends gnupg ca-certificates dirmngr curl git software-properties-common libtinfo5 z3
           mkdir -p "$HOME/.ghcup/bin"
-          curl -sL https://downloads.haskell.org/ghcup/0.1.20.0/x86_64-linux-ghcup-0.1.20.0 > "$HOME/.ghcup/bin/ghcup"
-          chmod a+x "$HOME/.ghcup/bin/ghcup"
-          "$HOME/.ghcup/bin/ghcup" install ghc "$HCVER" || (cat "$HOME"/.ghcup/logs/*.* && false)
-          "$HOME/.ghcup/bin/ghcup" install cabal 3.10.2.0 || (cat "$HOME"/.ghcup/logs/*.* && false)
+          curl --proto '=https' --tlsv1.2 -sSf https://get-ghcup.haskell.org | sh
         env:
-          HCKIND: ${{ matrix.compilerKind }}
-          HCNAME: ${{ matrix.compiler }}
-          HCVER: ${{ matrix.compilerVersion }}
+          BOOTSTRAP_HASKELL_NONINTERACTIVE: yes
+          BOOTSTRAP_HASKELL_NO_UPGRADE: yes
+          BOOTSTRAP_HASKELL_INSTALL_NO_STACK: yes
+          BOOTSTRAP_HASKELL_INSTALL_NO_STACK_HOOK: yes
+          BOOTSTRAP_HASKELL_GHC_VERSION: ${{ matrix.compilerVersion }}
       - name: update cabal index
         run: |
           cabal v2-update -v
@@ -68,17 +78,6 @@ jobs:
         run: |
           cabal v2-build  --enable-tests --enable-benchmarks --dry-run all
           cabal-plan
-      - name: restore cache
-        uses: actions/cache/restore@v3
-        with:
-          key: ${{ runner.os }}-${{ matrix.compiler }}-${{ github.sha }}
-          path: |
-            ~/.cache/cabal
-            ~/.config/cabal
-            ~/.local/state/cabal
-            ~/.local/bin
-            dist-newstyle
-          restore-keys: ${{ runner.os }}-${{ matrix.compiler }}-
       - name: install dependencies
         run: |
           cabal v2-build  --disable-tests --disable-benchmarks --dependencies-only -j2 all
