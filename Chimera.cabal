@@ -13,6 +13,8 @@ cabal-version:   3.4
 --
 -- The name of the package.
 name:            Chimera
+description:
+  This is an experimantal chess engine written in Haskell that aims to use only the native libraries and to be as fast as possible.
 
 -- The package version.
 -- See the Haskell package versioning policy (PVP) for standards
@@ -52,19 +54,10 @@ extra-doc-files:
   README.md
 
 homepage:        https://github.com/Matteo0301/Chimera
-
-tested-with: GHC ==9.4.7
+tested-with:     GHC ==9.4.7
 
 -- Extra source files to be distributed with the package, such as examples, or a tutorial module.
 -- extra-source-files:
-
-flag debug
-  description: Enable debug mode
-  default:     False
-
-flag profiling
-  description: Enable profiling
-  default:     False
 
 flag llvm
   description: Enable llvm
@@ -85,21 +78,12 @@ common optimizations
   ghc-options: -threaded -flate-dmd-anal -flate-specialise
   ld-options:  -fuse-ld=gold -flto -O3
 
-common llvm
   if flag(llvm)
     ghc-options:
       -fllvm -pgmP clang -pgmc clang -pgma clang -pgmlc llc -pgmlo opt
       -optlc-O3 -optlc-mcpu=native -optlo-O3 -optlo-mcpu=native
-      -fuse-ld=lld
 
     ld-options:  -fuse-ld=lld -flto -O3
-
-common debug
-  if flag(profiling)
-    ghc-options: -prof -fprof-auto -fprof-cafs -rtsopts
-
-  if flag(debug)
-    ghc-options: -O0 -g
 
 common liquid
   if impl(ghc ==9.4.7)
@@ -123,7 +107,6 @@ common extensions
 
 library prelude
   import:             warnings, optimizations
-  import:             debug
   import:             stan
   import:             liquid
   import:             extensions
@@ -141,10 +124,10 @@ library prelude
     , Data.Array.Destination
 
   build-depends:
-    , base
-    , linear-base  >=0.4.0 && <0.5
-    , random
-    , universum    >=1.8.2 && <1.9
+    , base         >=4.17.2 && <4.18
+    , linear-base  >=0.4.0  && <0.5
+    , random       >=1.2.1  && <1.3
+    , universum    >=1.8.2  && <1.9
 
   mixins:
     base hiding (Prelude),
@@ -152,7 +135,6 @@ library prelude
 
 library magic-bitboards
   import:          warnings, optimizations
-  import:          debug
   import:          stan
   import:          liquid
   import:          extensions
@@ -164,8 +146,8 @@ library magic-bitboards
   hs-source-dirs:  src/magicBitboards
   visibility:      public
   build-depends:
-    , template-haskell
-    , vector
+    , template-haskell  >=2.19.0 && <2.20
+    , vector            >=0.13.1 && <0.14
 
   other-modules:
     King.Internal
@@ -180,7 +162,6 @@ library magic-bitboards
 
 executable Chimera
   import:         warnings, optimizations
-  import:         debug
   import:         stan
   import:         liquid
   import:         extensions
@@ -188,19 +169,18 @@ executable Chimera
   main-is:        Main.hs
   build-depends:
     , Chimera:prelude
-    , text
+    , text             >=2.0.2 && <2.1
 
   hs-source-dirs: app
 
 test-suite test
   import:         warnings
-  import:         debug
   import:         stan
 
   --import:         liquid
   import:         extensions
   type:           exitcode-stdio-1.0
-  ghc-options:    -threaded -rtsopts -with-rtsopts=-N -O0
+  ghc-options:    -threaded -rtsopts -with-rtsopts=-N
   main-is:        Test.hs
   other-modules:
     BitboardTest
@@ -225,7 +205,6 @@ test-suite test
 
 benchmark benchmark
   import:           warnings, optimizations
-  import:           debug
   import:           stan
 
   --import:           liquid
@@ -239,3 +218,7 @@ benchmark benchmark
     , tasty-bench
 
   default-language: GHC2021
+
+source-repository head
+  type:     git
+  location: https://github.com/Matteo0301/Chimera.git
