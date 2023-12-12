@@ -1,0 +1,17 @@
+name: Create dependency bump PR
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: '0 0 * * 0'
+
+permissions:
+  contents: write
+  pull-requests: write
+
+jobs:
+  bump:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: nomeata/haskell-bounds-bump-action@main
+      with:
+        test: true

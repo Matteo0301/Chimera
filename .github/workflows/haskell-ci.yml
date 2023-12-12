@@ -55,7 +55,7 @@ jobs:
       - name: Tests
         run: cabal run tests --test-show-details=direct --test-option="--color=always" -- --xml=junit.xml
       - name: Benchmarks
-        run: cabal run benchmarks --test-show-details=direct --test-option="--color=always" -- --junit bench.xml
+        run: cabal run benchmarks
       - name: Publish Test Results
         uses: EnricoMi/publish-unit-test-result-action@v2
         if: always()
