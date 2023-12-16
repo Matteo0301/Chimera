@@ -1,4 +1,4 @@
-[![Check formatting](https://github.com/Matteo0301/Chimera/actions/workflows/format.yml/badge.svg)](https://github.com/Matteo0301/Chimera/actions/workflows/format.yml)[![Check icense headers](https://github.com/Matteo0301/Chimera/actions/workflows/license.yml/badge.svg)](https://github.com/Matteo0301/Chimera/actions/workflows/license.yml)[![Lint code](https://github.com/Matteo0301/Chimera/actions/workflows/lint.yml/badge.svg)](https://github.com/Matteo0301/Chimera/actions/workflows/lint.yml)[![Tests](https://github.com/Matteo0301/Chimera/actions/workflows/haskell.yml/badge.svg)](https://github.com/Matteo0301/Chimera/actions/workflows/haskell.yml)
+[![Check formatting](https://github.com/Matteo0301/Chimera/actions/workflows/format.yml/badge.svg)](https://github.com/Matteo0301/Chimera/actions/workflows/format.yml)[![Lint code](https://github.com/Matteo0301/Chimera/actions/workflows/lint.yml/badge.svg)](https://github.com/Matteo0301/Chimera/actions/workflows/lint.yml)[![Tests](https://github.com/Matteo0301/Chimera/actions/workflows/haskell.yml/badge.svg)](https://github.com/Matteo0301/Chimera/actions/workflows/haskell.yml)
 
 
 # Chimera

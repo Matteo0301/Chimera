@@ -1,5 +1,3 @@
-{-# LANGUAGE DataKinds #-}
-
 {-|
 Module      : Bits
 Description : Module for bit manipulation functions
