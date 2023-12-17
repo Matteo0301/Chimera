@@ -1,3 +1,13 @@
+{-# OPTIONS_GHC -Wno-unrecognised-pragmas #-}
+
+{-# HLINT ignore "Use camelCase" #-}
+
+{-@ LIQUID "--reflection" @-}
+{-@ LIQUID "--ple" @-}
+-- {-@ LIQUID "--ple-with-undecided-guards" @-}
+-- {-@ LIQUID "--extensionality" @-}
+{-@ LIQUID "--counter-examples" @-}
+
 {-|
 Module      : Bits
 Description : Module for bit manipulation functions
@@ -16,10 +26,55 @@ import Prelude.Linear (Movable)
 import Unsafe.Linear
 
 {-@ embed Int * as int @-}
-{-@ measure pop :: a -> Pop @-}
+
 
 {-@ type Pop = {x:Int | x >= 0 && x<= 64} @-}
 {-@ type Index = {x:Int | x >= 0 && x<= 63} @-}
+
+-- helper function to get an integer with the n-th bit set to 1
+{-@ reflect mask_n_bit @-}
+mask_n_bit :: Int -> Int
+mask_n_bit 0 = 1
+mask_n_bit n
+    | n > 0 = 2 * mask_n_bit (n - 1)
+    | otherwise = 1
+
+{-@ reflect get_n_bit @-}
+get_n_bit :: Int -> Int -> Bool
+get_n_bit x n =
+    let
+        {-@ assume p :: {x:Int | x /= 0} @-}
+        p = mask_n_bit n
+     in
+        (x `div` p) `mod` 2 == 1
+
+{-@ reflect clear_bit @-}
+-- {-@ clear_bit :: Int -> i:Index -> {x:Int | not (get_n_bit x i) } @-}
+clear_bit :: Int -> Int -> Int
+clear_bit x n =
+    let
+        p = mask_n_bit n
+     in
+        x - if get_n_bit x n then p else 0
+
+{-@ reflect set_bit @-}
+-- {-@ set_bit :: Int -> i:Index -> {x:Int | (get_n_bit x i) } @-}
+set_bit :: Int -> Int -> Int
+set_bit x n =
+    let
+        p = mask_n_bit n
+     in
+        x + if get_n_bit x n then 0 else p
+
+{-@ reflect get_pop @-}
+get_pop :: Int -> Int
+get_pop 0 = 0
+get_pop x = (x `mod` 2) + get_pop (x `div` 2)
+
+{-@ reflect pop @-}
+pop :: (Integral a) => a -> Int
+pop x = get_pop  (fromIntegral  x)
+
 
 {-|
     Linear version of 'Data.Bits.popCount'.
