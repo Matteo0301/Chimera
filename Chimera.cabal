@@ -76,14 +76,14 @@ common warnings
 
 common optimizations
   ghc-options: -threaded -flate-dmd-anal -flate-specialise
-  ld-options:  -fuse-ld=gold -flto -O3
+  ld-options:  -fuse-ld=gold -flto
 
   if flag(llvm)
     ghc-options:
       -fllvm -pgmP clang -pgmc clang -pgma clang -pgmlc llc -pgmlo opt
-      -optlc-O3 -optlc-mcpu=native -optlo-O3 -optlo-mcpu=native
+      -optlc-mcpu=native -optlo-mcpu=native
 
-    ld-options:  -fuse-ld=lld -flto -O3
+    ld-options:  -fuse-ld=lld -flto
 
 common liquid
   if impl(ghc ==9.4.7)
