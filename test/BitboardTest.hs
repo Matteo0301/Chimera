@@ -2,7 +2,7 @@
 {-# OPTIONS_GHC -Wno-unrecognised-pragmas #-}
 
 {-# HLINT ignore "Use camelCase" #-}
-module BitboardTest (Bitboard, emptyBoard, getPopulation, bb_tests) where
+module BitboardTest (Bitboard, emptyBoard, population, bb_tests) where
 
 import Bitboard
 import Test.Tasty
@@ -18,33 +18,33 @@ set_get_bit :: TestTree
 set_get_bit =
     testGroup
         "Set/unset squares"
-        [ QC.testProperty "get . set"
-            $ \x -> getSquare (setSquare emptyBoard x) x,
-          QC.testProperty "unset . set"
-            $ \x -> unsetSquare (setSquare emptyBoard x) x == emptyBoard,
-          QC.testProperty "set . unset"
-            $ \x -> unsetSquare emptyBoard x == emptyBoard,
-          QC.testProperty "getPopulation . set"
-            $ \x -> getPopulation (setSquare emptyBoard x) == 1
+        [ QC.testProperty "get . set" $
+            \x -> getSquare (setSquare emptyBoard x) x,
+          QC.testProperty "unset . set" $
+            \x -> unsetSquare (setSquare emptyBoard x) x == emptyBoard,
+          QC.testProperty "set . unset" $
+            \x -> unsetSquare emptyBoard x == emptyBoard,
+          QC.testProperty "population . set" $
+            \x -> population (setSquare emptyBoard x) == 1
         ]
 
 population_tests :: TestTree
 population_tests =
     testGroup
         "Population tests"
-        [ testCase "Population: empty"
-            $ getPopulation emptyBoard
-            @?= 0,
-          testCase "Population: A1"
-            $ getPopulation (emptyBoard <<>> A1)
-            @?= 1,
-          testCase "Population: D5"
-            $ getPopulation (emptyBoard <<>> D5)
-            @?= 1,
-          testCase "Population: white pawns"
-            $ getPopulation
+        [ testCase "Population: empty" $
+            population emptyBoard
+                @?= 0,
+          testCase "Population: A1" $
+            population (emptyBoard <<>> A1)
+                @?= 1,
+          testCase "Population: D5" $
+            population (emptyBoard <<>> D5)
+                @?= 1,
+          testCase "Population: white pawns" $
+            population
                 (emptyBoard <<>> A2 <<>> B2 <<>> C2 <<>> D2 <<>> E2 <<>> F2 <<>> G2 <<>> H2)
-            @?= 8,
-          QC.testProperty "getPopulation<=32"
-            $ \x -> getPopulation x <= 32
+                @?= 8,
+          QC.testProperty "population<=32" $
+            \x -> population x <= 32
         ]

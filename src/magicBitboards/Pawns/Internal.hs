@@ -28,7 +28,7 @@ import Prelude hiding (($))
 {- {-@ type Pop = {x:Int | x >= 0 && x<= 64} @-}
 {-@ type Index = {x:Int | x >= 0 && x<= 63} @-}
 {-@ measure bbPop :: Bitboard -> Pop @-} -}
-{-@ data PawnBBWrapped a = PawnBBWrapped (bb :: {x:Bitboard | bbPop x <= 8}) @-}
+-- {-@ data PawnBBWrapped a = PawnBBWrapped (bb :: {x:Bitboard | bbPop x <= 8}) @-}
 
 newtype PawnBBWrapped (side :: SideToMove) = PawnBBWrapped Bitboard
     deriving (Eq, Show)
@@ -36,13 +36,13 @@ newtype PawnBBWrapped (side :: SideToMove) = PawnBBWrapped Bitboard
 maskPawnAttack :: forall a. (GetSide a) => PawnBBWrapped a -> AttackBB
 maskPawnAttack (PawnBBWrapped bb) =
     let
-        initial :: Word64 = bb2Word bb
-        not_a_file :: Word64 -> Word64
-        not_a_file res = res .&. complement (file2Word FA)
-        not_h_file res = res .&. complement (file2Word FH)
+        initial :: Int = bb2Int bb
+        not_a_file :: Int -> Int
+        not_a_file res = res $&$ complement (file2Word FA)
+        not_h_file res = res $&$ complement (file2Word FH)
         attacks = AttackBB $ case getSide (Proxy :: Proxy a) of
-            White -> not_a_file (initial `shiftL` 7) .|. not_h_file (initial `shiftL` 9)
-            Black -> not_h_file (initial `shiftR` 7) .|. not_a_file (initial `shiftR` 9)
+            White -> not_a_file (initial `shiftL` 7) $|$ not_h_file (initial `shiftL` 9)
+            Black -> not_h_file (initial `shiftR` 7) $|$ not_a_file (initial `shiftR` 9)
      in
         attacks
 

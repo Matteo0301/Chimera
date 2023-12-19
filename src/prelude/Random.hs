@@ -16,7 +16,7 @@ module Random (XORShift, mkRandom) where
 
 {-@ LIQUID "--counter-examples" @-}
 
-import Bits
+import Data.Bits
 import Prelude.Linear (($))
 import System.Random
 import Prelude hiding (xor, ($))

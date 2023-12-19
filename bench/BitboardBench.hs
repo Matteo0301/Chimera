@@ -13,8 +13,8 @@ bitboard_benches :: Benchmark
 bitboard_benches =
     bgroup
         "Bitboard"
-        [ bench "population empty" $ whnf (forget getPopulation) emptyBoard,
-          bench "population initial" $ whnf (forget getPopulation) initialBoard,
+        [ bench "population empty" $ whnf (forget population) emptyBoard,
+          bench "population initial" $ whnf (forget population) initialBoard,
           bench "getSquare empty" $ whnf (forget (getSquare emptyBoard)) A1,
           bench "getSquare full" $ whnf (forget (getSquare initialBoard)) A1,
           bench "setSquare empty" $ whnf (forget (setSquare emptyBoard)) A1,

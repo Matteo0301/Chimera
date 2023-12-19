@@ -1,5 +1,6 @@
 {-# LANGUAGE DataKinds #-}
 {-# LANGUAGE KindSignatures #-}
+{-# OPTIONS_GHC -Wno-overflowed-literals #-}
 
 {-|
 Module      : Common
@@ -30,7 +31,7 @@ module Common
 import Bits
 import Unsafe.Linear
 
-{-@ type Board = Word64 @-}
+{-@ type Board = Int @-}
 
 {-@ type Pop = {x:Int | x >= 0 && x<= 64} @-}
 {-@ type Index = {x:Int | x >= 0 && x<= 63} @-}
@@ -118,25 +119,25 @@ data Rank = R1 | R2 | R3 | R4 | R5 | R6 | R7 | R8 deriving (Eq, Ord, Show, Enum)
 {-|
     Returns the pieces on the given file of the board.
 -}
-maskFile :: File -> Word64 -> Word64
-maskFile file bb = bb .&. (0x8080808080808080 `shiftR` fromEnum file)
+maskFile :: File -> Int -> Int
+maskFile file bb = bb $&$ (0x8080808080808080 `shiftR` fromEnum file)
 
 {-|
     Converts a file to its corresponding bits on the board.
 -}
-file2Word :: File -> Word64
+file2Word :: File -> Int
 file2Word file = 0x8080808080808080 `shiftR` fromEnum file
 
 {-|
     Returns the pieces on the given rank of the board.
 -}
-maskRank :: Rank -> Word64 %1 -> Word64
-maskRank rank bb = bb .&. (0xFF `shiftL` (8 * toLinear fromEnum rank))
+maskRank :: Rank -> Int %1 -> Int
+maskRank rank bb = bb $&$ (0xFF `shiftL` (8 * toLinear fromEnum rank))
 
 {-|
     Converts a rank to its corresponding bits on the board.
 -}
-rank2Word :: Rank -> Word64
+rank2Word :: Rank -> Int
 rank2Word rank = 0xFF `shiftL` (8 * toLinear fromEnum rank)
 
 {-|
@@ -155,7 +156,7 @@ data SideToMove = White | Black
 {-|
     Represents the squares attacked by a piece
 -}
-newtype AttackBB = AttackBB Word64 deriving (Eq, Show)
+newtype AttackBB = AttackBB Int deriving (Eq, Show)
 
 {-|
     Class to extract the value of the side to move from the corresponding type.

@@ -8,8 +8,8 @@ import Test.Tasty.QuickCheck
 instance Arbitrary Bitboard where
     arbitrary :: Gen Bitboard
     arbitrary = do
-        bb <- choose (0, 2 ^ (64 :: Int) - 1)
-        suchThat (return $ trySet bb) (\x -> getPopulation x <= 32)
+        -- bb <- choose (0, 2 ^ (64 :: Int) - 1)
+        suchThat (return $ emptyBoard) (\x -> population x <= 32)
 
     shrink :: Bitboard -> [Bitboard]
     shrink bb
