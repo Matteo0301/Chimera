@@ -73,10 +73,6 @@ pop :: Int -> Int
 pop 0 = 0
 pop x = if x < 0 then 1 + pop (x + mask_n_bit 63) else (x `mod` 2) + pop (x `div` 2)
 
-{-@ x :: {a:Int | pop a <= 32} @-}
-x :: Int
-x = 0x0FFF00000000FFFF
-
 {-@ reflect complement_helper @-}
 complement_helper :: Int -> Int -> Int
 complement_helper n x

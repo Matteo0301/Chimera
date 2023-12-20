@@ -37,7 +37,7 @@ module Bitboard
     , rank2Word
     ) where
 
-import Bits (clearBit, pop, popCount, setBit, testBit)
+import Bits (clearBit, mask_n_bit, pop, popCount, setBit, testBit)
 
 import Common
 import Prelude.Linear (($))
@@ -78,13 +78,13 @@ emptyBoard :: Bitboard
 emptyBoard = Bitboard 0
 
 -- Refinement types for integers can't handle numbers so big, so I have to use an assumption.
-{-@ assume initialBoard :: Bitboard @-}
+{-@ initialBoard :: Bitboard @-}
 
 {-|
     Represents the starting position.
 -}
 initialBoard :: Bitboard
-initialBoard = Bitboard 0xFFFF00000000FFFF
+initialBoard = Bitboard (-0x0000FFFFFFFF0001)
 
 {-@ reflect bb2Int @-}
 
