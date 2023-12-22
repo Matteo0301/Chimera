@@ -2,8 +2,6 @@
 {-# LANGUAGE GADTs #-}
 {-# LANGUAGE NoImplicitPrelude #-}
 
--- {-# OPTIONS_GHC -Wno-overflowed-literals #-}
-
 {-|
 Module      : Bitboard
 Description : Module for bitboards representation and operations
@@ -35,9 +33,10 @@ module Bitboard
     , maskRank
     , file2Word
     , rank2Word
+    , bbPop
     ) where
 
-import Bits (clearBit, mask_n_bit, pop, popCount, setBit, testBit)
+import Bits
 
 import Common
 import Prelude.Linear (($))
@@ -67,9 +66,7 @@ newtype Bitboard' where
 -- {-@ type Bitboard = Bitboard' @-}
 type Bitboard = Bitboard'
 
-{- {-@ x :: Bitboard @-}
-x :: Bitboard
-x = Bitboard 1 -}
+{-@ emptyBoard :: Bitboard @-}
 
 {-|
     Represents the empty board.
@@ -77,7 +74,6 @@ x = Bitboard 1 -}
 emptyBoard :: Bitboard
 emptyBoard = Bitboard 0
 
--- Refinement types for integers can't handle numbers so big, so I have to use an assumption.
 {-@ initialBoard :: Bitboard @-}
 
 {-|
@@ -86,16 +82,16 @@ emptyBoard = Bitboard 0
 initialBoard :: Bitboard
 initialBoard = Bitboard (-0x0000FFFFFFFF0001)
 
-{-@ reflect bb2Int @-}
+{-@ inline bb2Int @-}
 
 {-|
     Converts a bitboard to its underlying 'Int' representation.
 -}
-bb2Int :: Bitboard %1 -> Int
+bb2Int :: Bitboard' %1 -> Int
 bb2Int (Bitboard bb) = bb
 
-{-@ reflect bbPop @-}
-bbPop :: Bitboard -> Int
+{-@ inline bbPop @-}
+bbPop :: Bitboard' -> Int
 bbPop (Bitboard bb) = pop bb
 
 {-|
