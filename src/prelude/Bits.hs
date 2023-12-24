@@ -25,6 +25,8 @@ see if the extended type literals will allow me to use the `Word64` type.
 module Bits where
 
 import Data.Bits
+import Debug.Trace as Debug
+import GHC.Base (Int (I#), iShiftRL#)
 import Unsafe.Linear
 
 {-@ embed Int * as int @-}
@@ -40,17 +42,27 @@ mask_n_bit n
     | n > 0 = 2 * mask_n_bit (n - 1)
     | otherwise = 1
 
+{-@ reflect div' @-}
+div' :: Int -> Int -> Int
+div' x y
+    | y == 0 = 0
+    | x < 0 = -div' (-x) y
+    | y < 0 = -div' x (-y)
+    | x < y = 0
+    | otherwise = 1 + div' (x - y) y
+
 {-@ reflect get_n_bit @-}
 get_n_bit :: Int -> Int -> Bool
 get_n_bit x n
-    | n == 63 && x < 0 = True
+    | n == 63 = x < 0
+    | n < 0 = False
     | x < 0 = not (get_n_bit (-x - 1) n)
     | otherwise =
         let
             {-@ assume p :: {x:Int | x /= 0} @-}
             p = mask_n_bit n
          in
-            (x `div` p) `mod` 2 == 1
+            (x `div'` p) `mod` 2 == 1
 
 {-@ reflect clear_bit @-}
 clear_bit :: Int -> Int -> Int
@@ -71,25 +83,25 @@ set_bit x n =
 {-@ reflect pop @-}
 pop :: Int -> Int
 pop 0 = 0
-pop x = if x < 0 then 1 + pop (x + mask_n_bit 63) else (x `mod` 2) + pop (x `div` 2)
+pop x = if x < 0 then 1 + pop (x + mask_n_bit 63) else x `mod` 2 + pop (x `div` 2)
 
 {-@ reflect complement_helper @-}
 complement_helper :: Int -> Int -> Int
 complement_helper n x
-    | n > 0 =
+    | n >= 0 =
         if get_n_bit x n
-            then complement_helper (n - 1) (clear_bit x (n - 1))
-            else complement_helper (n - 1) (set_bit x (n - 1))
+            then complement_helper (n - 1) (clear_bit x n)
+            else complement_helper (n - 1) (set_bit x n)
     | otherwise = x
 
 {-@ reflect complement' @-}
 complement' :: Int -> Int
-complement' = complement_helper 64
+complement' = complement_helper 63
 
 {-@ reflect and_helper @-}
 and_helper :: Int -> Int -> Int -> Int
 and_helper n x y
-    | n > 0 =
+    | n >= 0 =
         if get_n_bit x n && get_n_bit y n
             then and_helper (n - 1) (set_bit x n) y
             else and_helper (n - 1) (clear_bit x n) y
@@ -97,12 +109,12 @@ and_helper n x y
 
 {-@ reflect and' @-}
 and' :: Int -> Int -> Int
-and' = and_helper 64
+and' = and_helper 63
 
 {-@ reflect or_helper @-}
 or_helper :: Int -> Int -> Int -> Int
 or_helper n x y
-    | n > 0 =
+    | n >= 0 =
         if get_n_bit x n || get_n_bit y n
             then or_helper (n - 1) (set_bit x n) y
             else or_helper (n - 1) (clear_bit x n) y
@@ -110,12 +122,12 @@ or_helper n x y
 
 {-@ reflect or' @-}
 or' :: Int -> Int -> Int
-or' = or_helper 64
+or' = or_helper 63
 
 {-@ reflect xor_helper @-}
 xor_helper :: Int -> Int -> Int -> Int
 xor_helper n x y
-    | n > 0 =
+    | n >= 0 =
         if get_n_bit x n /= get_n_bit y n
             then xor_helper (n - 1) (set_bit x n) y
             else xor_helper (n - 1) (clear_bit x n) y
@@ -123,7 +135,37 @@ xor_helper n x y
 
 {-@ reflect xor' @-}
 xor' :: Int -> Int -> Int
-xor' = xor_helper 64
+xor' = xor_helper 63
+
+{-@ reflect shiftR_helper @-}
+shiftR_helper :: Int -> Int -> Int -> Int
+shiftR_helper n x i
+    | n >= 64 - i = shiftR_helper (63 - i) x i
+    | n >= 0 =
+        let res = shiftR_helper (n - 1) x i
+         in if get_n_bit x (n + i)
+                then set_bit res n
+                else res
+    | otherwise = 0
+
+{-@ reflect shiftR' @-}
+shiftR' :: Int -> Int -> Int
+shiftR' = shiftR_helper 63
+
+{-@ reflect shiftL_helper @-}
+shiftL_helper :: Int -> Int -> Int -> Int
+shiftL_helper n x i
+    | n >= 64 = shiftL_helper 63 x i
+    | n >= 0 =
+        let res = shiftL_helper (n - 1) x i
+         in if get_n_bit x (n - i)
+                then set_bit res n
+                else res
+    | otherwise = 0
+
+{-@ reflect shiftL' @-}
+shiftL' :: Int -> Int -> Int
+shiftL' = shiftL_helper 63
 
 {-|
     Linear version of 'Data.Bits.popCount'.
@@ -165,19 +207,25 @@ testBit = toLinear2 Data.Bits.testBit
 xor :: Int %1 -> Int %1 -> Int
 xor = toLinear2 Prelude.xor
 
+{-@ assume shiftL :: n:Int -> i:Int -> { shiftL' n i} @-}
+
 {-|
-    Linear version of 'Data.Bits.shiftL'.
+    Linear version of 'Data.Bits.shiftL'. The first argument is the number to shift, the second is the number of bits to shift.
 -}
 shiftL :: Int %1 -> Int %1 -> Int
 shiftL = toLinear2 Data.Bits.shiftL
 
-{-@ assume shiftR :: n:Int -> i:Int -> { div n (mask_n_bit i)} @-}
+{-@ assume shiftR :: n:Int -> i:Int -> { shiftR' n i} @-}
 
 {-|
-    Linear version of 'Data.Bits.shiftR'.
+    A linear version of a logic (unsigned) right shift. The first argument is the number to shift, the second is the number of bits to shift.
 -}
 shiftR :: Int %1 -> Int %1 -> Int
-shiftR = toLinear2 Data.Bits.shiftR
+shiftR =
+    toLinear2 liftShiftR
+  where
+    liftShiftR :: Int -> Int -> Int
+    liftShiftR (I# x) (I# i) = I# (x `iShiftRL#` i)
 
 {-|
     Linear version of 'Data.Bits.setBit'.

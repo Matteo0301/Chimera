@@ -104,6 +104,7 @@ common all
     OverloadedStrings
     ScopedTypeVariables
     TypeFamilies
+    MagicHash
 
   other-extensions:
     InstanceSigs
