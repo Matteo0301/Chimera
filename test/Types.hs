@@ -1,23 +1,17 @@
 {-# OPTIONS_GHC -Wno-orphans #-}
 
-module Types (Bitboard, Square (..)) where
+module Types (Bitboard, Square (..), genBitboard, genSquare) where
 
 import Bitboard
-import Test.Tasty.QuickCheck
+import Test.Falsify.Generator qualified as Generator
+import Test.Falsify.Range
+import Unsafe.Linear (toLinear2)
 
-instance Arbitrary Bitboard where
-    arbitrary :: Gen Bitboard
-    arbitrary = do
-        -- bb <- choose (0, 2 ^ (64 :: Int) - 1)
-        suchThat (return $ emptyBoard) (\x -> population x <= 32)
+genSquare :: Generator.Gen Square
+genSquare = do
+    Generator.inRange (enum (A1, H8))
 
-    shrink :: Bitboard -> [Bitboard]
-    shrink bb
-        | bb == emptyBoard = []
-        | otherwise = [unsetSquare bb x | x <- [A1 .. H8], getSquare bb x]
-
-instance Arbitrary Square where
-    arbitrary :: Gen Square
-    arbitrary = do
-        s <- choose (0, 32)
-        return $ toEnum s
+genBitboard :: Generator.Gen Bitboard
+genBitboard = do
+    l <- Generator.list (between (0, 32)) genSquare
+    return $ foldl (toLinear2 setSquare) emptyBoard l

@@ -10,8 +10,6 @@
 
 import BitboardTest
 import PawnsTest
-import QuickSpec
-import Spec
 import Test.Tasty
 import Test.Tasty.Ingredients (composeReporters)
 import Test.Tasty.Ingredients.Basic
@@ -25,10 +23,6 @@ main =
             (composeReporters antXMLRunner consoleTestReporter : defaultIngredients)
         ]
         tests
-
-{- main :: IO ()
-main =
-    quickSpec sig -}
 
 tests :: TestTree
 tests = testGroup "Tests" [bb_tests, pawns_tests]

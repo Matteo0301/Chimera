@@ -6,7 +6,7 @@
 {-@ LIQUID "--ple" @-}
 {-@ LIQUID "--no-termination" @-}
 -- {-@ LIQUID "--ple-with-undecided-guards" @-}
--- {-@ LIQUID "--extensionality" @-}
+{-@ LIQUID "--extensionality" @-}
 -- {-@ LIQUID "--counter-examples" @-}
 
 {-|
@@ -25,7 +25,6 @@ see if the extended type literals will allow me to use the `Word64` type.
 module Bits where
 
 import Data.Bits
-import Debug.Trace as Debug
 import GHC.Base (Int (I#), iShiftRL#)
 import Unsafe.Linear
 

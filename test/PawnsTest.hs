@@ -11,10 +11,11 @@ import Bits
 import Common
 import Data.Vector
 import Pawns
+import Test.Falsify.Predicate qualified as P
 import Test.Tasty
 import Test.Tasty.ExpectedFailure (expectFail)
+import Test.Tasty.Falsify qualified as Falsify
 import Test.Tasty.Inspection
-import Test.Tasty.QuickCheck as Qc
 import Types
 
 goal :: AttackBB
@@ -29,15 +30,31 @@ pawns_tests = testGroup "Pawns tests" [pawns_property, pawns_inspection]
 pawns_inspection :: TestTree
 pawns_inspection = testGroup "Pawns inspection" [pawns_specialization, pawns_inline]
 
+prop_get_attacks :: Falsify.Property ()
+prop_get_attacks = do
+    s <- Falsify.gen genSquare
+    Falsify.assert $
+        P.eq
+            P..$ ("expected", tableWhite ! square2Index s)
+            P..$ ("actual", getAttacks (Proxy :: Proxy (PawnBB 'White)) s)
+
+prop_attacks_number :: Falsify.Property ()
+prop_attacks_number = do
+    s <- Falsify.gen genSquare
+    Falsify.assert $
+        P.ge
+            P..$ ("expected", 2)
+            P..$ ( "actual",
+                   case getAttacks (Proxy :: Proxy (PawnBB 'White)) s of
+                    AttackBB bb -> popCount bb
+                 )
+
 pawns_property :: TestTree
 pawns_property =
     testGroup
         "Pawns property"
-        [ Qc.testProperty "getAttacks"
-            $ \s -> getAttacks (Proxy :: Proxy (PawnBB 'White)) s == tableWhite ! square2Index s,
-          Qc.testProperty "attacks number"
-            $ \s -> case getAttacks (Proxy :: Proxy (PawnBB 'White)) s of
-                AttackBB bb -> popCount bb <= 2
+        [ Falsify.testProperty "getAttacks" prop_get_attacks,
+          Falsify.testProperty "attacks number" prop_attacks_number
         ]
 
 pawns_specialization :: TestTree

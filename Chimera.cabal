@@ -163,7 +163,6 @@ library magic-bitboards
     Pawns.Internal
     Pawns.PawnsTH
 
-  -- Other library packages from which modules are imported.
   build-depends:   Chimera:prelude
 
 executable Chimera
@@ -183,7 +182,6 @@ test-suite test
   import:         warnings
   import:         stan
 
-  --import:         liquid
   import:         all
   type:           exitcode-stdio-1.0
   ghc-options:    -threaded -rtsopts -with-rtsopts=-N
@@ -191,19 +189,16 @@ test-suite test
   other-modules:
     BitboardTest
     PawnsTest
-    Spec
     Types
 
   build-depends:
     , Chimera:{magic-bitboards, prelude}
     , falsify
-    , quickspec
     , tasty
     , tasty-ant-xml
     , tasty-expected-failure
     , tasty-hunit
     , tasty-inspection-testing
-    , tasty-quickcheck
     , tasty-rerun
     , vector
 
