@@ -148,6 +148,7 @@ library magic-bitboards
     Knights
     Pawns
     Bishops
+    Rooks
 
   hs-source-dirs:  src/magicBitboards
   visibility:      public
@@ -165,6 +166,8 @@ library magic-bitboards
     Pawns.PawnsTH
     Bishops.Internal
     Bishops.BishopsTH
+    Rooks.Internal
+    Rooks.RooksTH
 
   build-depends:   Chimera:prelude
 
