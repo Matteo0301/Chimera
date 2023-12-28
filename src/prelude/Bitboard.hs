@@ -31,8 +31,6 @@ module Bitboard
     , bb2Int
     , maskFile
     , maskRank
-    , file2Word
-    , rank2Word
     , bbPop
     ) where
 

@@ -22,7 +22,7 @@ import Data.Vector
 import Prelude.Linear (($))
 import Prelude hiding (xor, ($))
 
---{-@ LIQUID "--no-termination" @-}
+-- {-@ LIQUID "--no-termination" @-}
 
 {- {-@ type Pop = {x:Int | x >= 0 && x<= 64} @-}
 {-@ type Index = {x:Int | x >= 0 && x<= 63} @-}
@@ -36,8 +36,8 @@ maskKingAttack (KingBBWrapped bb) =
     let
         initial :: Int = bb2Int bb
         not_a_file :: Int -> Int
-        not_a_file res = res $&$ complement (file2Word FA)
-        not_h_file res = res $&$ complement (file2Word FH)
+        not_a_file res = res $&$ complement (file2Int FA)
+        not_h_file res = res $&$ complement (file2Int FH)
         tmp =
             not_a_file (initial `shiftR` 1) $|$ not_h_file (initial `shiftL` 1) $|$ initial
         attacks = (tmp `shiftR` 8) $|$ tmp $|$ (tmp `shiftL` 8) `xor` initial

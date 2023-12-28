@@ -36,10 +36,10 @@ maskKnightAttack (KnightBBWrapped bb) =
     let
         initial :: Int = bb2Int bb
         not_a_file :: Int -> Int
-        not_a_file res = res $&$ complement (file2Word FA)
-        not_h_file res = res $&$ complement (file2Word FH)
-        not_ab_file res = res $&$ complement (file2Word FA) $&$ complement (file2Word FB)
-        not_gh_file res = res $&$ complement (file2Word FG) $&$ complement (file2Word FH)
+        not_a_file res = res $&$ complement (file2Int FA)
+        not_h_file res = res $&$ complement (file2Int FH)
+        not_ab_file res = res $&$ complement (file2Int FA) $&$ complement (file2Int FB)
+        not_gh_file res = res $&$ complement (file2Int FG) $&$ complement (file2Int FH)
         attacks =
             AttackBB
                 $ not_a_file (initial `shiftL` 15)

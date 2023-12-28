@@ -21,11 +21,12 @@ module Common
     , File (..)
     , Rank (..)
     , maskFile
-    , file2Word
+    , file2Int
     , maskRank
-    , rank2Word
+    , rank2Int
     , square2Index
     , Piece (..)
+    , squareMask
     ) where
 
 import Bits
@@ -106,39 +107,51 @@ data Square
     | A8
     deriving (Eq, Ord, Show, Enum)
 
+{-@ data File = FA | FB | FC | FD | FE | FF | FG | FH @-}
+
 {-|
     Represents the file of a square on the board.
 -}
 data File = FA | FB | FC | FD | FE | FF | FG | FH deriving (Eq, Ord, Show, Enum)
+
+{-@ data Rank = R1 | R2 | R3 | R4 | R5 | R6 | R7 | R8 @-}
 
 {-|
     Represents the rank of a square on the board.
 -}
 data Rank = R1 | R2 | R3 | R4 | R5 | R6 | R7 | R8 deriving (Eq, Ord, Show, Enum)
 
+{-@ maskFile :: File -> Int -> Int @-}
+
 {-|
     Returns the pieces on the given file of the board.
 -}
 maskFile :: File -> Int -> Int
-maskFile file bb = bb $&$ (0x8080808080808080 `shiftR` fromEnum file)
+maskFile file bb = bb $&$ file2Int file
+
+{-@ file2Int :: File -> Int @-}
 
 {-|
     Converts a file to its corresponding bits on the board.
 -}
-file2Word :: File -> Int
-file2Word file = 0x8080808080808080 `shiftR` fromEnum file
+file2Int :: File -> Int
+file2Int file = 0x8080808080808080 `shiftR` fromEnum file
+
+{-@ maskRank :: Rank -> Int -> Int @-}
 
 {-|
     Returns the pieces on the given rank of the board.
 -}
 maskRank :: Rank -> Int %1 -> Int
-maskRank rank bb = bb $&$ (0xFF `shiftL` (8 * toLinear fromEnum rank))
+maskRank rank bb = bb $&$ rank2Int rank
+
+{-@ rank2Int :: Rank -> Int @-}
 
 {-|
     Converts a rank to its corresponding bits on the board.
 -}
-rank2Word :: Rank -> Int
-rank2Word rank = 0xFF `shiftL` (8 * toLinear fromEnum rank)
+rank2Int :: Rank -> Int
+rank2Int rank = 0xFF `shiftL` (8 * toLinear fromEnum rank)
 
 {-|
     Converts a square to its index in the bitboard.
@@ -147,6 +160,9 @@ rank2Word rank = 0xFF `shiftL` (8 * toLinear fromEnum rank)
 {-@ assume square2Index :: Square -> Index  @-}
 square2Index :: Square %1 -> Int
 square2Index = toLinear fromEnum
+
+squareMask :: Square -> Int
+squareMask s = 1 `shiftL` square2Index s
 
 {-|
     Represents the side to move.
@@ -165,9 +181,11 @@ class GetSide (a :: SideToMove) where
     getSide :: Proxy a -> SideToMove
 
 instance GetSide 'White where
+    getSide :: Proxy 'White -> SideToMove
     getSide _ = White
 
 instance GetSide 'Black where
+    getSide :: Proxy 'Black -> SideToMove
     getSide _ = Black
 
 {-|
