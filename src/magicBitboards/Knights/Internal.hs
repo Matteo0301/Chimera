@@ -22,7 +22,7 @@ import Data.Vector
 import Prelude.Linear (($))
 import Prelude hiding (($))
 
---{-@ LIQUID "--no-termination" @-}
+-- {-@ LIQUID "--no-termination" @-}
 
 {- {-@ type Pop = {x:Int | x >= 0 && x<= 64} @-}
 {-@ type Index = {x:Int | x >= 0 && x<= 63} @-}
@@ -41,15 +41,15 @@ maskKnightAttack (KnightBBWrapped bb) =
         not_ab_file res = res $&$ complement (file2Int FA) $&$ complement (file2Int FB)
         not_gh_file res = res $&$ complement (file2Int FG) $&$ complement (file2Int FH)
         attacks =
-            AttackBB
-                $ not_a_file (initial `shiftL` 15)
-                $|$ not_h_file (initial `shiftL` 17)
-                $|$ not_ab_file (initial `shiftL` 6)
-                $|$ not_gh_file (initial `shiftL` 10)
-                $|$ not_h_file (initial `shiftR` 15)
-                $|$ not_a_file (initial `shiftR` 17)
-                $|$ not_gh_file (initial `shiftR` 6)
-                $|$ not_ab_file (initial `shiftR` 10)
+            AttackBB $
+                not_a_file (initial `shiftL` 15)
+                    $|$ not_h_file (initial `shiftL` 17)
+                    $|$ not_ab_file (initial `shiftL` 6)
+                    $|$ not_gh_file (initial `shiftL` 10)
+                    $|$ not_h_file (initial `shiftR` 15)
+                    $|$ not_a_file (initial `shiftR` 17)
+                    $|$ not_gh_file (initial `shiftR` 6)
+                    $|$ not_ab_file (initial `shiftR` 10)
      in
         attacks
 
