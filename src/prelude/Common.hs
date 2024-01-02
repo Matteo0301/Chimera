@@ -27,6 +27,7 @@ module Common
     , square2Index
     , Piece (..)
     , squareMask
+    , attacks2Int
     ) where
 
 import Bits
@@ -173,6 +174,9 @@ data SideToMove = White | Black
     Represents the squares attacked by a piece
 -}
 newtype AttackBB = AttackBB Int deriving (Eq, Show)
+
+attacks2Int :: AttackBB -> Int
+attacks2Int (AttackBB bb) = bb
 
 {-|
     Class to extract the value of the side to move from the corresponding type.
