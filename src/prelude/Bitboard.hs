@@ -130,6 +130,8 @@ unsetSquare (Bitboard bb) sq = Bitboard $ clearBit bb (square2Index sq)
 (<<>>) :: Bitboard -> Square -> Bitboard
 bb <<>> i = setSquare bb i
 
+infixl 8 <<>>
+
 {-|
     Shows the bitboard in a square representation, along with its numeric value
 -}
