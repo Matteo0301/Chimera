@@ -190,6 +190,8 @@ testBit = toLinear2 Data.Bits.testBit
 ($|$) :: Int %1 -> Int %1 -> Int
 ($|$) = toLinear2 (Data.Bits..|.)
 
+infixl 5 $|$
+
 {-@ assume $&$ :: x:Int -> y:Int -> {and' x y} @-}
 
 {-|
@@ -198,6 +200,8 @@ testBit = toLinear2 Data.Bits.testBit
 ($&$) :: Int %1 -> Int %1 -> Int
 ($&$) = toLinear2 (Data.Bits..&.)
 
+infixl 7 $&$
+
 {-@ assume xor :: x:Int -> y:Int -> {xor' x y} @-}
 
 {-|
@@ -205,6 +209,8 @@ testBit = toLinear2 Data.Bits.testBit
 -}
 xor :: Int %1 -> Int %1 -> Int
 xor = toLinear2 Prelude.xor
+
+infixl 6 `xor`
 
 {-@ assume shiftL :: n:Int -> i:Int -> { shiftL' n i} @-}
 
@@ -216,6 +222,8 @@ shiftL = toLinear2 Data.Bits.shiftL
 
 {-@ assume shiftR :: n:Int -> i:Int -> { shiftR' n i} @-}
 
+infixl 8 `shiftL`
+
 {-|
     A linear version of a logic (unsigned) right shift. The first argument is the number to shift, the second is the number of bits to shift.
 -}
@@ -225,6 +233,8 @@ shiftR =
   where
     liftShiftR :: Int -> Int -> Int
     liftShiftR (I# x) (I# i) = I# (x `iShiftRL#` i)
+
+infixl 8 `shiftR`
 
 {-|
     Linear version of 'Data.Bits.setBit'.
