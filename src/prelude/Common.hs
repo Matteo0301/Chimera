@@ -30,6 +30,12 @@ module Common
     , attacks2Int
     , showBits
     , printAttacks
+    , fileA
+    , fileG
+    , fileB
+    , fileH
+    , rank1
+    , rank8
     ) where
 
 import Bits
@@ -155,6 +161,24 @@ maskRank rank bb = bb $&$ rank2Int rank
 -}
 rank2Int :: Rank -> Int
 rank2Int rank = 0xFF `shiftL` (8 * toLinear fromEnum rank)
+
+fileA :: Int
+fileA = file2Int FA
+
+fileB :: Int
+fileB = file2Int FB
+
+fileG :: Int
+fileG = file2Int FG
+
+fileH :: Int
+fileH = file2Int FH
+
+rank1 :: Int
+rank1 = rank2Int R1
+
+rank8 :: Int
+rank8 = rank2Int R8
 
 {-|
     Converts a square to its index in the bitboard.

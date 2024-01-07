@@ -21,21 +21,3 @@ occupancy s bits a = occupancy_helper bits 0 a
                 if s $&$ (1 `shiftL` count) /= 0
                     then occupancy_helper (count - 1) (occ $|$ (1 `shiftL` square)) (clearBit a' square)
                     else occupancy_helper (count - 1) (occ) (clearBit a' square)
-
-fileA :: Int
-fileA = file2Int FA
-
-fileB :: Int
-fileB = file2Int FB
-
-fileG :: Int
-fileG = file2Int FG
-
-fileH :: Int
-fileH = file2Int FH
-
-rank1 :: Int
-rank1 = rank2Int R1
-
-rank8 :: Int
-rank8 = rank2Int R8
