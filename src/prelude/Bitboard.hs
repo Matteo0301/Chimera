@@ -30,6 +30,7 @@ module Bitboard
     , maskFile
     , maskRank
     , bbPop
+    , printBitboard
     ) where
 
 import Bits
@@ -57,6 +58,9 @@ import Prelude hiding (($))
 newtype Bitboard' where
     Bitboard :: Int %1 -> Bitboard'
     deriving (Eq, Show, Ord)
+
+printBitboard :: Bitboard' -> Text
+printBitboard (Bitboard bb) = showBits bb
 
 {-@ type Bitboard = {a:Bitboard' | bbPop a <= 32} @-}
 -- {-@ type Bitboard = Bitboard' @-}

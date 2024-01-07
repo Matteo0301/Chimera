@@ -33,5 +33,5 @@ newtype KingBB = KingBB KingBBWrapped deriving (Eq, Show)
 
 instance Piece KingBB where
     {-# INLINE getAttacks #-}
-    getAttacks :: Proxy KingBB -> Square -> AttackBB
-    getAttacks _ s = table ! square2Index s
+    getAttacks :: Square -> AttackBB
+    getAttacks s = table ! square2Index s

@@ -13,13 +13,12 @@ import Data.Vector
 import Pawns
 import Test.Falsify.Predicate qualified as P
 import Test.Tasty
-import Test.Tasty.ExpectedFailure (expectFail)
 import Test.Tasty.Falsify qualified as Falsify
 import Test.Tasty.Inspection
 import Types
 
 goal :: AttackBB
-goal = getAttacks (Proxy :: Proxy (PawnBB 'White)) A1
+goal = getAttacks @(PawnBB 'White) A1
 
 reference :: AttackBB
 reference = tableWhite ! square2Index A1
@@ -36,7 +35,7 @@ prop_get_attacks = do
     Falsify.assert $
         P.eq
             P..$ ("expected", tableWhite ! square2Index s)
-            P..$ ("actual", getAttacks (Proxy :: Proxy (PawnBB 'White)) s)
+            P..$ ("actual", getAttacks @(PawnBB 'White) s)
 
 prop_attacks_number :: Falsify.Property ()
 prop_attacks_number = do
@@ -45,7 +44,7 @@ prop_attacks_number = do
         P.ge
             P..$ ("expected", 2)
             P..$ ( "actual",
-                   case getAttacks (Proxy :: Proxy (PawnBB 'White)) s of
+                   case getAttacks @(PawnBB 'White) s of
                     AttackBB bb -> popCount bb
                  )
 
@@ -65,7 +64,6 @@ pawns_specialization =
 
 pawns_inline :: TestTree
 pawns_inline =
-    expectFail
-        $( inspectTest
-            (('goal ==- 'reference) {testName = Just "getAttacks inlining"})
-         )
+    $( inspectTest
+        (('goal ==- 'reference) {testName = Just "getAttacks inlining"})
+     )

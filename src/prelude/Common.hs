@@ -29,6 +29,7 @@ module Common
     , squareMask
     , attacks2Int
     , showBits
+    , printAttacks
     ) where
 
 import Bits
@@ -197,7 +198,10 @@ instance GetSide 'Black where
     Class to extract the attacks of a piece from the corresponding type.
 -}
 class Piece a where
-    getAttacks :: Proxy a -> Square -> AttackBB
+    getAttacks :: Square -> AttackBB
+
+printAttacks :: forall a. (Piece a) => Square -> Text
+printAttacks s = showBits $ attacks2Int $ getAttacks @a s
 
 {-@ ignore showBits @-}
 
