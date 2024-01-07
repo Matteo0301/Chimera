@@ -21,7 +21,6 @@ import Common
 import Data.Array.Destination
 import Data.Vector
 import Prelude.Linear (($))
-import Util
 import Prelude hiding (($))
 
 {-@ LIQUID "--no-termination" @-}
@@ -42,8 +41,8 @@ maskPawnAttack (PawnBBWrapped bb) =
         not_a_file res = res $&$ complement fileA
         not_h_file res = res $&$ complement fileH
         attacks = AttackBB $ case getSide (Proxy :: Proxy a) of
-            White -> not_a_file (initial `shiftL` 7) $|$ not_h_file (initial `shiftL` 9)
-            Black -> not_h_file (initial `shiftR` 7) $|$ not_a_file (initial `shiftR` 9)
+            White -> not_a_file (initial `shiftR` 7) $|$ not_h_file (initial `shiftR` 9)
+            Black -> not_h_file (initial `shiftL` 7) $|$ not_a_file (initial `shiftL` 9)
      in
         attacks
 

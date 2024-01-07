@@ -20,7 +20,6 @@ import Common
 import Data.Array.Destination
 import Data.Vector
 import Prelude.Linear (($))
-import Util
 import Prelude hiding (($))
 
 -- {-@ LIQUID "--no-termination" @-}

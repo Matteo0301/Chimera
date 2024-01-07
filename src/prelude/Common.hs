@@ -116,19 +116,19 @@ data Square
     | H1
     deriving (Eq, Ord, Show, Enum)
 
-{-@ data File = FA | FB | FC | FD | FE | FF | FG | FH @-}
+{-@ data File = FH | FG | FF | FE | FD | FC | FB | FA @-}
 
 {-|
     Represents the file of a square on the board.
 -}
-data File = FA | FB | FC | FD | FE | FF | FG | FH deriving (Eq, Ord, Show, Enum)
+data File = FH | FG | FF | FE | FD | FC | FB | FA deriving (Eq, Ord, Show, Enum)
 
-{-@ data Rank = R1 | R2 | R3 | R4 | R5 | R6 | R7 | R8 @-}
+{-@ data Rank = R8 | R7 | R6 | R5 | R4 | R3 | R2 | R1 @-}
 
 {-|
     Represents the rank of a square on the board.
 -}
-data Rank = R1 | R2 | R3 | R4 | R5 | R6 | R7 | R8 deriving (Eq, Ord, Show, Enum)
+data Rank = R8 | R7 | R6 | R5 | R4 | R3 | R2 | R1 deriving (Eq, Ord, Show, Enum)
 
 {-@ maskFile :: File -> Int -> Int @-}
 

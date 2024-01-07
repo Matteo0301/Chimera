@@ -36,15 +36,44 @@ prop_get_attacks = do
         P.eq
             P..$ ("expected", tableWhite ! square2Index s)
             P..$ ("actual", getAttacks @(PawnBB 'White) s)
+    Falsify.assert $
+        P.eq
+            P..$ ("expected", tableBlack ! square2Index s)
+            P..$ ("actual", getAttacks @(PawnBB 'Black) s)
+
+attack_number_white :: Square -> Int
+attack_number_white s
+    | s' $&$ rank8 /= 0 = 0
+    | s' $&$ files /= 0 = 1
+    | otherwise = 2
+  where
+    files = fileA $|$ fileH
+    s' = squareMask s
+
+attack_number_black :: Square -> Int
+attack_number_black s
+    | s' $&$ rank1 /= 0 = 0
+    | s' $&$ files /= 0 = 1
+    | otherwise = 2
+  where
+    files = fileA $|$ fileH
+    s' = squareMask s
 
 prop_attacks_number :: Falsify.Property ()
 prop_attacks_number = do
     s <- Falsify.gen genSquare
     Falsify.assert $
-        P.ge
-            P..$ ("expected", 2)
+        P.eq
+            P..$ ("expected", attack_number_white s)
             P..$ ( "actual",
                    case getAttacks @(PawnBB 'White) s of
+                    AttackBB bb -> popCount bb
+                 )
+    Falsify.assert $
+        P.eq
+            P..$ ("expected", attack_number_black s)
+            P..$ ( "actual",
+                   case getAttacks @(PawnBB 'Black) s of
                     AttackBB bb -> popCount bb
                  )
 
