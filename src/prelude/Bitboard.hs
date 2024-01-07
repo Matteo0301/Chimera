@@ -132,11 +132,12 @@ bb <<>> i = setSquare bb i
 
 infixl 8 <<>>
 
+{-@ ignore showBits @-}
 {-|
     Shows the bitboard in a square representation, along with its numeric value
 -}
 showBits :: Int -> Text
-showBits bb = showBits' 63
+showBits bb = showBits' 0
   where
     showBit :: Int -> Text
     showBit i =
@@ -145,9 +146,9 @@ showBits bb = showBits' 63
          in
             if b then "# " else ". "
     line :: Int -> Text
-    line i = if i `mod` 8 == 0 then " " <> show (i `div` 8 + 1) <> "\n" else ""
+    line i = if i `mod` 8 == 7 then " " <> show (8 - (i `div` 8)) <> "\n" else ""
     showBits' i
         | i < 0 || i >= 64 = ""
-        | i == 0 =
+        | i == 63 =
             showBit i <> line i <> "a b c d e f g h\n" <> "Value: " <> show bb <> "\n"
-        | otherwise = showBit i <> line i <> showBits' (i - 1)
+        | otherwise = showBit i <> line i <> showBits' (i + 1)

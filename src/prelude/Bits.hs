@@ -265,3 +265,9 @@ complement = toLinear Data.Bits.complement
 -}
 lastBit :: Int %1 -> Int
 lastBit = toLinear (\x' -> x' Bits.$&$ Bits.complement x')
+
+{-|
+    Linear version of 'Data.Bits.countLeadingZeros'.
+-}
+countTrailingZeros :: Int %1 -> Int
+countTrailingZeros = toLinear Data.Bits.countTrailingZeros
