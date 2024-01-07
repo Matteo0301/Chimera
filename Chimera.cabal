@@ -168,6 +168,7 @@ library magic-bitboards
     Bishops.BishopsTH
     Rooks.Internal
     Rooks.RooksTH
+    Util
 
   build-depends:   Chimera:prelude
 

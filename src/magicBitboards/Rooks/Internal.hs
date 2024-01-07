@@ -9,15 +9,14 @@
 {-@ LIQUID "--extensionality" @-}
 {-@ LIQUID "--counter-examples" @-}
 
-module Rooks.Internal (maskRookAttacks, attacksOnTheFly, occupancy) where
+module Rooks.Internal (maskRookAttacks, attacksOnTheFly) where
 
 import Bitboard
 import Bits
 import Common
+import Util
 
-type RookMask = Int
-
-type Occupancy = Int
+type RookMask = AttackMask
 
 {-@ lazy mask_attacks_b @-}
 mask_attacks_b :: Int -> RookMask
@@ -25,7 +24,7 @@ mask_attacks_b s
     | s $&$ m /= 0 = 0
     | otherwise = mask_attacks_b' (s `shiftR` 8)
   where
-    m = rank2Int R1
+    m = rank1
     mask_attacks_b' 0 = 0
     mask_attacks_b' s'
         | s' $&$ m /= 0 = 0
@@ -37,7 +36,7 @@ mask_attacks_t s
     | (s) $&$ m /= 0 = 0
     | otherwise = mask_attacks_t' (s `shiftL` 8)
   where
-    m = rank2Int R8
+    m = rank8
     mask_attacks_t' 0 = 0
     mask_attacks_t' s'
         | s' $&$ m /= 0 = 0
@@ -49,7 +48,7 @@ mask_attacks_l s
     | (s) $&$ m /= 0 = 0
     | otherwise = mask_attacks_l' (s `shiftL` 1)
   where
-    m = file2Int FA
+    m = fileA
     mask_attacks_l' 0 = 0
     mask_attacks_l' s'
         | s' $&$ m /= 0 = 0
@@ -61,7 +60,7 @@ mask_attacks_r s
     | (s) $&$ m /= 0 = 0
     | otherwise = mask_attacks_r' (s `shiftR` 1)
   where
-    m = file2Int FH
+    m = fileH
     mask_attacks_r' 0 = 0
     mask_attacks_r' s'
         | s' $&$ m /= 0 = 0
@@ -81,7 +80,7 @@ attacks_b occ s
     | s $&$ m /= 0 = 0
     | otherwise = attacks_b' (s `shiftR` 8)
   where
-    m = rank2Int R1
+    m = rank1
     attacks_b' 0 = 0
     attacks_b' s'
         | s' $&$ m /= 0 = s'
@@ -94,7 +93,7 @@ attacks_t occ s
     | (s) $&$ m /= 0 = 0
     | otherwise = attacks_t' (s `shiftL` 8)
   where
-    m = rank2Int R8
+    m = rank8
     attacks_t' 0 = 0
     attacks_t' s'
         | s' $&$ m /= 0 = s'
@@ -107,7 +106,7 @@ attacks_l occ s
     | (s) $&$ m /= 0 = 0
     | otherwise = attacks_l' (s `shiftL` 1)
   where
-    m = file2Int FA
+    m = fileA
     attacks_l' 0 = 0
     attacks_l' s'
         | s' $&$ m /= 0 = s'
@@ -120,7 +119,7 @@ attacks_r occ s
     | (s) $&$ m /= 0 = 0
     | otherwise = attacks_r' (s `shiftR` 1)
   where
-    m = file2Int FH
+    m = fileH
     attacks_r' 0 = 0
     attacks_r' s'
         | s' $&$ m /= 0 = s'
@@ -136,19 +135,3 @@ attacksOnTheFly occ s =
                 $|$ attacks_b occ' s'
                 $|$ attacks_t occ' s'
                 $|$ attacks_r occ' s'
-
-{-@ ignore occupancy @-}
-occupancy :: Int -> Int -> RookMask -> Occupancy
-occupancy _ 0 _ = 0
-occupancy _ _ 0 = 0
-occupancy s bits a = occupancy_helper bits 0 a
-  where
-    occupancy_helper count occ a'
-        | count <= 0 = occ
-        | otherwise =
-            let
-                square = countTrailingZeros a'
-             in
-                if s $&$ (1 `shiftL` count) /= 0
-                    then occupancy_helper (count - 1) (occ $|$ (1 `shiftL` square)) (clearBit a' square)
-                    else occupancy_helper (count - 1) (occ) (clearBit a' square)

@@ -20,6 +20,7 @@ import Common
 import Data.Array.Destination
 import Data.Vector
 import Prelude.Linear (($))
+import Util
 import Prelude hiding (($))
 
 -- {-@ LIQUID "--no-termination" @-}
@@ -36,20 +37,20 @@ maskKnightAttack (KnightBBWrapped bb) =
     let
         initial :: Int = bb2Int bb
         not_a_file :: Int -> Int
-        not_a_file res = res $&$ complement (file2Int FA)
-        not_h_file res = res $&$ complement (file2Int FH)
-        not_ab_file res = res $&$ complement (file2Int FA) $&$ complement (file2Int FB)
-        not_gh_file res = res $&$ complement (file2Int FG) $&$ complement (file2Int FH)
+        not_a_file res = res $&$ complement fileA
+        not_h_file res = res $&$ complement fileH
+        not_ab_file res = res $&$ complement fileA $&$ complement fileB
+        not_gh_file res = res $&$ complement fileG $&$ complement fileH
         attacks =
-            AttackBB $
-                not_a_file (initial `shiftL` 15)
-                    $|$ not_h_file (initial `shiftL` 17)
-                    $|$ not_ab_file (initial `shiftL` 6)
-                    $|$ not_gh_file (initial `shiftL` 10)
-                    $|$ not_h_file (initial `shiftR` 15)
-                    $|$ not_a_file (initial `shiftR` 17)
-                    $|$ not_gh_file (initial `shiftR` 6)
-                    $|$ not_ab_file (initial `shiftR` 10)
+            AttackBB
+                $ not_a_file (initial `shiftL` 15)
+                $|$ not_h_file (initial `shiftL` 17)
+                $|$ not_ab_file (initial `shiftL` 6)
+                $|$ not_gh_file (initial `shiftL` 10)
+                $|$ not_h_file (initial `shiftR` 15)
+                $|$ not_a_file (initial `shiftR` 17)
+                $|$ not_gh_file (initial `shiftR` 6)
+                $|$ not_ab_file (initial `shiftR` 10)
      in
         attacks
 
