@@ -35,6 +35,8 @@ module Common
     , fileB
     , fileH
     , rank1
+    , rank2
+    , rank7
     , rank8
     ) where
 
@@ -176,6 +178,12 @@ fileH = file2Int FH
 
 rank1 :: Int
 rank1 = rank2Int R1
+
+rank2 :: Int
+rank2 = rank2Int R2
+
+rank7 :: Int
+rank7 = rank2Int R7
 
 rank8 :: Int
 rank8 = rank2Int R8

@@ -10,6 +10,7 @@
 
 import BitboardTest
 import KingTest (king_tests)
+import KnightsTest (knights_tests)
 import PawnsTest (pawns_tests)
 import Test.Tasty
 import Test.Tasty.Ingredients (composeReporters)
@@ -26,4 +27,4 @@ main =
         tests
 
 tests :: TestTree
-tests = testGroup "Tests" [bb_tests, pawns_tests, king_tests]
+tests = testGroup "Tests" [bb_tests, pawns_tests, king_tests, knights_tests]
