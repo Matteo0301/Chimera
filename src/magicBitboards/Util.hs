@@ -1,7 +1,6 @@
 module Util where
 
 import Bits
-import Common
 
 type Occupancy = Int
 type AttackMask = Int
@@ -17,7 +16,9 @@ occupancy s bits a = occupancy_helper bits 0 a
         | otherwise =
             let
                 square = countTrailingZeros a'
+                occ' =
+                    if s $&$ (1 `shiftL` count) /= 0
+                        then occ $|$ (1 `shiftL` square)
+                        else occ
              in
-                if s $&$ (1 `shiftL` count) /= 0
-                    then occupancy_helper (count - 1) (occ $|$ (1 `shiftL` square)) (clearBit a' square)
-                    else occupancy_helper (count - 1) (occ) (clearBit a' square)
+                occupancy_helper (count - 1) occ' (clearBit a' square)

@@ -197,6 +197,7 @@ test-suite test
     BitboardTest
     PawnsTest
     Types
+    KingTest
 
   build-depends:
     , Chimera:{magic-bitboards, prelude}
