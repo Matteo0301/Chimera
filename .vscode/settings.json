@@ -17,6 +17,7 @@
         "mappend",
         "mempty",
         "Monoid",
+        "NOINLINE",
         "nomeata",
         "olean",
         "POSIX",

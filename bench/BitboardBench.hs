@@ -5,7 +5,6 @@
 module BitboardBench (bitboard_benches) where
 
 import Bitboard
-import Relude.Foldable
 import Test.Tasty.Bench
 
 bitboard_benches :: Benchmark
