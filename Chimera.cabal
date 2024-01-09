@@ -114,11 +114,12 @@ common all
     , base         >=4.17.2 && <4.18
     , linear-base  >=0.4.0  && <0.5
     , random       >=1.2.1  && <1.3
-    , universum    >=1.8.2  && <1.9
+    , relude
   
   mixins:
-    base hiding (Prelude),
-    universum (Universum as Prelude)
+    base hiding (Prelude)
+    , relude (Relude as Prelude)
+    , relude
 
 library prelude
   import:             warnings, optimizations

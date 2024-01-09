@@ -13,4 +13,4 @@ genSquare = do
 genBitboard :: Generator.Gen Bitboard
 genBitboard = do
     l <- Generator.list (between (0, 32)) genSquare
-    return $ foldl setSquare emptyBoard l
+    return $ foldl' setSquare emptyBoard l
