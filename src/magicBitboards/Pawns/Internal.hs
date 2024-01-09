@@ -34,9 +34,9 @@ newtype PawnBBWrapped (side :: SideToMove) = PawnBBWrapped Bitboard
     deriving (Eq, Show)
 
 maskPawnAttack :: forall a. (GetSide a) => PawnBBWrapped a -> AttackBB
-maskPawnAttack (PawnBBWrapped bb) =
+maskPawnAttack (PawnBBWrapped b) =
     let
-        initial :: Int = bb2Int bb
+        initial :: Int = bb b
         not_a_file :: Int -> Int
         not_a_file res = res $&$ complement fileA
         not_h_file res = res $&$ complement fileH

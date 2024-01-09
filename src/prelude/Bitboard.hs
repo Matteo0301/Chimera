@@ -26,7 +26,7 @@ module Bitboard
     , emptyBoard
     , initialBoard
     , square2Index
-    , bb2Int
+    , bb
     , maskFile
     , maskRank
     , bbPop
@@ -55,9 +55,7 @@ import Prelude hiding (($))
     The least significant bit represents the square h1, the most significant bit represents the square a8.
     The bitboard is stored in little endian order, so the first 8 bits represent the first row of the board.
 -}
-newtype Bitboard' where
-    Bitboard :: Int %1 -> Bitboard'
-    deriving (Eq, Show, Ord)
+newtype Bitboard' = Bitboard {bb :: Int} deriving (Eq, Show, Ord)
 
 printBitboard :: Bitboard' -> Text
 printBitboard (Bitboard bb) = showBits bb
@@ -82,14 +80,6 @@ emptyBoard = Bitboard 0
 initialBoard :: Bitboard
 initialBoard = Bitboard (-0x0000FFFFFFFF0001)
 
-{-@ inline bb2Int @-}
-
-{-|
-    Converts a bitboard to its underlying 'Int' representation.
--}
-bb2Int :: Bitboard' %1 -> Int
-bb2Int (Bitboard bb) = bb
-
 {-@ inline bbPop @-}
 bbPop :: Bitboard' -> Int
 bbPop (Bitboard bb) = pop bb
@@ -97,7 +87,7 @@ bbPop (Bitboard bb) = pop bb
 {-|
     Returns the number of squares occupied in the bitboard.
 -}
-population :: Bitboard %1 -> Int
+population :: Bitboard -> Int
 population (Bitboard bb) = popCount bb
 
 -- {-@ getSquare :: Bitboard -> Square -> Bool @-}
@@ -105,7 +95,7 @@ population (Bitboard bb) = popCount bb
 {-|
     Returns whether the square is set in the bitboard
 -}
-getSquare :: Bitboard %1 -> Square %1 -> Bool
+getSquare :: Bitboard -> Square -> Bool
 getSquare (Bitboard bb) sq = testBit bb (square2Index sq)
 
 -- {-@ setSquare :: x:Bitboard -> Square -> {y:Bitboard | population x == 32 => population y = 32 && population x < 32 => population y = population x + 1} @-}
@@ -113,7 +103,7 @@ getSquare (Bitboard bb) sq = testBit bb (square2Index sq)
 {-|
     Sets the square in the bitboard. If the new bitboard has more that 32 squares occupied, returns the old one.
 -}
-setSquare :: Bitboard %1 -> Square %1 -> Bitboard
+setSquare :: Bitboard -> Square -> Bitboard
 setSquare (Bitboard bb) sq = Bitboard $ setBit bb (square2Index sq)
 
 -- {-@ assume unsetSquare :: x:Bitboard -> Square -> {y:Bitboard | bbPop x == 0 => bbPop y = 0 && bbPop x < 32 => bbPop y = bbPop x - 1} @-}
@@ -121,7 +111,7 @@ setSquare (Bitboard bb) sq = Bitboard $ setBit bb (square2Index sq)
 {-|
     Sets a certain square in the board as empty
 -}
-unsetSquare :: Bitboard %1 -> Square %1 -> Bitboard
+unsetSquare :: Bitboard -> Square -> Bitboard
 unsetSquare (Bitboard bb) sq = Bitboard $ clearBit bb (square2Index sq)
 
 -- {-@ (<<>>) :: Bitboard -> Square -> Bitboard @-}

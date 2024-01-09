@@ -7,7 +7,6 @@
 module KnightsTest (knights_tests) where
 
 import Bitboard
-import Bits
 import Common
 import Data.Vector
 import Knights
@@ -16,7 +15,6 @@ import Test.Tasty
 import Test.Tasty.Falsify qualified as Falsify
 import Test.Tasty.Inspection
 import Types
-import Unsafe.Linear (toLinear2)
 
 goal :: AttackBB
 goal = getAttacks @KnightBB A1

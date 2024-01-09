@@ -41,7 +41,6 @@ module Common
     ) where
 
 import Bits
-import Unsafe.Linear
 
 {-@ type Board = Int @-}
 
@@ -153,7 +152,7 @@ file2Int file = 0x8080808080808080 `shiftR` fromEnum file
 {-|
     Returns the pieces on the given rank of the board.
 -}
-maskRank :: Rank -> Int %1 -> Int
+maskRank :: Rank -> Int -> Int
 maskRank rank bb = bb $&$ rank2Int rank
 
 {-@ rank2Int :: Rank -> Int @-}
@@ -162,7 +161,7 @@ maskRank rank bb = bb $&$ rank2Int rank
     Converts a rank to its corresponding bits on the board.
 -}
 rank2Int :: Rank -> Int
-rank2Int rank = 0xFF `shiftL` (8 * toLinear fromEnum rank)
+rank2Int rank = 0xFF `shiftL` (8 * fromEnum rank)
 
 fileA :: Int
 fileA = file2Int FA
@@ -193,8 +192,8 @@ rank8 = rank2Int R8
 -}
 
 {-@ assume square2Index :: Square -> Index  @-}
-square2Index :: Square %1 -> Int
-square2Index = toLinear fromEnum
+square2Index :: Square -> Int
+square2Index = fromEnum
 
 squareMask :: Square -> Int
 squareMask s = 1 `shiftL` square2Index s

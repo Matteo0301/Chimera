@@ -129,7 +129,7 @@ attacks_r occ s
 attacksOnTheFly :: Bitboard -> Square -> AttackBB
 attacksOnTheFly occ s =
     let s' = squareMask s
-        occ' = bb2Int occ
+        occ' = bb occ
      in AttackBB $
             attacks_l occ' s'
                 $|$ attacks_b occ' s'

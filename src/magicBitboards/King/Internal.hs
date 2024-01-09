@@ -32,9 +32,9 @@ import Prelude hiding (xor, ($))
 newtype KingBBWrapped = KingBBWrapped Bitboard deriving (Eq, Show)
 
 maskKingAttack :: KingBBWrapped -> AttackBB
-maskKingAttack (KingBBWrapped bb) =
+maskKingAttack (KingBBWrapped b) =
     let
-        initial :: Int = bb2Int bb
+        initial :: Int = bb b
         not_a_file res = res $&$ complement fileA
         not_h_file res = res $&$ complement fileH
         tmp =
