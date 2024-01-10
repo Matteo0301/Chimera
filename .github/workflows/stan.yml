@@ -57,6 +57,11 @@ jobs:
       - name: Build
         run: cabal build --enable-tests --enable-benchmarks --flags="stan" all
       - name: Build stan
-        run: 'type -P "stan" || pushd /tmp && git clone https://github.com/kowainik/stan.git && cd stan && cabal v2-build exe:stan && mkdir -p ~/.local/bin &&  cp "$(cabal v2-exec --verbose=0 --offline sh -- -c "command -v stan")" ~/.local/bin/stan && popd'
+        run: cabal v2-install stan --install-method=copy --overwrite-policy=always
       - name: Run stan
         run: stan
+      - name: Upload results
+        uses: actions/upload-artifact@v4
+        with:
+          name: my-artifact
+          path: stan.html
