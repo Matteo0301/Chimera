@@ -1,6 +1,6 @@
 -- \|
 -- Description : Main test module
--- Copyright   : (c) 2023 Matteo Mariotti
+-- Copyright   : (c) 2023 - 2024 Matteo Mariotti
 -- License     : GNU GPL v.3
 -- Maintainer  : matteomariotti0301@gmail.com
 -- Stability   : experimental
