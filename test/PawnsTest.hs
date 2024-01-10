@@ -13,13 +13,12 @@ import Data.Vector
 import Pawns
 import Test.Falsify.Predicate qualified as P
 import Test.Tasty
-import Test.Tasty.ExpectedFailure (expectFail)
 import Test.Tasty.Falsify qualified as Falsify
 import Test.Tasty.Inspection
 import Types
 
 goal :: AttackBB
-goal = getAttacks (Proxy :: Proxy (PawnBB 'White)) A1
+goal = getAttacks @(PawnBB 'White) A1
 
 reference :: AttackBB
 reference = tableWhite ! square2Index A1
@@ -36,16 +35,45 @@ prop_get_attacks = do
     Falsify.assert $
         P.eq
             P..$ ("expected", tableWhite ! square2Index s)
-            P..$ ("actual", getAttacks (Proxy :: Proxy (PawnBB 'White)) s)
+            P..$ ("actual", getAttacks @(PawnBB 'White) s)
+    Falsify.assert $
+        P.eq
+            P..$ ("expected", tableBlack ! square2Index s)
+            P..$ ("actual", getAttacks @(PawnBB 'Black) s)
+
+attack_number_white :: Square -> Int
+attack_number_white s
+    | s' $&$ rank8 /= 0 = 0
+    | s' $&$ files /= 0 = 1
+    | otherwise = 2
+  where
+    files = fileA $|$ fileH
+    s' = squareMask s
+
+attack_number_black :: Square -> Int
+attack_number_black s
+    | s' $&$ rank1 /= 0 = 0
+    | s' $&$ files /= 0 = 1
+    | otherwise = 2
+  where
+    files = fileA $|$ fileH
+    s' = squareMask s
 
 prop_attacks_number :: Falsify.Property ()
 prop_attacks_number = do
     s <- Falsify.gen genSquare
     Falsify.assert $
-        P.ge
-            P..$ ("expected", 2)
+        P.eq
+            P..$ ("expected", attack_number_white s)
             P..$ ( "actual",
-                   case getAttacks (Proxy :: Proxy (PawnBB 'White)) s of
+                   case getAttacks @(PawnBB 'White) s of
+                    AttackBB bb -> popCount bb
+                 )
+    Falsify.assert $
+        P.eq
+            P..$ ("expected", attack_number_black s)
+            P..$ ( "actual",
+                   case getAttacks @(PawnBB 'Black) s of
                     AttackBB bb -> popCount bb
                  )
 
@@ -65,7 +93,6 @@ pawns_specialization =
 
 pawns_inline :: TestTree
 pawns_inline =
-    expectFail
-        $( inspectTest
-            (('goal ==- 'reference) {testName = Just "getAttacks inlining"})
-         )
+    $( inspectTest
+        (('goal ==- 'reference) {testName = Just "getAttacks inlining"})
+     )

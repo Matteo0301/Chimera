@@ -22,7 +22,7 @@ import Data.Vector
 import Prelude.Linear (($))
 import Prelude hiding (($))
 
---{-@ LIQUID "--no-termination" @-}
+-- {-@ LIQUID "--no-termination" @-}
 
 {- {-@ type Pop = {x:Int | x >= 0 && x<= 64} @-}
 {-@ type Index = {x:Int | x >= 0 && x<= 63} @-}
@@ -32,14 +32,14 @@ import Prelude hiding (($))
 newtype KnightBBWrapped = KnightBBWrapped Bitboard deriving (Eq, Show)
 
 maskKnightAttack :: KnightBBWrapped -> AttackBB
-maskKnightAttack (KnightBBWrapped bb) =
+maskKnightAttack (KnightBBWrapped b) =
     let
-        initial :: Int = bb2Int bb
+        initial :: Int = bb b
         not_a_file :: Int -> Int
-        not_a_file res = res $&$ complement (file2Int FA)
-        not_h_file res = res $&$ complement (file2Int FH)
-        not_ab_file res = res $&$ complement (file2Int FA) $&$ complement (file2Int FB)
-        not_gh_file res = res $&$ complement (file2Int FG) $&$ complement (file2Int FH)
+        not_a_file res = res $&$ complement fileA
+        not_h_file res = res $&$ complement fileH
+        not_ab_file res = res $&$ complement fileA $&$ complement fileB
+        not_gh_file res = res $&$ complement fileG $&$ complement fileH
         attacks =
             AttackBB
                 $ not_a_file (initial `shiftL` 15)

@@ -111,14 +111,15 @@ common all
     NoImplicitPrelude
   
   build-depends:
-    base >=4.17.2 && <4.18 || ^>=4.19.0,
-    linear-base >=0.4.0 && <0.5,
-    random >=1.2.1 && <1.3,
-    universum >=1.8.2 && <1.9
+    base >=4.17.2 && <4.18 || ^>=4.19.0
+    , linear-base  >=0.4.0  && <0.5
+    , random       >=1.2.1  && <1.3
+    , relude
   
   mixins:
-    base hiding (Prelude),
-    universum (Universum as Prelude)
+    base hiding (Prelude)
+    , relude (Relude as Prelude)
+    , relude
 
 library prelude
   import:             warnings, optimizations
@@ -168,6 +169,7 @@ library magic-bitboards
     Bishops.BishopsTH
     Rooks.Internal
     Rooks.RooksTH
+    Util
 
   build-depends:   Chimera:prelude
 
@@ -196,6 +198,8 @@ test-suite test
     BitboardTest
     PawnsTest
     Types
+    KingTest
+    KnightsTest
 
   build-depends:
     Chimera:{magic-bitboards, prelude},

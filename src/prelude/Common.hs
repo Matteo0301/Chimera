@@ -27,10 +27,20 @@ module Common
     , square2Index
     , Piece (..)
     , squareMask
+    , attacks2Int
+    , showBits
+    , printAttacks
+    , fileA
+    , fileG
+    , fileB
+    , fileH
+    , rank1
+    , rank2
+    , rank7
+    , rank8
     ) where
 
 import Bits
-import Unsafe.Linear
 
 {-@ type Board = Int @-}
 
@@ -41,85 +51,85 @@ import Unsafe.Linear
     The 'Square' type represents the index of a square on the board.
 -}
 data Square
-    = H1
-    | G1
-    | F1
-    | E1
-    | D1
-    | C1
-    | B1
-    | A1
-    | H2
-    | G2
-    | F2
-    | E2
-    | D2
-    | C2
-    | B2
-    | A2
-    | H3
-    | G3
-    | F3
-    | E3
-    | D3
-    | C3
-    | B3
-    | A3
-    | H4
-    | G4
-    | F4
-    | E4
-    | D4
-    | C4
-    | B4
-    | A4
-    | H5
-    | G5
-    | F5
-    | E5
-    | D5
-    | C5
-    | B5
-    | A5
-    | H6
-    | G6
-    | F6
-    | E6
-    | D6
-    | C6
-    | B6
-    | A6
-    | H7
-    | G7
-    | F7
-    | E7
-    | D7
-    | C7
-    | B7
-    | A7
-    | H8
-    | G8
-    | F8
-    | E8
-    | D8
-    | C8
+    = A8
     | B8
-    | A8
+    | C8
+    | D8
+    | E8
+    | F8
+    | G8
+    | H8
+    | A7
+    | B7
+    | C7
+    | D7
+    | E7
+    | F7
+    | G7
+    | H7
+    | A6
+    | B6
+    | C6
+    | D6
+    | E6
+    | F6
+    | G6
+    | H6
+    | A5
+    | B5
+    | C5
+    | D5
+    | E5
+    | F5
+    | G5
+    | H5
+    | A4
+    | B4
+    | C4
+    | D4
+    | E4
+    | F4
+    | G4
+    | H4
+    | A3
+    | B3
+    | C3
+    | D3
+    | E3
+    | F3
+    | G3
+    | H3
+    | A2
+    | B2
+    | C2
+    | D2
+    | E2
+    | F2
+    | G2
+    | H2
+    | A1
+    | B1
+    | C1
+    | D1
+    | E1
+    | F1
+    | G1
+    | H1
     deriving (Eq, Ord, Show, Enum)
 
-{-@ data File = FA | FB | FC | FD | FE | FF | FG | FH @-}
+{-@ data File = FH | FG | FF | FE | FD | FC | FB | FA @-}
 
 {-|
     Represents the file of a square on the board.
 -}
-data File = FA | FB | FC | FD | FE | FF | FG | FH deriving (Eq, Ord, Show, Enum)
+data File = FH | FG | FF | FE | FD | FC | FB | FA deriving (Eq, Ord, Show, Enum)
 
-{-@ data Rank = R1 | R2 | R3 | R4 | R5 | R6 | R7 | R8 @-}
+{-@ data Rank = R8 | R7 | R6 | R5 | R4 | R3 | R2 | R1 @-}
 
 {-|
     Represents the rank of a square on the board.
 -}
-data Rank = R1 | R2 | R3 | R4 | R5 | R6 | R7 | R8 deriving (Eq, Ord, Show, Enum)
+data Rank = R8 | R7 | R6 | R5 | R4 | R3 | R2 | R1 deriving (Eq, Ord, Show, Enum)
 
 {-@ maskFile :: File -> Int -> Int @-}
 
@@ -142,7 +152,7 @@ file2Int file = 0x8080808080808080 `shiftR` fromEnum file
 {-|
     Returns the pieces on the given rank of the board.
 -}
-maskRank :: Rank -> Int %1 -> Int
+maskRank :: Rank -> Int -> Int
 maskRank rank bb = bb $&$ rank2Int rank
 
 {-@ rank2Int :: Rank -> Int @-}
@@ -151,15 +161,39 @@ maskRank rank bb = bb $&$ rank2Int rank
     Converts a rank to its corresponding bits on the board.
 -}
 rank2Int :: Rank -> Int
-rank2Int rank = 0xFF `shiftL` (8 * toLinear fromEnum rank)
+rank2Int rank = 0xFF `shiftL` (8 * fromEnum rank)
+
+fileA :: Int
+fileA = file2Int FA
+
+fileB :: Int
+fileB = file2Int FB
+
+fileG :: Int
+fileG = file2Int FG
+
+fileH :: Int
+fileH = file2Int FH
+
+rank1 :: Int
+rank1 = rank2Int R1
+
+rank2 :: Int
+rank2 = rank2Int R2
+
+rank7 :: Int
+rank7 = rank2Int R7
+
+rank8 :: Int
+rank8 = rank2Int R8
 
 {-|
     Converts a square to its index in the bitboard.
 -}
 
 {-@ assume square2Index :: Square -> Index  @-}
-square2Index :: Square %1 -> Int
-square2Index = toLinear fromEnum
+square2Index :: Square -> Int
+square2Index = fromEnum
 
 squareMask :: Square -> Int
 squareMask s = 1 `shiftL` square2Index s
@@ -173,6 +207,9 @@ data SideToMove = White | Black
     Represents the squares attacked by a piece
 -}
 newtype AttackBB = AttackBB Int deriving (Eq, Show)
+
+attacks2Int :: AttackBB -> Int
+attacks2Int (AttackBB bb) = bb
 
 {-|
     Class to extract the value of the side to move from the corresponding type.
@@ -192,4 +229,29 @@ instance GetSide 'Black where
     Class to extract the attacks of a piece from the corresponding type.
 -}
 class Piece a where
-    getAttacks :: Proxy a -> Square -> AttackBB
+    getAttacks :: Square -> AttackBB
+
+printAttacks :: forall a. (Piece a) => Square -> Text
+printAttacks s = showBits $ attacks2Int $ getAttacks @a s
+
+{-@ ignore showBits @-}
+
+{-|
+    Shows the bitboard in a square representation, along with its numeric value
+-}
+showBits :: Int -> Text
+showBits bb = showBits' 0
+  where
+    showBit :: Int -> Text
+    showBit i =
+        let
+            b = testBit bb i
+         in
+            if b then "# " else ". "
+    line :: Int -> Text
+    line i = if i `mod` 8 == 7 then " " <> show (8 - (i `div` 8)) <> "\n" else ""
+    showBits' i
+        | i < 0 || i >= 64 = ""
+        | i == 63 =
+            showBit i <> line i <> "a b c d e f g h\n" <> "Value: " <> show bb <> "\n"
+        | otherwise = showBit i <> line i <> showBits' (i + 1)

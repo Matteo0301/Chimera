@@ -36,9 +36,9 @@ newtype PawnBB (side :: SideToMove) = PawnBB (PawnBBWrapped side)
 
 instance (GetSide a) => Piece (PawnBB a) where
     {-# INLINE getAttacks #-}
-    {-# SPECIALIZE getAttacks :: Proxy (PawnBB 'White) -> Square -> AttackBB #-}
-    {-# SPECIALIZE getAttacks :: Proxy (PawnBB 'Black) -> Square -> AttackBB #-}
-    getAttacks :: (GetSide a) => Proxy (PawnBB a) -> Square -> AttackBB
-    getAttacks _ s = case getSide (Proxy :: Proxy a) of
+    {-     {-# SPECIALIZE getAttacks :: 'White -> Square -> AttackBB #-}
+        {-# SPECIALIZE getAttacks :: 'Black -> Square -> AttackBB #-} -}
+    getAttacks :: Square -> AttackBB
+    getAttacks s = case getSide (Proxy :: Proxy a) of
         White -> tableWhite ! square2Index s
         Black -> tableBlack ! square2Index s

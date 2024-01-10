@@ -26,7 +26,6 @@ module Bits where
 
 import Data.Bits
 import GHC.Base (Int (I#), iShiftRL#)
-import Unsafe.Linear
 
 {-@ embed Int * as int @-}
 
@@ -167,91 +166,107 @@ shiftL' :: Int -> Int -> Int
 shiftL' = shiftL_helper 63
 
 {-|
-    Linear version of 'Data.Bits.popCount'.
+    Version of 'Data.Bits.popCount' with refinement types.
 -}
 
 {-@ assume popCount :: x:Int -> {y:Pop | y = pop x} @-}
-popCount :: Int %1 -> Int
-popCount = toLinear Data.Bits.popCount
+popCount :: Int -> Int
+popCount = Data.Bits.popCount
 
 {-|
-    Linear version of 'Data.Bits.testBit'.
+    Version of 'Data.Bits.testBit' with refinement types.
 -}
 
 {-@ assume testBit :: n:Int -> i:Index -> {get_n_bit n i} @-}
-testBit :: Int %1 -> Int %1 -> Bool
-testBit = toLinear2 Data.Bits.testBit
+testBit :: Int -> Int -> Bool
+testBit = Data.Bits.testBit
 
 {-@ assume $|$ :: x:Int -> y:Int -> {or' x y} @-}
 
 {-|
-    Linear version of 'Data.Bits..|.'.
+    Version of 'Data.Bits..|.' with refinement types.
 -}
-($|$) :: Int %1 -> Int %1 -> Int
-($|$) = toLinear2 (Data.Bits..|.)
+($|$) :: Int -> Int -> Int
+($|$) = (Data.Bits..|.)
+
+infixl 5 $|$
 
 {-@ assume $&$ :: x:Int -> y:Int -> {and' x y} @-}
 
 {-|
-    Linear version of 'Data.Bits..&.'.
+    Version of 'Data.Bits..&.' with refinement types.
 -}
-($&$) :: Int %1 -> Int %1 -> Int
-($&$) = toLinear2 (Data.Bits..&.)
+($&$) :: Int -> Int -> Int
+($&$) = (Data.Bits..&.)
+
+infixl 7 $&$
 
 {-@ assume xor :: x:Int -> y:Int -> {xor' x y} @-}
 
 {-|
-    Linear version of 'Data.Bits.xor'.
+    Version of 'Data.Bits.xor' with refinement types.
 -}
-xor :: Int %1 -> Int %1 -> Int
-xor = toLinear2 Prelude.xor
+xor :: Int -> Int -> Int
+xor = Prelude.xor
+
+infixl 6 `xor`
 
 {-@ assume shiftL :: n:Int -> i:Int -> { shiftL' n i} @-}
 
 {-|
-    Linear version of 'Data.Bits.shiftL'. The first argument is the number to shift, the second is the number of bits to shift.
+    Version of 'Data.Bits.shiftL' with refinement types. The first argument is the number to shift, the second is the number of bits to shift.
 -}
-shiftL :: Int %1 -> Int %1 -> Int
-shiftL = toLinear2 Data.Bits.shiftL
+shiftL :: Int -> Int -> Int
+shiftL = Data.Bits.shiftL
 
 {-@ assume shiftR :: n:Int -> i:Int -> { shiftR' n i} @-}
 
+infixl 8 `shiftL`
+
 {-|
-    A linear version of a logic (unsigned) right shift. The first argument is the number to shift, the second is the number of bits to shift.
+    A Version of logic (unsigned) right shift with refinement types. The first argument is the number to shift, the second is the number of bits to shift.
 -}
-shiftR :: Int %1 -> Int %1 -> Int
+shiftR :: Int -> Int -> Int
 shiftR =
-    toLinear2 liftShiftR
+    liftShiftR
   where
     liftShiftR :: Int -> Int -> Int
     liftShiftR (I# x) (I# i) = I# (x `iShiftRL#` i)
 
+infixl 8 `shiftR`
+
 {-|
-    Linear version of 'Data.Bits.setBit'.
+    Version of 'Data.Bits.setBit' with refinement types.
 -}
 
 {-@ assume setBit :: x:Int -> Index -> {y:Int | pop y = pop x || pop y = pop x + 1 } @-}
-setBit :: Int %1 -> Int %1 -> Int
-setBit = toLinear2 Data.Bits.setBit
+setBit :: Int -> Int -> Int
+setBit = Data.Bits.setBit
 
 {-|
-    Linear version of 'Data.Bits.clearBit'.
+    Version of 'Data.Bits.clearBit' with refinement types.
 -}
 
 {-@ assume clearBit :: x:Int -> Index -> {y:Int | pop y = pop x || pop y = pop x - 1 } @-}
-clearBit :: Int %1 -> Int %1 -> Int
-clearBit = toLinear2 Data.Bits.clearBit
+clearBit :: Int -> Int -> Int
+clearBit = Data.Bits.clearBit
 
 {-|
-    Linear version of 'Data.Bits.complement'.
+    Version of 'Data.Bits.complement' with refinement types.
 -}
 
 {-@ assume complement :: x:Int -> { complement' x } @-}
-complement :: Int %1 -> Int
-complement = toLinear Data.Bits.complement
+complement :: Int -> Int
+complement = Data.Bits.complement
 
 {-|
     Gets the last bit set to 1 or returns 0 instead.
 -}
-lastBit :: Int %1 -> Int
-lastBit = toLinear (\x' -> x' Bits.$&$ Bits.complement x')
+lastBit :: Int -> Int
+lastBit x' = x' Bits.$&$ Bits.complement x'
+
+{-|
+    Version of 'Data.Bits.countLeadingZeros' with refinement types.
+-}
+countTrailingZeros :: Int -> Int
+countTrailingZeros = Data.Bits.countTrailingZeros

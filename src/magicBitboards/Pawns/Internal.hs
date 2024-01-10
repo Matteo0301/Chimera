@@ -34,15 +34,15 @@ newtype PawnBBWrapped (side :: SideToMove) = PawnBBWrapped Bitboard
     deriving (Eq, Show)
 
 maskPawnAttack :: forall a. (GetSide a) => PawnBBWrapped a -> AttackBB
-maskPawnAttack (PawnBBWrapped bb) =
+maskPawnAttack (PawnBBWrapped b) =
     let
-        initial :: Int = bb2Int bb
+        initial :: Int = bb b
         not_a_file :: Int -> Int
-        not_a_file res = res $&$ complement (file2Int FA)
-        not_h_file res = res $&$ complement (file2Int FH)
+        not_a_file res = res $&$ complement fileA
+        not_h_file res = res $&$ complement fileH
         attacks = AttackBB $ case getSide (Proxy :: Proxy a) of
-            White -> not_a_file (initial `shiftL` 7) $|$ not_h_file (initial `shiftL` 9)
-            Black -> not_h_file (initial `shiftR` 7) $|$ not_a_file (initial `shiftR` 9)
+            White -> not_a_file (initial `shiftR` 7) $|$ not_h_file (initial `shiftR` 9)
+            Black -> not_h_file (initial `shiftL` 7) $|$ not_a_file (initial `shiftL` 9)
      in
         attacks
 
