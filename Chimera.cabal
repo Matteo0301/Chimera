@@ -111,7 +111,7 @@ common all
     NoImplicitPrelude
   
   build-depends:
-    , base         >=4.17.2 && <4.18
+    base >=4.17.2 && <4.18 || ^>=4.19.0
     , linear-base  >=0.4.0  && <0.5
     , random       >=1.2.1  && <1.3
     , relude       >= 1.2.1 && < 1.3
@@ -154,9 +154,9 @@ library magic-bitboards
   hs-source-dirs:  src/magicBitboards
   visibility:      public
   build-depends:
-    , Chimera:prelude
-    , template-haskell  >=2.19.0 && <2.20
-    , vector            >=0.13.1 && <0.14
+    Chimera:prelude,
+    template-haskell >=2.19.0 && <2.20 || ^>=2.21.0,
+    vector >=0.13.1 && <0.14
 
   other-modules:
     King.Internal
@@ -181,8 +181,8 @@ executable Chimera
   ghc-options:    -rtsopts -with-rtsopts=-N
   main-is:        Main.hs
   build-depends:
-    , Chimera:prelude
-    , text             >=2.0.2 && <2.1
+    Chimera:prelude,
+    text >=2.0.2 && <2.1 || ^>=2.1
 
   hs-source-dirs: app
 
@@ -202,15 +202,15 @@ test-suite test
     KnightsTest
 
   build-depends:
-    , Chimera:{magic-bitboards, prelude}
-    , falsify
-    , tasty
-    , tasty-ant-xml
-    , tasty-expected-failure
-    , tasty-hunit
-    , tasty-inspection-testing
-    , tasty-rerun
-    , vector
+    Chimera:{magic-bitboards, prelude},
+    falsify,
+    tasty,
+    tasty-ant-xml,
+    tasty-expected-failure,
+    tasty-hunit,
+    tasty-inspection-testing,
+    tasty-rerun,
+    vector
 
   hs-source-dirs: test
 
@@ -225,8 +225,8 @@ benchmark benchmark
   main-is:          Bench.hs
   other-modules:    BitboardBench
   build-depends:
-    , Chimera:{magic-bitboards, prelude}
-    , tasty-bench
+    Chimera:{magic-bitboards, prelude},
+    tasty-bench
 
   default-language: GHC2021
 
