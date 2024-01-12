@@ -6,7 +6,7 @@ License     : GNU GPL v.3
 Stability   : experimental
 Portability : POSIX
 
-This module implements the generation of random values for the types defined in the project. It uses the Falseify library.
+This module implements the generation of random values for the types defined in the project. It uses the Falsify library.
 -}
 {- FOURMOLU_DISABLE -}
 {-|
