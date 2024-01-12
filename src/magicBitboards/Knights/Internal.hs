@@ -1,17 +1,18 @@
-{-# LANGUAGE ScopedTypeVariables #-}
-{-# LANGUAGE NoImplicitPrelude #-}
-
 {-|
 Module      : Knights.Internal
 Description : Knight representation using bitboards
-Copyright   : (c) 2023 - 2024 Matteo Mariotti
+Copyright   : (c) 2023-2024 Matteo Mariotti
 License     : GNU GPL v.3
-Maintainer  : matteomariotti0301@gmail.com
 Stability   : experimental
 Portability : POSIX
 
 This module contains the representation of knights using bitboards, with also the relevant attack tables.
 -}
+{- FOURMOLU_DISABLE -}
+{-|
+-}
+{-# LANGUAGE ScopedTypeVariables #-}
+{-# LANGUAGE NoImplicitPrelude #-}
 module Knights.Internal (KnightBBWrapped (..), showAttacks, allocTable) where
 
 import Bitboard
@@ -21,8 +22,6 @@ import Data.Array.Destination
 import Data.Vector
 import Prelude.Linear (($))
 import Prelude hiding (($))
-
--- {-@ LIQUID "--no-termination" @-}
 
 {- {-@ type Pop = {x:Int | x >= 0 && x<= 64} @-}
 {-@ type Index = {x:Int | x >= 0 && x<= 63} @-}

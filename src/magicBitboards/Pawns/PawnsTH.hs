@@ -1,17 +1,18 @@
-{-# LANGUAGE TemplateHaskell #-}
-{-# OPTIONS_GHC -Wno-orphans #-}
-
 {-|
 Module      : Pawns.PawnsTH
 Description : Template Haskell functions for Pawns module
-Copyright   : (c) 2023 - 2024 Matteo Mariotti
+Copyright   : (c) 2023-2024 Matteo Mariotti
 License     : GNU GPL v.3
-Maintainer  : matteomariotti0301@gmail.com
 Stability   : experimental
 Portability : POSIX
 
 This module is a wrapper around Pawns.Internal to provide Template Haskell functions.
 -}
+{- FOURMOLU_DISABLE -}
+{-|
+-}
+{-# LANGUAGE TemplateHaskell #-}
+{-# OPTIONS_GHC -Wno-orphans #-}
 module Pawns.PawnsTH where
 
 import Bitboard

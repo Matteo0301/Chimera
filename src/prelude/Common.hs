@@ -1,18 +1,20 @@
-{-# LANGUAGE DataKinds #-}
-{-# LANGUAGE KindSignatures #-}
-{-# OPTIONS_GHC -Wno-overflowed-literals #-}
-
 {-|
 Module      : Common
-Description : Common utils
-Copyright   : (c) 2023 Matteo Mariotti
+Description : Common utilities
+Copyright   : (c) 2023-2024 Matteo Mariotti
 License     : GNU GPL v.3
-Maintainer  : matteomariotti0301@gmail.com
 Stability   : experimental
 Portability : POSIX
 
-A collection of common utilities used in the project.
+This module contains common utilities used throughout the project, such as the definitions for the squares, ranks, files and attacks.
 -}
+{- FOURMOLU_DISABLE -}
+{-|
+-}
+{-# LANGUAGE DataKinds #-}
+{-# LANGUAGE KindSignatures #-}
+{-# OPTIONS_GHC -Wno-overflowed-literals #-}
+{- FOURMOLU_ENABLE -}
 module Common
     ( SideToMove (..)
     , AttackBB (..)

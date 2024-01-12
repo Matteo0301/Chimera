@@ -1,20 +1,8 @@
-{-# OPTIONS_GHC -Wno-unrecognised-pragmas #-}
-
-{-# HLINT ignore "Use camelCase" #-}
-
-{-@ LIQUID "--reflection" @-}
-{-@ LIQUID "--ple" @-}
-{-@ LIQUID "--no-termination" @-}
--- {-@ LIQUID "--ple-with-undecided-guards" @-}
-{-@ LIQUID "--extensionality" @-}
--- {-@ LIQUID "--counter-examples" @-}
-
 {-|
 Module      : Bits
 Description : Module for bit manipulation functions
-Copyright   : (c) 2023 - 2024 Matteo Mariotti
+Copyright   : (c) 2023-2024 Matteo Mariotti
 License     : GNU GPL v.3
-Maintainer  : matteomariotti0301@gmail.com
 Stability   : experimental
 Portability : POSIX
 
@@ -22,10 +10,24 @@ Wrappers around the standard bit functions to make them linear and add liquidhas
 For now they are all specialized to 64 bit integers, because I'm waiting for liquidhaskell to support ghc 9.8.1 and
 see if the extended type literals will allow me to use the `Word64` type.
 -}
+{- FOURMOLU_DISABLE -}
+{-|
+-}
+{-# OPTIONS_GHC -Wno-unrecognised-pragmas #-}
+
+{-# HLINT ignore "Use camelCase" #-}
+{- FOURMOLU_ENABLE -}
 module Bits where
 
 import Data.Bits
 import GHC.Base (Int (I#), iShiftRL#)
+
+{-@ LIQUID "--reflection" @-}
+{-@ LIQUID "--ple" @-}
+{-@ LIQUID "--no-termination" @-}
+-- {-@ LIQUID "--ple-with-undecided-guards" @-}
+{-@ LIQUID "--extensionality" @-}
+-- {-@ LIQUID "--counter-examples" @-}
 
 {-@ embed Int * as int @-}
 

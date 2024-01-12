@@ -1,17 +1,18 @@
-{-# LANGUAGE InstanceSigs #-}
-{-# LANGUAGE NoImplicitPrelude #-}
-
 {-|
 Module      : Random
 Description : Custom random number generator
-Copyright   : (c) 2023 - 2024 Matteo Mariotti
+Copyright   : (c) 2023-2024 Matteo Mariotti
 License     : GNU GPL v.3
-Maintainer  : matteomariotti0301@gmail.com
 Stability   : experimental
 Portability : POSIX
 
 The implementation of a custom random number generator based on the xorshift32 algorithm.
 -}
+{- FOURMOLU_DISABLE -}
+{-|
+-}
+{-# LANGUAGE InstanceSigs #-}
+{-# LANGUAGE NoImplicitPrelude #-}
 module Random (XORShift, mkRandom) where
 
 {-@ LIQUID "--counter-examples" @-}

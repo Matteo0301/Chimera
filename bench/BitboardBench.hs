@@ -1,3 +1,16 @@
+{-|
+Module      : BitboardBench
+Description : Bitboard benchmarks
+Copyright   : (c) 2023-2024 Matteo Mariotti
+License     : GNU GPL v.3
+Stability   : experimental
+Portability : POSIX
+
+This module benchmarks the performance of the Bitboard library.
+-}
+{- FOURMOLU_DISABLE -}
+{-|
+-}
 {-# OPTIONS_GHC -Wno-unrecognised-pragmas #-}
 
 {-# HLINT ignore "Use camelCase" #-}

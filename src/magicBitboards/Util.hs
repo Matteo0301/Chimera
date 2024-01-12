@@ -1,15 +1,16 @@
 {-|
 Module      : Util
 Description : Utilities for magic bitboards
-Copyright   : (c) 2023 - 2024 Matteo Mariotti
+Copyright   : (c) 2023-2024 Matteo Mariotti
 License     : GNU GPL v.3
-Maintainer  : matteomariotti0301@gmail.com
 Stability   : experimental
 Portability : POSIX
 
 This module contains some utilities for working with magic bitboards.
 -}
-
+{- FOURMOLU_DISABLE -}
+{-|
+-}
 module Util where
 
 import Bits

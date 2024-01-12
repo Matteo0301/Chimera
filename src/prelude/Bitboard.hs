@@ -1,18 +1,19 @@
-{-# LANGUAGE DataKinds #-}
-{-# LANGUAGE GADTs #-}
-{-# LANGUAGE NoImplicitPrelude #-}
-
 {-|
 Module      : Bitboard
 Description : Module for bitboards representation and operations
-Copyright   : (c) 2023 - 2024 Matteo Mariotti
+Copyright   : (c) 2023-2024 Matteo Mariotti
 License     : GNU GPL v.3
-Maintainer  : matteomariotti0301@gmail.com
 Stability   : experimental
 Portability : POSIX
 
 This module export the 'Bitboard' type and the functions to operate on its squares.
 -}
+{- FOURMOLU_DISABLE -}
+{-|
+-}
+{-# LANGUAGE DataKinds #-}
+{-# LANGUAGE GADTs #-}
+{-# LANGUAGE NoImplicitPrelude #-}
 module Bitboard
     ( Bitboard
     , Square (..)
@@ -48,7 +49,7 @@ import Prelude hiding (($))
 {-@ type Pop = {x:Int | x >= 0 && x<= 64} @-}
 {-@ type Index = {x:Int | x >= 0 && x<= 63} @-}
 
-{-@ data Bitboard [bbPop] = Bitboard (bb::Int) @-}
+{-@ data Bitboard [piece_number] = Bitboard (bb::Int) @-}
 
 {-|
     The 'Bitboard' type is a newtype wrapper around 'Int' that represents a bitboard.
@@ -63,7 +64,7 @@ newtype Bitboard = Bitboard {bb :: Int} deriving (Eq, Show, Ord)
 printBitboard :: Bitboard -> Text
 printBitboard (Bitboard bb) = showBits bb
 
-{-@ emptyBoard :: Bitboard @-}
+{-@ emptyBoard :: {x:Bitboard | bbPop x == 0} @-}
 
 {-|
     Represents the empty board.
@@ -71,7 +72,7 @@ printBitboard (Bitboard bb) = showBits bb
 emptyBoard :: Bitboard
 emptyBoard = Bitboard 0
 
-{-@ initialBoard :: Bitboard @-}
+{-@ initialBoard :: {x:Bitboard | bbPop x == 32} @-}
 
 {-|
     Represents the starting position.
@@ -79,12 +80,13 @@ emptyBoard = Bitboard 0
 initialBoard :: Bitboard
 initialBoard = Bitboard (-0x0000FFFFFFFF0001)
 
--- {-@ inline bbPop @-}
+{-@ inline bbPop @-}
 bbPop :: Bitboard -> Int
 bbPop (Bitboard bb) = pop bb
 
-{-@ measure bbPop :: Bitboard -> Int
-        bbPop (Bitboard b) = pop b @-}
+{-@ measure piece_number :: Bitboard -> Int
+            piece_number (Bitboard b) = pop b @-}
+
 
 {-|
     Returns the number of squares occupied in the bitboard.

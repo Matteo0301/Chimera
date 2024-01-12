@@ -1,3 +1,16 @@
+{-|
+Module      : !!! INSERT HASKELL MODULE NAME !!!
+Description : !!! INSERT MODULE SHORT DESCRIPTION !!!
+Copyright   : (c) 2023-2024 Matteo Mariotti
+License     : GNU GPL v.3
+Stability   : experimental
+Portability : POSIX
+
+!!! INSERT MODULE LONG DESCRIPTION !!!
+-}
+{- FOURMOLU_DISABLE -}
+{-|
+-}
 {-# OPTIONS_GHC -Wno-unrecognised-pragmas #-}
 
 {-# HLINT ignore "Use camelCase" #-}

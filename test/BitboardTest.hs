@@ -1,3 +1,16 @@
+{-|
+Module      : BitboardTest
+Description : Bitboard tests
+Copyright   : (c) 2023-2024 Matteo Mariotti
+License     : GNU GPL v.3
+Stability   : experimental
+Portability : POSIX
+
+This module contains the tests for the bitboard module.
+-}
+{- FOURMOLU_DISABLE -}
+{-|
+-}
 {-# OPTIONS_GHC -Wno-orphans #-}
 {-# OPTIONS_GHC -Wno-unrecognised-pragmas #-}
 
@@ -10,7 +23,7 @@ import Test.Tasty
 import Test.Tasty.Falsify qualified as Falsify
 import Test.Tasty.HUnit
 import Test.Tasty.Runners (TestTree (TestGroup))
-import Types
+import Gen
 
 bb_tests :: TestTree
 bb_tests = TestGroup "Bitboard tests" [set_get_bit, population_tests]

@@ -1,12 +1,17 @@
--- \|
--- Description : Main test module
--- Copyright   : (c) 2023 - 2024 Matteo Mariotti
--- License     : GNU GPL v.3
--- Maintainer  : matteomariotti0301@gmail.com
--- Stability   : experimental
--- Portability : POSIX
---
--- This is the module for the test suite of the project.
+{-|
+Module      : Main
+Description : Test suite
+Copyright   : (c) 2023-2024 Matteo Mariotti
+License     : GNU GPL v.3
+Stability   : experimental
+Portability : POSIX
+
+This is the main test suite for the project.
+-}
+{- FOURMOLU_DISABLE -}
+{-|
+-}
+module Main where
 
 import BitboardTest
 import KingTest (king_tests)

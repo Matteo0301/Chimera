@@ -23,6 +23,8 @@ run-mode: add
 ## times for more than one path).
 source-paths:
 - src/
+- test/
+- bench/
 - app/
 
 ## Allows to define list of regular expressions that will be matched against
@@ -30,6 +32,19 @@ source-paths:
 ## '-e|--excluded-path=REGEX' command line argument (can be used multiple times
 ## for more than one path).
 excluded-paths: []
+
+license-headers:
+  haskell:
+    file-extensions: ["hs"]
+    margin-top-code: 0
+    margin-top-file: 0
+    margin-bottom-code: 0
+    margin-bottom-file: 0
+    put-after: ["${-#", "${-@"]
+    put-before: ["^module", "${- FOURMOLU_DISABLE -}"]
+    block-comment:
+      starts-with: ^{-\|
+      ends-with: (?<!#)-}$
 
 ## If set to 'true', Headroom tries to detect whether any VCS (like GIT) is used
 ## for current project and if yes, it loads rules for ignored files and excludes
@@ -46,7 +61,12 @@ template-paths:
 ## same as '-v|--variable="KEY=VALUE"' command line argument (can be used
 ## multiple times for more than one path).
 variables: {
-  year: "2023",
   author: "Matteo Mariotti",
+  year: "2023",
   email: "matteomariotti0301@gmail.com"
 }
+
+post-process:
+
+  update-copyright:
+    enabled: true

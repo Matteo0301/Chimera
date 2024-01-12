@@ -1,17 +1,18 @@
-{-# LANGUAGE ScopedTypeVariables #-}
-{-# LANGUAGE NoImplicitPrelude #-}
-
 {-|
 Module      : King.Internal
 Description : King representation using bitboards
-Copyright   : (c) 2023 - 2024 Matteo Mariotti
+Copyright   : (c) 2023-2024 Matteo Mariotti
 License     : GNU GPL v.3
-Maintainer  : matteomariotti0301@gmail.com
 Stability   : experimental
 Portability : POSIX
 
 This module contains the representation of kings using bitboards, with also the relevant attack tables.
 -}
+{- FOURMOLU_DISABLE -}
+{-|
+-}
+{-# LANGUAGE ScopedTypeVariables #-}
+{-# LANGUAGE NoImplicitPrelude #-}
 module King.Internal (KingBBWrapped (..), showAttacks, allocTable) where
 
 import Bitboard
@@ -22,7 +23,6 @@ import Data.Vector
 import Prelude.Linear (($))
 import Prelude hiding (xor, ($))
 
--- {-@ LIQUID "--no-termination" @-}
 
 {- {-@ type Pop = {x:Int | x >= 0 && x<= 64} @-}
 {-@ type Index = {x:Int | x >= 0 && x<= 63} @-}

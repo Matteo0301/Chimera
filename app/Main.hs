@@ -1,13 +1,15 @@
 {-|
 Module      : Main
-Description : !!! INSERT MODULE SHORT DESCRIPTION !!!
-Copyright   : (c) 2023 Matteo Mariotti
+Description : Main module for the project executable
+Copyright   : (c) 2023-2024 Matteo Mariotti
 License     : GNU GPL v.3
-Maintainer  : matteomariotti0301@gmail.com
 Stability   : experimental
 Portability : POSIX
 
-!!! INSERT MODULE LONG DESCRIPTION !!!
+This module contains the executable of the chess engine.
+-}
+{- FOURMOLU_DISABLE -}
+{-|
 -}
 module Main where
 

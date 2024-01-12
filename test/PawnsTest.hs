@@ -1,3 +1,16 @@
+{-|
+Module      : PawnsTest
+Description : Pawns magic bitboards tests
+Copyright   : (c) 2023-2024 Matteo Mariotti
+License     : GNU GPL v.3
+Stability   : experimental
+Portability : POSIX
+
+This module contains the tests for the pawns module implemented as magic bitboards.
+-}
+{- FOURMOLU_DISABLE -}
+{-|
+-}
 {-# LANGUAGE TemplateHaskell #-}
 {-# OPTIONS_GHC -O -dsuppress-all -dno-suppress-type-signatures -fplugin=Test.Tasty.Inspection.Plugin #-}
 {-# OPTIONS_GHC -Wno-unrecognised-pragmas #-}
@@ -15,7 +28,7 @@ import Test.Falsify.Predicate qualified as P
 import Test.Tasty
 import Test.Tasty.Falsify qualified as Falsify
 import Test.Tasty.Inspection
-import Types
+import Gen
 
 goal :: AttackBB
 goal = getAttacks @(PawnBB 'White) A1

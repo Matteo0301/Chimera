@@ -197,7 +197,7 @@ test-suite test
   other-modules:
     BitboardTest
     PawnsTest
-    Types
+    Gen
     KingTest
     KnightsTest
 
