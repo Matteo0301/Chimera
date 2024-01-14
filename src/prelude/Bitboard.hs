@@ -39,7 +39,8 @@ import Bits
 import Common
 import Control.Exception (assert)
 import Prelude.Linear (($))
-import Prelude hiding (($))
+import Prelude hiding (($), toList)
+import GHC.Exts
 
 {-@ LIQUID "--counter-examples" @-}
 {-@ LIQUID "--reflection" @-}
@@ -60,6 +61,19 @@ import Prelude hiding (($))
 newtype Bitboard = Bitboard {bb :: Int} deriving (Eq, Show, Ord)
 
 {-@ using (Bitboard) as {a:Bitboard | bbPop a <= 32} @-}
+
+instance IsList Bitboard where
+    type Item Bitboard = Square
+
+    toList :: Bitboard -> [Item Bitboard]
+    toList bb@(Bitboard bb')
+        | bb == emptyBoard = []
+        | otherwise = let lastSquare = toEnum (countTrailingZeros bb')
+                            in lastSquare:toList (unsetSquare bb lastSquare)
+
+    fromList :: [Item Bitboard] -> Bitboard
+    fromList = foldl' setSquare emptyBoard
+
 
 printBitboard :: Bitboard -> Text
 printBitboard (Bitboard bb) = showBits bb

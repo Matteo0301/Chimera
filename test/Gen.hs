@@ -12,6 +12,7 @@ This module implements the generation of random values for the types defined in 
 {-|
 -}
 {-# OPTIONS_GHC -Wno-orphans #-}
+{- FOURMOLU_ENABLE -}
 
 module Gen (Bitboard, Square (..), genBitboard, genSquare) where
 
@@ -26,4 +27,4 @@ genSquare = do
 genBitboard :: Generator.Gen Bitboard
 genBitboard = do
     l <- Generator.list (between (0, 32)) genSquare
-    return $ foldl' setSquare emptyBoard l
+    return $ fromList l
