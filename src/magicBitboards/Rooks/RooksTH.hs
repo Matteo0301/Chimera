@@ -8,8 +8,4 @@ Portability : POSIX
 
 This module is a wrapper around Rooks.Internal to provide Template Haskell functions.
 -}
-{- FOURMOLU_DISABLE -}
-{-|
--}
-{- FOURMOLU_ENABLE -}
 module Rooks.RooksTH where

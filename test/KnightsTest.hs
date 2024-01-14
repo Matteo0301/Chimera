@@ -16,7 +16,7 @@ This module contains the tests for the knights module implemented as magic bitbo
 {-# OPTIONS_GHC -Wno-unrecognised-pragmas #-}
 
 {-# HLINT ignore "Use camelCase" #-}
-
+{- FOURMOLU_ENABLE -}
 module KnightsTest (knights_tests) where
 
 import Bitboard

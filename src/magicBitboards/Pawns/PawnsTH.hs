@@ -11,9 +11,9 @@ This module is a wrapper around Pawns.Internal to provide Template Haskell funct
 {- FOURMOLU_DISABLE -}
 {-|
 -}
-{- FOURMOLU_ENABLE -}
 {-# LANGUAGE TemplateHaskell #-}
 {-# OPTIONS_GHC -Wno-orphans #-}
+{- FOURMOLU_ENABLE -}
 module Pawns.PawnsTH where
 
 import Bitboard

@@ -16,7 +16,7 @@ This module contains the tests for the pawns module implemented as magic bitboar
 {-# OPTIONS_GHC -Wno-unrecognised-pragmas #-}
 
 {-# HLINT ignore "Use camelCase" #-}
-
+{- FOURMOLU_ENABLE -}
 module PawnsTest (pawns_tests) where
 
 import Bitboard

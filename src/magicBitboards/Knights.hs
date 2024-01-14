@@ -11,9 +11,8 @@ This module contains the representation of knight using bitboards, with also the
 {- FOURMOLU_DISABLE -}
 {-|
 -}
-{- FOURMOLU_ENABLE -}
 {-# OPTIONS_GHC -Wno-unused-imports #-}
-
+{- FOURMOLU_ENABLE -}
 module Knights (module P) where
 
 import Bitboard

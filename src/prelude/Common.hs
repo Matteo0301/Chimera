@@ -40,9 +40,11 @@ module Common
     , rank2
     , rank7
     , rank8
+    , index2Square
     ) where
 
 import Bits
+import Relude.Extra (safeToEnum)
 
 {-@ type Board = Int @-}
 
@@ -117,7 +119,7 @@ data Square
     | F1
     | G1
     | H1
-    deriving (Eq, Ord, Show, Enum)
+    deriving (Eq, Ord, Show, Enum, Bounded)
 
 {-@ data File = FH | FG | FF | FE | FD | FC | FB | FA @-}
 
@@ -197,8 +199,19 @@ rank8 = rank2Int R8
 square2Index :: Square -> Int
 square2Index = fromEnum
 
+{-|
+    Converts a square to a mask with only the corresponding bit set.
+-}
 squareMask :: Square -> Int
 squareMask s = 1 `shiftL` square2Index s
+
+{-|
+    Converts an index to a square, throwing an error if the index is out of bounds.
+-}
+index2Square :: Int -> Square
+index2Square x = case safeToEnum x of
+    Just s -> s
+    Nothing -> error "Invalid square"
 
 {-|
     Represents the side to move.

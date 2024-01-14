@@ -11,11 +11,10 @@ This module is a wrapper around Knights.Internal to provide Template Haskell fun
 {- FOURMOLU_DISABLE -}
 {-|
 -}
-{- FOURMOLU_ENABLE -}
 {-# LANGUAGE InstanceSigs #-}
 {-# LANGUAGE TemplateHaskell #-}
 {-# OPTIONS_GHC -Wno-orphans #-}
-
+{- FOURMOLU_ENABLE -}
 module Knights.KnightsTH where
 
 import Bitboard

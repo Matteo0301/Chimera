@@ -14,6 +14,8 @@ This module export the 'Bitboard' type and the functions to operate on its squar
 {-# LANGUAGE DataKinds #-}
 {-# LANGUAGE GADTs #-}
 {-# LANGUAGE NoImplicitPrelude #-}
+{-# OPTIONS_GHC -Wno-unused-top-binds #-}
+{- FOURMOLU_ENABLE -}
 module Bitboard
     ( Bitboard
     , Square (..)
@@ -38,9 +40,9 @@ import Bits
 
 import Common
 import Control.Exception (assert)
-import Prelude.Linear (($))
-import Prelude hiding (($), toList)
 import GHC.Exts
+import Prelude.Linear (($))
+import Prelude hiding (toList, ($))
 
 {-@ LIQUID "--counter-examples" @-}
 {-@ LIQUID "--reflection" @-}
@@ -50,7 +52,7 @@ import GHC.Exts
 {-@ type Pop = {x:Int | x >= 0 && x<= 64} @-}
 {-@ type Index = {x:Int | x >= 0 && x<= 63} @-}
 
-{-@ data Bitboard [piece_number] <p :: Int -> Bool > = Bitboard (bb :: Int<p>) @-}
+{-@ data Bitboard [piece_number] = Bitboard (bb :: {x:Int | pop x <= 32}) @-}
 
 {-|
     The 'Bitboard' type is a newtype wrapper around 'Int' that represents a bitboard.
@@ -60,7 +62,12 @@ import GHC.Exts
 -}
 newtype Bitboard = Bitboard {bb :: Int} deriving (Eq, Show, Ord)
 
-{-@ using (Bitboard) as {a:Bitboard | bbPop a <= 32} @-}
+-- {-@ using (Bitboard) as {a:Bitboard | bbPop a <= 32} @-}
+
+{-@ fail wrongBitboard @-}
+{-@ wrongBitboard :: {x:Bitboard | bbPop x <= 32} @-}
+wrongBitboard :: Bitboard
+wrongBitboard = Bitboard 0x00FFFFFFFFFFFFFF
 
 instance IsList Bitboard where
     type Item Bitboard = Square
@@ -68,12 +75,12 @@ instance IsList Bitboard where
     toList :: Bitboard -> [Item Bitboard]
     toList bb@(Bitboard bb')
         | bb == emptyBoard = []
-        | otherwise = let lastSquare = toEnum (countTrailingZeros bb')
-                            in lastSquare:toList (unsetSquare bb lastSquare)
+        | otherwise =
+            let lastSquare = index2Square (countTrailingZeros bb')
+             in lastSquare : toList (unsetSquare bb lastSquare)
 
     fromList :: [Item Bitboard] -> Bitboard
     fromList = foldl' setSquare emptyBoard
-
 
 printBitboard :: Bitboard -> Text
 printBitboard (Bitboard bb) = showBits bb
@@ -86,7 +93,7 @@ printBitboard (Bitboard bb) = showBits bb
 emptyBoard :: Bitboard
 emptyBoard = Bitboard 0
 
-{-@ initialBoard :: {x:Bitboard | bbPop x == 32} @-}
+{-@ initialBoard ::{x:Bitboard | bbPop x == 32} @-}
 
 {-|
     Represents the starting position.
@@ -94,15 +101,16 @@ emptyBoard = Bitboard 0
 initialBoard :: Bitboard
 initialBoard = Bitboard (-0x0000FFFFFFFF0001)
 
-
-{-# WARNING bbPop "This is here only to be used by LiquidHaskell. It should not be used in real code." #-}
+{-# WARNING
+    bbPop
+    "This is here only to be used by LiquidHaskell. It should not be used in real code."
+    #-}
 {-@ inline bbPop @-}
 bbPop :: Bitboard -> Int
 bbPop (Bitboard bb) = pop bb
 
 {-@ measure piece_number :: Bitboard -> Int
             piece_number (Bitboard b) = pop b @-}
-
 
 {-|
     Returns the number of squares occupied in the bitboard.
@@ -116,7 +124,7 @@ population (Bitboard bb) = popCount bb
 getSquare :: Bitboard -> Square -> Bool
 getSquare (Bitboard bb) sq = testBit bb (square2Index sq)
 
-{-@ ignore setSquare @-}
+-- {-@ ignore setSquare @-}
 -- we know it works, but liquidhaskell cannot prove it
 
 {-|

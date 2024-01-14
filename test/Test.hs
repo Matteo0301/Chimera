@@ -8,9 +8,6 @@ Portability : POSIX
 
 This is the main test suite for the project.
 -}
-{- FOURMOLU_DISABLE -}
-{-|
--}
 module Main where
 
 import BitboardTest

@@ -44,8 +44,8 @@ mask_n_bit n
 
 {-@ reflect div' @-}
 div' :: Int -> Int -> Int
+div' _ 0 = 0
 div' x y
-    | y == 0 = 0
     | x < 0 = -div' (-x) y
     | y < 0 = -div' x (-y)
     | x < y = 0

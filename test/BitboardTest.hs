@@ -15,15 +15,16 @@ This module contains the tests for the bitboard module.
 {-# OPTIONS_GHC -Wno-unrecognised-pragmas #-}
 
 {-# HLINT ignore "Use camelCase" #-}
+{- FOURMOLU_ENABLE -}
 module BitboardTest (Bitboard, emptyBoard, population, bb_tests) where
 
 import Bitboard
+import Gen
 import Test.Falsify.Predicate qualified as P
 import Test.Tasty
 import Test.Tasty.Falsify qualified as Falsify
 import Test.Tasty.HUnit
 import Test.Tasty.Runners (TestTree (TestGroup))
-import Gen
 
 bb_tests :: TestTree
 bb_tests = TestGroup "Bitboard tests" [set_get_bit, population_tests]

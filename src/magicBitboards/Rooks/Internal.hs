@@ -1,12 +1,12 @@
 {-|
-Module      : !!! INSERT HASKELL MODULE NAME !!!
-Description : !!! INSERT MODULE SHORT DESCRIPTION !!!
+Module      : Rooks.Internal
+Description : Rooks representation using bitboards
 Copyright   : (c) 2023-2024 Matteo Mariotti
 License     : GNU GPL v.3
 Stability   : experimental
 Portability : POSIX
 
-!!! INSERT MODULE LONG DESCRIPTION !!!
+This module contains the representation of knights using bitboards, with also the relevant attack tables.
 -}
 {- FOURMOLU_DISABLE -}
 {-|
@@ -16,29 +16,19 @@ Portability : POSIX
 {-# HLINT ignore "Use camelCase" #-}
 {-# HLINT ignore "Redundant bracket" #-}
 
-{-@ LIQUID "--reflection" @-}
-{-@ LIQUID "--ple" @-}
--- {-@ LIQUID "--ple-with-undecided-guards" @-}
-{-@ LIQUID "--extensionality" @-}
-{-@ LIQUID "--counter-examples" @-}
-
-{-|
-Module      : Rooks.Internal
-Description : Rooks representation using bitboards
-Copyright   : (c) 2023 - 2024 Matteo Mariotti
-License     : GNU GPL v.3
-Maintainer  : matteomariotti0301@gmail.com
-Stability   : experimental
-Portability : POSIX
-
-This module contains the representation of knights using bitboards, with also the relevant attack tables.
--}
+{- FOURMOLU_ENABLE -}
 module Rooks.Internal (maskRookAttacks, attacksOnTheFly) where
 
 import Bitboard
 import Bits
 import Common
 import Util
+
+{-@ LIQUID "--reflection" @-}
+{-@ LIQUID "--ple" @-}
+-- {-@ LIQUID "--ple-with-undecided-guards" @-}
+{-@ LIQUID "--extensionality" @-}
+{-@ LIQUID "--counter-examples" @-}
 
 type RookMask = AttackMask
 

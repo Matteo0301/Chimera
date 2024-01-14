@@ -11,10 +11,9 @@ This module contains the representation of kings using bitboards, with also the 
 {- FOURMOLU_DISABLE -}
 {-|
 -}
-{- FOURMOLU_ENABLE -}
 {-# LANGUAGE ScopedTypeVariables #-}
 {-# LANGUAGE NoImplicitPrelude #-}
-
+{- FOURMOLU_ENABLE -}
 module King.Internal (KingBB (..), showAttacks, allocTable) where
 
 import Bitboard
@@ -28,7 +27,7 @@ import Prelude hiding (xor, ($))
 {- {-@ type Pop = {x:Int | x >= 0 && x<= 64} @-}
 {-@ type Index = {x:Int | x >= 0 && x<= 63} @-}
 {-@ measure bbPop :: Bitboard -> Pop @-} -}
-{-@ type KingBB = Bitboard <{\n -> pop n == 2}> @-}
+{-@ type KingBB = {x:Bitboard | bbPop x == 2}  @-}
 
 {-|
     The basic type for knight bitboards. It is a wrapper around 'Bitboard' that represents a bitboard with at most 10 bits set.
@@ -54,7 +53,7 @@ allocTable = alloc 64 $ \newArr -> fromFunction fillFunction newArr
     fillFunction :: Int -> AttackBB
     fillFunction i
         | i < 0 || i >= 64 = AttackBB 0
-        | otherwise = maskKingAttack (KingBB (emptyBoard <<>> toEnum i))
+        | otherwise = maskKingAttack (KingBB (emptyBoard <<>> index2Square i))
 
 showAttacks :: AttackBB -> Text
 showAttacks (AttackBB bb) = showBits bb
