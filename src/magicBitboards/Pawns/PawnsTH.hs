@@ -11,6 +11,7 @@ This module is a wrapper around Pawns.Internal to provide Template Haskell funct
 {- FOURMOLU_DISABLE -}
 {-|
 -}
+{- FOURMOLU_ENABLE -}
 {-# LANGUAGE TemplateHaskell #-}
 {-# OPTIONS_GHC -Wno-orphans #-}
 module Pawns.PawnsTH where
@@ -25,15 +26,6 @@ tableWhite = $([|allocTable @'White|])
 
 tableBlack :: Vector AttackBB
 tableBlack = $([|allocTable @'Black|])
-
-{-@ data PawnBB a = PawnBB (PawnBBWrapped a) @-}
-
-{-|
-    The basic type for pawn bitboards. It is a wrapper around 'Bitboard' that represents a bitboard with at most 8 bits set.
-    The phantom type parameter specifies the side to move.
--}
-newtype PawnBB (side :: SideToMove) = PawnBB (PawnBBWrapped side)
-    deriving (Eq, Show)
 
 instance (GetSide a) => Piece (PawnBB a) where
     {-# INLINE getAttacks #-}

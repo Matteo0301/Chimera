@@ -11,9 +11,11 @@ This module contains the representation of knights using bitboards, with also th
 {- FOURMOLU_DISABLE -}
 {-|
 -}
+{- FOURMOLU_ENABLE -}
 {-# LANGUAGE ScopedTypeVariables #-}
 {-# LANGUAGE NoImplicitPrelude #-}
-module Knights.Internal (KnightBBWrapped (..), showAttacks, allocTable) where
+
+module Knights.Internal (KnightBB (..), showAttacks, allocTable) where
 
 import Bitboard
 import Bits
@@ -26,12 +28,16 @@ import Prelude hiding (($))
 {- {-@ type Pop = {x:Int | x >= 0 && x<= 64} @-}
 {-@ type Index = {x:Int | x >= 0 && x<= 63} @-}
 {-@ measure bbPop :: Bitboard -> Pop @-} -}
--- {-@ data KnightBBWrapped = KnightBBWrapped (bb :: {x:Bitboard | bbPop x <= 10}) @-}
+{-@ type KnightBB = Bitboard <{\v -> pop v <= 10}> @-}
 
-newtype KnightBBWrapped = KnightBBWrapped Bitboard deriving (Eq, Show)
+{-|
+    The basic type for knight bitboards. It is a wrapper around 'Bitboard' that represents a bitboard with at most 10 bits set.
+    The phantom type parameter specifies the side to move.
+-}
+newtype KnightBB = KnightBB Bitboard deriving (Eq, Show)
 
-maskKnightAttack :: KnightBBWrapped -> AttackBB
-maskKnightAttack (KnightBBWrapped b) =
+maskKnightAttack :: KnightBB -> AttackBB
+maskKnightAttack (KnightBB b) =
     let
         initial :: Int = bb b
         not_a_file :: Int -> Int
@@ -58,7 +64,7 @@ allocTable = alloc 64 $ \newArr -> fromFunction fillFunction newArr
     fillFunction :: Int -> AttackBB
     fillFunction i
         | i < 0 || i >= 64 = AttackBB 0
-        | otherwise = maskKnightAttack (KnightBBWrapped (emptyBoard <<>> toEnum i))
+        | otherwise = maskKnightAttack (KnightBB (emptyBoard <<>> toEnum i))
 
 showAttacks :: AttackBB -> Text
 showAttacks (AttackBB bb) = showBits bb

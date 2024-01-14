@@ -50,7 +50,7 @@ import GHC.Exts
 {-@ type Pop = {x:Int | x >= 0 && x<= 64} @-}
 {-@ type Index = {x:Int | x >= 0 && x<= 63} @-}
 
-{-@ data Bitboard [piece_number] = Bitboard (bb::Int) @-}
+{-@ data Bitboard [piece_number] <p :: Int -> Bool > = Bitboard (bb :: Int<p>) @-}
 
 {-|
     The 'Bitboard' type is a newtype wrapper around 'Int' that represents a bitboard.
@@ -94,6 +94,8 @@ emptyBoard = Bitboard 0
 initialBoard :: Bitboard
 initialBoard = Bitboard (-0x0000FFFFFFFF0001)
 
+
+{-# WARNING bbPop "This is here only to be used by LiquidHaskell. It should not be used in real code." #-}
 {-@ inline bbPop @-}
 bbPop :: Bitboard -> Int
 bbPop (Bitboard bb) = pop bb

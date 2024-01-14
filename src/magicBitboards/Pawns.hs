@@ -11,9 +11,11 @@ This module contains the representation of pawns using bitboards, with also the 
 {- FOURMOLU_DISABLE -}
 {-|
 -}
+{- FOURMOLU_ENABLE -}
 {-# OPTIONS_GHC -Wno-unused-imports #-}
+
 module Pawns (module P) where
 
 import Bitboard
-import Pawns.Internal as P hiding (PawnBBWrapped (..), allocTable)
+import Pawns.Internal as P hiding (allocTable)
 import Pawns.PawnsTH as P

@@ -11,6 +11,7 @@ This module contains the representation of bishops using bitboards, with also th
 {- FOURMOLU_DISABLE -}
 {-|
 -}
+{- FOURMOLU_ENABLE -}
 {-# OPTIONS_GHC -Wno-unrecognised-pragmas #-}
 
 {-# HLINT ignore "Use camelCase" #-}

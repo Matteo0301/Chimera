@@ -15,5 +15,5 @@ This module contains the representation of king using bitboards, with also the r
 module King (module P) where
 
 import Bitboard
-import King.Internal as P hiding (KingBBWrapped (..), allocTable)
+import King.Internal as P hiding (allocTable)
 import King.KingTH as P

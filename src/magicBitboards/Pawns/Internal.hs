@@ -14,7 +14,7 @@ This module contains the representation of pawns using bitboards, with also the 
 {-# LANGUAGE KindSignatures #-}
 {-# LANGUAGE ScopedTypeVariables #-}
 {-# LANGUAGE NoImplicitPrelude #-}
-module Pawns.Internal (PawnBBWrapped (..), showAttacks, allocTable) where
+module Pawns.Internal (PawnBB (..), showAttacks, allocTable) where
 
 import Bitboard
 import Bits
@@ -24,18 +24,20 @@ import Data.Vector
 import Prelude.Linear (($))
 import Prelude hiding (($))
 
---{-@ LIQUID "--no-termination" @-}
-
 {- {-@ type Pop = {x:Int | x >= 0 && x<= 64} @-}
 {-@ type Index = {x:Int | x >= 0 && x<= 63} @-}
 {-@ measure bbPop :: Bitboard -> Pop @-} -}
--- {-@ data PawnBBWrapped a = PawnBBWrapped (bb :: {x:Bitboard | bbPop x <= 8}) @-}
+{-@ type PawnBB a = Bitboard <{\v -> pop v <= 8}> @-}
 
-newtype PawnBBWrapped (side :: SideToMove) = PawnBBWrapped Bitboard
+{-|
+    The basic type for pawn bitboards. It is a wrapper around 'Bitboard' that represents a bitboard with at most 8 bits set.
+    The phantom type parameter specifies the side to move.
+-}
+newtype PawnBB (side :: SideToMove) = PawnBB Bitboard
     deriving (Eq, Show)
 
-maskPawnAttack :: forall a. (GetSide a) => PawnBBWrapped a -> AttackBB
-maskPawnAttack (PawnBBWrapped b) =
+maskPawnAttack :: forall a. (GetSide a) => PawnBB a -> AttackBB
+maskPawnAttack (PawnBB b) =
     let
         initial :: Int = bb b
         not_a_file :: Int -> Int
@@ -53,7 +55,7 @@ allocTable = alloc 64 $ \newArr -> fromFunction fillFunction newArr
     fillFunction :: Int -> AttackBB
     fillFunction i
         | i < 0 || i >= 64 = AttackBB 0
-        | otherwise = maskPawnAttack @a (PawnBBWrapped (emptyBoard <<>> toEnum i))
+        | otherwise = maskPawnAttack @a (PawnBB (emptyBoard <<>> toEnum i))
 
 showAttacks :: AttackBB -> Text
 showAttacks (AttackBB bb) = showBits bb

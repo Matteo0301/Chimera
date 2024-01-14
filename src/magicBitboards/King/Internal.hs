@@ -11,9 +11,11 @@ This module contains the representation of kings using bitboards, with also the 
 {- FOURMOLU_DISABLE -}
 {-|
 -}
+{- FOURMOLU_ENABLE -}
 {-# LANGUAGE ScopedTypeVariables #-}
 {-# LANGUAGE NoImplicitPrelude #-}
-module King.Internal (KingBBWrapped (..), showAttacks, allocTable) where
+
+module King.Internal (KingBB (..), showAttacks, allocTable) where
 
 import Bitboard
 import Bits
@@ -23,16 +25,19 @@ import Data.Vector
 import Prelude.Linear (($))
 import Prelude hiding (xor, ($))
 
-
 {- {-@ type Pop = {x:Int | x >= 0 && x<= 64} @-}
 {-@ type Index = {x:Int | x >= 0 && x<= 63} @-}
 {-@ measure bbPop :: Bitboard -> Pop @-} -}
--- {-@ data KingBBWrapped = KingBBWrapped (bb :: {x:Bitboard | bbPop x == 1}) @-}
+{-@ type KingBB = Bitboard <{\n -> pop n == 2}> @-}
 
-newtype KingBBWrapped = KingBBWrapped Bitboard deriving (Eq, Show)
+{-|
+    The basic type for knight bitboards. It is a wrapper around 'Bitboard' that represents a bitboard with at most 10 bits set.
+    The phantom type parameter specifies the side to move.
+-}
+newtype KingBB = KingBB Bitboard deriving (Eq, Show)
 
-maskKingAttack :: KingBBWrapped -> AttackBB
-maskKingAttack (KingBBWrapped b) =
+maskKingAttack :: KingBB -> AttackBB
+maskKingAttack (KingBB b) =
     let
         initial :: Int = bb b
         not_a_file res = res $&$ complement fileA
@@ -49,7 +54,7 @@ allocTable = alloc 64 $ \newArr -> fromFunction fillFunction newArr
     fillFunction :: Int -> AttackBB
     fillFunction i
         | i < 0 || i >= 64 = AttackBB 0
-        | otherwise = maskKingAttack (KingBBWrapped (emptyBoard <<>> toEnum i))
+        | otherwise = maskKingAttack (KingBB (emptyBoard <<>> toEnum i))
 
 showAttacks :: AttackBB -> Text
 showAttacks (AttackBB bb) = showBits bb
