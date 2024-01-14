@@ -50,7 +50,7 @@ jobs:
         run: cabal update
 
       - name: Build
-        run: cabal build all --enable-tests --enable-benchmarks
+        run: cabal build all --enable-tests --enable-benchmarks --flags="+liquid"
 
       - name: Tests
         run: cabal run tests --test-show-details=direct --test-option="--color=always" -- --xml=junit.xml
