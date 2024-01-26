@@ -26,3 +26,4 @@ cabal.project.local~*
 *.xml
 *.html
 **/.liquid/
+.mutants/

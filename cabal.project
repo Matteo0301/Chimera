@@ -1,6 +1,15 @@
 packages : Chimera.cabal
 tests : True
 benchmarks : True
+write-ghc-environment-files: always
 
 flags: +optimizations +stan
 optimization: 2
+
+source-repository-package
+    type: git
+    location: https://github.com/Matteo0301/mucheck.git
+    
+source-repository-package
+    type: git
+    location: https://github.com/Matteo0301/mucheck-tasty.git

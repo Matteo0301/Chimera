@@ -24,9 +24,9 @@ import Bits
 import Common
 import Data.Vector
 import Pawns
-import Test.Falsify.Predicate qualified as P
+import qualified Test.Falsify.Predicate as P
 import Test.Tasty
-import Test.Tasty.Falsify qualified as Falsify
+import qualified Test.Tasty.Falsify as Falsify
 import Test.Tasty.Inspection
 import Gen
 

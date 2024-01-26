@@ -20,12 +20,16 @@ module BitboardTest (Bitboard, emptyBoard, population, bb_tests) where
 
 import Bitboard
 import Gen
-import Test.Falsify.Predicate qualified as P
+{- FOURMOLU_DISABLE -}
+import qualified Test.Falsify.Predicate as P
+import qualified Test.Tasty.Falsify as Falsify
+{- FOURMOLU_ENABLE -}
+import Test.MuCheck.TestAdapter.TastyAdapter (evalTastyTree)
 import Test.Tasty
-import Test.Tasty.Falsify qualified as Falsify
 import Test.Tasty.HUnit
 import Test.Tasty.Runners (TestTree (TestGroup))
 
+{-# ANN bb_tests "Test" #-}
 bb_tests :: TestTree
 bb_tests = TestGroup "Bitboard tests" [set_get_bit, population_tests]
 

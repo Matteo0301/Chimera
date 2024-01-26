@@ -17,6 +17,7 @@
         "mappend",
         "mempty",
         "Monoid",
+        "mucheck",
         "NOINLINE",
         "nomeata",
         "olean",

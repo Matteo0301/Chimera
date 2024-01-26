@@ -8,15 +8,11 @@ Portability : POSIX
 
 This module implements the generation of random values for the types defined in the project. It uses the Falsify library.
 -}
-{- FOURMOLU_DISABLE -}
-{-|
--}
-{-# OPTIONS_GHC -Wno-orphans #-}
-{- FOURMOLU_ENABLE -}
 
 module Gen (Bitboard, Square (..), genBitboard, genSquare) where
 
 import Bitboard
+import Relude (fromList)
 import Test.Falsify.Generator qualified as Generator
 import Test.Falsify.Range
 
