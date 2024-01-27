@@ -11,8 +11,6 @@ This module contains the tests for the king attacks implemented as magic bitboar
 {- FOURMOLU_DISABLE -}
 {-|
 -}
-{-# LANGUAGE TemplateHaskell #-}
-{-# OPTIONS_GHC -O -dsuppress-all -dno-suppress-type-signatures -fplugin=Test.Tasty.Inspection.Plugin #-}
 {-# OPTIONS_GHC -Wno-unrecognised-pragmas #-}
 
 {-# HLINT ignore "Use camelCase" #-}
@@ -23,24 +21,28 @@ import Bitboard
 import Bits
 import Common
 import Data.Vector
-import King
-import qualified Test.Falsify.Predicate as P
-import Test.Tasty
-import qualified Test.Tasty.Falsify as Falsify
-import Test.Tasty.Inspection
 import Gen
-
-goal :: AttackBB
-goal = getAttacks @KingBB A1
-
-reference :: AttackBB
-reference = table ! square2Index A1
+import King
+{- FOURMOLU_DISABLE -}
+import qualified Test.Falsify.Predicate as P
+import qualified Test.Tasty.Falsify as Falsify
+{- FOURMOLU_ENABLE -}
+import Data.Proxy
+import InspectionTest
+import Test.MuCheck.TestAdapter.TastyAdapter
+import Test.Tasty
 
 king_tests :: TestTree
-king_tests = testGroup "Pawns tests" [king_property, king_inspection]
+king_tests = testGroup "King tests" [king_property, king_inspection]
 
-king_inspection :: TestTree
-king_inspection = testGroup "Pawns inspection" [king_specialization, king_inline]
+{-# ANN king_property "Test" #-}
+king_property :: TestTree
+king_property =
+    testGroup
+        "King property"
+        [ Falsify.testProperty "getAttacks" prop_get_attacks,
+          Falsify.testProperty "attacks number" prop_attacks_number
+        ]
 
 prop_get_attacks :: Falsify.Property ()
 prop_get_attacks = do
@@ -48,7 +50,7 @@ prop_get_attacks = do
     Falsify.assert $
         P.eq
             P..$ ("expected", table ! square2Index s)
-            P..$ ("actual", getAttacks @KingBB s)
+            P..$ ("actual", getAttacksProxy (Proxy :: Proxy KingBB) s)
 
 attack_number :: Square -> Int
 attack_number A1 = 3
@@ -69,26 +71,6 @@ prop_attacks_number = do
         P.eq
             P..$ ("expected", attack_number s)
             P..$ ( "actual",
-                   case getAttacks @KingBB s of
+                   case getAttacksProxy (Proxy :: Proxy KingBB) s of
                     AttackBB bb -> popCount bb
                  )
-
-king_property :: TestTree
-king_property =
-    testGroup
-        "Pawns property"
-        [ Falsify.testProperty "getAttacks" prop_get_attacks,
-          Falsify.testProperty "attacks number" prop_attacks_number
-        ]
-
-king_specialization :: TestTree
-king_specialization =
-    $( inspectTest
-        ((hasNoTypeClasses 'goal) {testName = Just "getAttacks specialization"})
-     )
-
-king_inline :: TestTree
-king_inline =
-    $( inspectTest
-        (('goal ==- 'reference) {testName = Just "getAttacks inlining"})
-     )

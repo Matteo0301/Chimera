@@ -14,7 +14,7 @@ This module contains the representation of pawns using bitboards, with also the 
 {-# LANGUAGE KindSignatures #-}
 {-# LANGUAGE ScopedTypeVariables #-}
 {-# LANGUAGE NoImplicitPrelude #-}
-module Pawns.Internal (PawnBB (..), showAttacks, allocTable) where
+module Pawns.Internal (PawnBB (..), showAttacks, allocTable, WhitePawnBB, BlackPawnBB) where
 
 import Bitboard
 import Bits
@@ -35,6 +35,9 @@ import Prelude hiding (($))
 -}
 newtype PawnBB (side :: SideToMove) = PawnBB Bitboard
     deriving (Eq, Show)
+
+type WhitePawnBB = PawnBB 'White
+type BlackPawnBB = PawnBB 'Black
 
 maskPawnAttack :: forall a. (GetSide a) => PawnBB a -> AttackBB
 maskPawnAttack (PawnBB b) =

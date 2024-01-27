@@ -11,8 +11,6 @@ This module contains the tests for the pawns module implemented as magic bitboar
 {- FOURMOLU_DISABLE -}
 {-|
 -}
-{-# LANGUAGE TemplateHaskell #-}
-{-# OPTIONS_GHC -O -dsuppress-all -dno-suppress-type-signatures -fplugin=Test.Tasty.Inspection.Plugin #-}
 {-# OPTIONS_GHC -Wno-unrecognised-pragmas #-}
 
 {-# HLINT ignore "Use camelCase" #-}
@@ -23,24 +21,28 @@ import Bitboard
 import Bits
 import Common
 import Data.Vector
-import Pawns
-import qualified Test.Falsify.Predicate as P
-import Test.Tasty
-import qualified Test.Tasty.Falsify as Falsify
-import Test.Tasty.Inspection
 import Gen
-
-goal :: AttackBB
-goal = getAttacks @(PawnBB 'White) A1
-
-reference :: AttackBB
-reference = tableWhite ! square2Index A1
+import Pawns
+{- FOURMOLU_DISABLE -}
+import qualified Test.Falsify.Predicate as P
+import qualified Test.Tasty.Falsify as Falsify
+{- FOURMOLU_ENABLE -}
+import Data.Proxy
+import InspectionTest
+import Test.MuCheck.TestAdapter.TastyAdapter
+import Test.Tasty
 
 pawns_tests :: TestTree
 pawns_tests = testGroup "Pawns tests" [pawns_property, pawns_inspection]
 
-pawns_inspection :: TestTree
-pawns_inspection = testGroup "Pawns inspection" [pawns_specialization, pawns_inline]
+{-# ANN pawns_property "Test" #-}
+pawns_property :: TestTree
+pawns_property =
+    testGroup
+        "Pawns property"
+        [ Falsify.testProperty "getAttacks" prop_get_attacks,
+          Falsify.testProperty "attacks number" prop_attacks_number
+        ]
 
 prop_get_attacks :: Falsify.Property ()
 prop_get_attacks = do
@@ -48,11 +50,11 @@ prop_get_attacks = do
     Falsify.assert $
         P.eq
             P..$ ("expected", tableWhite ! square2Index s)
-            P..$ ("actual", getAttacks @(PawnBB 'White) s)
+            P..$ ("actual", getAttacksProxy (Proxy :: Proxy WhitePawnBB) s)
     Falsify.assert $
         P.eq
             P..$ ("expected", tableBlack ! square2Index s)
-            P..$ ("actual", getAttacks @(PawnBB 'Black) s)
+            P..$ ("actual", getAttacksProxy (Proxy :: Proxy BlackPawnBB) s)
 
 attack_number_white :: Square -> Int
 attack_number_white s
@@ -79,33 +81,13 @@ prop_attacks_number = do
         P.eq
             P..$ ("expected", attack_number_white s)
             P..$ ( "actual",
-                   case getAttacks @(PawnBB 'White) s of
+                   case getAttacksProxy (Proxy :: Proxy WhitePawnBB) s of
                     AttackBB bb -> popCount bb
                  )
     Falsify.assert $
         P.eq
             P..$ ("expected", attack_number_black s)
             P..$ ( "actual",
-                   case getAttacks @(PawnBB 'Black) s of
+                   case getAttacksProxy (Proxy :: Proxy BlackPawnBB) s of
                     AttackBB bb -> popCount bb
                  )
-
-pawns_property :: TestTree
-pawns_property =
-    testGroup
-        "Pawns property"
-        [ Falsify.testProperty "getAttacks" prop_get_attacks,
-          Falsify.testProperty "attacks number" prop_attacks_number
-        ]
-
-pawns_specialization :: TestTree
-pawns_specialization =
-    $( inspectTest
-        ((hasNoTypeClasses 'goal) {testName = Just "getAttacks specialization"})
-     )
-
-pawns_inline :: TestTree
-pawns_inline =
-    $( inspectTest
-        (('goal ==- 'reference) {testName = Just "getAttacks inlining"})
-     )

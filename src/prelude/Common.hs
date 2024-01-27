@@ -245,6 +245,8 @@ instance GetSide 'Black where
 -}
 class Piece a where
     getAttacks :: Square -> AttackBB
+    getAttacksProxy :: Proxy a -> Square -> AttackBB
+    getAttacksProxy _ = getAttacks @a
 
 printAttacks :: forall a. (Piece a) => Square -> Text
 printAttacks s = showBits $ attacks2Int $ getAttacks @a s

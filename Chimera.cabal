@@ -190,6 +190,8 @@ library test-lib
     Gen
     KingTest
     KnightsTest
+    InspectionTest
+    
 
   build-depends:
     Chimera:{magic-bitboards, prelude}

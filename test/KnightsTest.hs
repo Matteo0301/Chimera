@@ -11,8 +11,6 @@ This module contains the tests for the knights module implemented as magic bitbo
 {- FOURMOLU_DISABLE -}
 {-|
 -}
-{-# LANGUAGE TemplateHaskell #-}
-{-# OPTIONS_GHC -O -dsuppress-all -dno-suppress-type-signatures -fplugin=Test.Tasty.Inspection.Plugin #-}
 {-# OPTIONS_GHC -Wno-unrecognised-pragmas #-}
 
 {-# HLINT ignore "Use camelCase" #-}
@@ -22,24 +20,28 @@ module KnightsTest (knights_tests) where
 import Bitboard
 import Common
 import Data.Vector
-import Knights
-import qualified Test.Falsify.Predicate as P
-import Test.Tasty
-import qualified Test.Tasty.Falsify as Falsify
-import Test.Tasty.Inspection
 import Gen
-
-goal :: AttackBB
-goal = getAttacks @KnightBB A1
-
-reference :: AttackBB
-reference = table ! square2Index A1
+import InspectionTest
+import Knights
+{- FOURMOLU_DISABLE -}
+import qualified Test.Falsify.Predicate as P
+import qualified Test.Tasty.Falsify as Falsify
+{- FOURMOLU_ENABLE -}
+import Data.Proxy
+import Test.MuCheck.TestAdapter.TastyAdapter
+import Test.Tasty
 
 knights_tests :: TestTree
-knights_tests = testGroup "Pawns tests" [knights_property, knights_inspection]
+knights_tests = testGroup "Knights tests" [knights_property, knights_inspection]
 
-knights_inspection :: TestTree
-knights_inspection = testGroup "Pawns inspection" [knights_specialization, knights_inline]
+{-# ANN knights_property "Test" #-}
+knights_property :: TestTree
+knights_property =
+    testGroup
+        "Knights property"
+        [ Falsify.testProperty "getAttacks" prop_get_attacks
+        -- Falsify.testProperty "attacks number" prop_attacks_number
+        ]
 
 prop_get_attacks :: Falsify.Property ()
 prop_get_attacks = do
@@ -47,7 +49,7 @@ prop_get_attacks = do
     Falsify.assert $
         P.eq
             P..$ ("expected", table ! square2Index s)
-            P..$ ("actual", getAttacks @KnightBB s)
+            P..$ ("actual", getAttacksProxy (Proxy :: Proxy KnightBB) s)
 
 {- attack_number :: Square -> Int
 attack_number A1 = 2
@@ -86,23 +88,3 @@ prop_attacks_number = do
                    case getAttacks @KnightBB s of
                     AttackBB bb -> popCount bb
                  ) -}
-
-knights_property :: TestTree
-knights_property =
-    testGroup
-        "Pawns property"
-        [ Falsify.testProperty "getAttacks" prop_get_attacks
-        -- Falsify.testProperty "attacks number" prop_attacks_number
-        ]
-
-knights_specialization :: TestTree
-knights_specialization =
-    $( inspectTest
-        ((hasNoTypeClasses 'goal) {testName = Just "getAttacks specialization"})
-     )
-
-knights_inline :: TestTree
-knights_inline =
-    $( inspectTest
-        (('goal ==- 'reference) {testName = Just "getAttacks inlining"})
-     )
