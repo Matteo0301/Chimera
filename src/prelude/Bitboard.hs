@@ -47,12 +47,11 @@ import Prelude hiding (toList, ($))
 {-@ LIQUID "--counter-examples" @-}
 {-@ LIQUID "--reflection" @-}
 {-@ LIQUID "--ple" @-}
-{-@ LIQUID "--prune-unsorted" @-}
 
 {-@ type Pop = {x:Int | x >= 0 && x<= 64} @-}
 {-@ type Index = {x:Int | x >= 0 && x<= 63} @-}
 
-{-@ data Bitboard [piece_number] = Bitboard (bb :: {x:Int | pop x <= 32}) @-}
+{-@ data Bitboard' [piece_number] = Bitboard (bb :: {x:Int | pop x <= 32}) @-}
 
 {-|
     The 'Bitboard' type is a newtype wrapper around 'Int' that represents a bitboard.
@@ -60,12 +59,14 @@ import Prelude hiding (toList, ($))
     The least significant bit represents the square h1, the most significant bit represents the square a8.
     The bitboard is stored in little endian order, so the first 8 bits represent the first row of the board.
 -}
-newtype Bitboard = Bitboard {bb :: Int} deriving (Eq, Show, Ord)
+newtype Bitboard' = Bitboard {bb :: Int} deriving (Eq, Show, Ord)
 
--- {-@ using (Bitboard) as {a:Bitboard | bbPop a <= 32} @-}
+{-@ type Bitboard = {x:Bitboard' | bbPop x <= 32} @-}
+
+type Bitboard = Bitboard'
 
 {-@ fail wrongBitboard @-}
-{-@ wrongBitboard :: {x:Bitboard | bbPop x <= 32} @-}
+{-@ wrongBitboard :: Bitboard @-}
 wrongBitboard :: Bitboard
 wrongBitboard = Bitboard 0x00FFFFFFFFFFFFFF
 
@@ -92,8 +93,6 @@ printBitboard (Bitboard bb) = showBits bb
 -}
 emptyBoard :: Bitboard
 emptyBoard = Bitboard 0
-
-{-@ initialBoard ::{x:Bitboard | bbPop x == 32} @-}
 
 {-|
     Represents the starting position.
@@ -124,9 +123,6 @@ population (Bitboard bb) = popCount bb
 getSquare :: Bitboard -> Square -> Bool
 getSquare (Bitboard bb) sq = testBit bb (square2Index sq)
 
--- {-@ ignore setSquare @-}
--- we know it works, but liquidhaskell cannot prove it
-
 {-|
     Sets the square in the bitboard. If the new bitboard has more that 32 squares occupied, returns the old one.
 -}
@@ -135,9 +131,6 @@ setSquare (Bitboard bb) sq =
     assert
         (pop (setBit bb (square2Index sq)) <= 32)
         (Bitboard $ setBit bb (square2Index sq))
-
-{- setSquare :: Bitboard -> Square -> Bitboard
-setSquare (Bitboard bb) sq = checkBB (setBit bb (square2Index sq)) -}
 
 {-|
     Sets a certain square in the board as empty

@@ -78,10 +78,9 @@ RUN cabal install \
     retrie \
     fourmolu
 
-#RUN cd /tmp
-#RUN git clone https://github.com/kowainik/stan.git
-#RUN cd stan && cabal v2-build exe:stan && cp "$(cabal v2-exec --verbose=0 --offline sh -- -c 'command -v stan')" ~/.local/bin/stan
-
+RUN cabal v2-install stan --install-method=copy --overwrite-policy=always
+RUN cabal install headroom
+RUN cabal install weeder
 
 ENV DEBIAN_FRONTEND=dialog
 

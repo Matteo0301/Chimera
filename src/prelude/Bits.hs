@@ -14,19 +14,23 @@ see if the extended type literals will allow me to use the `Word64` type.
 {-|
 -}
 {-# OPTIONS_GHC -Wno-unrecognised-pragmas #-}
+{-# LANGUAGE NoImplicitPrelude #-}
 
 {-# HLINT ignore "Use camelCase" #-}
 {- FOURMOLU_ENABLE -}
 module Bits where
 
+import Prelude hiding ((&&&))
 import Data.Bits
 import GHC.Base (Int (I#), iShiftRL#)
+import Language.Haskell.Liquid.ProofCombinators
 
 {-@ LIQUID "--reflection" @-}
 {-@ LIQUID "--ple" @-}
 {-@ LIQUID "--no-termination" @-}
--- {-@ LIQUID "--ple-with-undecided-guards" @-}
+{-@ LIQUID "--ple-with-undecided-guards" @-}
 {-@ LIQUID "--extensionality" @-}
+--{-@ LIQUID "--higherorder" @-}
 -- {-@ LIQUID "--counter-examples" @-}
 
 {-@ embed Int * as int @-}
@@ -74,11 +78,7 @@ clear_bit x n =
 
 {-@ reflect set_bit @-}
 set_bit :: Int -> Int -> Int
-set_bit x n =
-    let
-        p = mask_n_bit n
-     in
-        x + if get_n_bit x n then 0 else p
+set_bit x n = pleUnfold (x + if get_n_bit x n then 0 else mask_n_bit n)
 
 {-@ reflect pop @-}
 pop :: Int -> Int

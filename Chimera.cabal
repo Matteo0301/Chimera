@@ -90,9 +90,10 @@ common optimizations
     ld-options:  -fuse-ld=lld -flto
 
 common liquid
-  if flag(liquid)
+  if flag(liquid) && impl(ghc ==9.4.7)
     ghc-options:   -fplugin=LiquidHaskell
-    build-depends: liquidhaskell
+    build-depends: liquidhaskell ==0.9.4.7.0
+                   , liquid-prelude
 
 common all
   default-language:   GHC2021

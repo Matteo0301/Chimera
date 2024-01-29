@@ -1,3 +1,13 @@
+{-|
+Module      : Main
+Description : Module for mutation testing
+Copyright   : (c) 2023-2024 Matteo Mariotti
+License     : GNU GPL v.3
+Stability   : experimental
+Portability : POSIX
+
+This test suite implements mutation testing for the project using the MuCheck library.
+-}
 module Main where
 
 import Test.MuCheck
