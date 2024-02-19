@@ -2,7 +2,7 @@ FROM debian:bullseye-slim as base
 
 ENV LANG C.UTF-8
 
-ARG GHC_VERSION=9.4.7
+ARG GHC_VERSION=9.6.3
 ARG CABAL_VERSION=latest
 ARG HLS_VERSION=latest
 ARG LLVM_VERSION=15
@@ -19,7 +19,7 @@ ENV USERNAME=vscode \
 RUN ulimit -n 8192
 
 RUN apt-get update
-RUN apt-get install -y --no-install-recommends apt-utils bash build-essential ca-certificates curl gcc git gnupg libffi-dev libffi7 libgmp-dev libgmp-dev libgmp10 libicu-dev libncurses-dev libncurses5 libnuma1 libnuma-dev libtinfo5 lsb-release make procps software-properties-common sudo wget xz-utils z3 zlib1g-dev libpcre3 libpcre3-dev
+RUN apt-get install -y --no-install-recommends apt-utils bash build-essential ca-certificates curl git gnupg libffi-dev libffi7 libgmp-dev libgmp-dev libgmp10 libicu-dev libncurses-dev libncurses5 libnuma1 libnuma-dev libtinfo5 lsb-release make procps software-properties-common sudo wget xz-utils z3 zlib1g-dev libpcre3 libpcre3-dev
 
 
 RUN groupadd --gid ${USER_GID} ${USERNAME} && \
@@ -53,17 +53,10 @@ RUN curl --proto '=https' --tlsv1.2 -sSf https://get-ghcup.haskell.org | sh
 
 FROM ghcup as tooling
 
-# RUN ghcup install ghc ${GHC_VERSION} --set
-# RUN ghcup install cabal ${CABAL_VERSION} --set
-# RUN ghcup install hls ${HLS_VERSION} --set
 
 # Update Cabal.
 RUN cabal update && cabal new-install cabal-install
 
-
-# Configure cabal
-# RUN cabal user-config update -f && \
-#     sed -i 's/-- ghc-options:/ghc-options: -haddock/g' ~/.cabal/config
 
 FROM tooling as packages
 
@@ -79,8 +72,9 @@ RUN cabal install \
     fourmolu
 
 RUN cabal v2-install stan --install-method=copy --overwrite-policy=always
-RUN cabal install headroom
+#RUN cabal install headroom
 RUN cabal install weeder
+RUN cabal install doctest
 
 ENV DEBIAN_FRONTEND=dialog
 

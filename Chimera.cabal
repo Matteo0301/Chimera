@@ -54,7 +54,7 @@ extra-doc-files:
   README.md
 
 homepage:        https://github.com/Matteo0301/Chimera
-tested-with:     GHC ==9.4.7
+tested-with:     GHC ==9.6.3
 
 -- Extra source files to be distributed with the package, such as examples, or a tutorial module.
 -- extra-source-files:
@@ -90,9 +90,9 @@ common optimizations
     ld-options:  -fuse-ld=lld -flto
 
 common liquid
-  if flag(liquid) && impl(ghc ==9.4.7)
+  if flag(liquid) && impl(ghc ==9.6.3)
     ghc-options:   -fplugin=LiquidHaskell
-    build-depends: liquidhaskell ==0.9.4.7.0
+    build-depends: liquidhaskell ==0.9.6.3
                    , liquid-prelude
 
 common all
@@ -112,8 +112,8 @@ common all
     NoImplicitPrelude
   
   build-depends:
-    base >=4.17.2 && <4.18 || ^>=4.19.0
-    , linear-base  >=0.4.0  && <0.5
+    base
+    , linear-base
     , random       >=1.2.1  && <1.3
     , relude       >= 1.2.1 && < 1.3
   
@@ -150,7 +150,7 @@ library magic-bitboards
   visibility:      public
   build-depends:
     Chimera:prelude,
-    template-haskell >=2.19.0 && <2.20 || ^>=2.21.0,
+    template-haskell,
     vector >=0.13.1 && <0.14
 
   other-modules:
@@ -204,7 +204,7 @@ library test-lib
     , tasty-inspection-testing
     , tasty-rerun
     , vector
-    , base >=4.17.2 && <4.18 || ^>=4.19.0
+    , base
     , linear-base  >=0.4.0  && <0.5
     , random       >=1.2.1  && <1.3
     , relude       >= 1.2.1 && < 1.3
