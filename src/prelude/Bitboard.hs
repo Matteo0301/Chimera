@@ -51,6 +51,9 @@ import Prelude hiding (toList, ($))
 {-@ type Pop = {x:Int | x >= 0 && x<= 64} @-}
 {-@ type Index = {x:Int | x >= 0 && x<= 63} @-}
 
+-- >>> 3 + 3
+-- 6
+
 {-@ data Bitboard' [piece_number] = Bitboard (bb :: {x:Int | pop x <= 32}) @-}
 
 {-|

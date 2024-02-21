@@ -15,23 +15,20 @@ see if the extended type literals will allow me to use the `Word64` type.
 -}
 {-# OPTIONS_GHC -Wno-unrecognised-pragmas #-}
 {-# LANGUAGE NoImplicitPrelude #-}
-
+{-# LANGUAGE MagicHash #-}
 {-# HLINT ignore "Use camelCase" #-}
 {- FOURMOLU_ENABLE -}
 module Bits where
 
-import Prelude hiding ((&&&))
 import Data.Bits
 import GHC.Base (Int (I#), iShiftRL#)
-import Language.Haskell.Liquid.ProofCombinators
+import Relude hiding ((&&&))
 
 {-@ LIQUID "--reflection" @-}
 {-@ LIQUID "--ple" @-}
 {-@ LIQUID "--no-termination" @-}
 {-@ LIQUID "--ple-with-undecided-guards" @-}
 {-@ LIQUID "--extensionality" @-}
---{-@ LIQUID "--higherorder" @-}
--- {-@ LIQUID "--counter-examples" @-}
 
 {-@ embed Int * as int @-}
 
@@ -78,7 +75,7 @@ clear_bit x n =
 
 {-@ reflect set_bit @-}
 set_bit :: Int -> Int -> Int
-set_bit x n = pleUnfold (x + if get_n_bit x n then 0 else mask_n_bit n)
+set_bit x n = x + if get_n_bit x n then 0 else mask_n_bit n
 
 {-@ reflect pop @-}
 pop :: Int -> Int
@@ -169,6 +166,9 @@ shiftL' = shiftL_helper 63
 
 {-|
     Version of 'Data.Bits.popCount' with refinement types.
+
+>>> Bits.popCount 0
+0
 -}
 
 {-@ assume popCount :: x:Int -> {y:Pop | y = pop x} @-}
@@ -209,7 +209,7 @@ infixl 7 $&$
     Version of 'Data.Bits.xor' with refinement types.
 -}
 xor :: Int -> Int -> Int
-xor = Prelude.xor
+xor = Relude.xor
 
 infixl 6 `xor`
 

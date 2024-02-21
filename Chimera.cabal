@@ -54,7 +54,7 @@ extra-doc-files:
   README.md
 
 homepage:        https://github.com/Matteo0301/Chimera
-tested-with:     GHC ==9.6.3
+tested-with:     GHC ==9.4.7
 
 -- Extra source files to be distributed with the package, such as examples, or a tutorial module.
 -- extra-source-files:
@@ -90,9 +90,9 @@ common optimizations
     ld-options:  -fuse-ld=lld -flto
 
 common liquid
-  if flag(liquid) && impl(ghc ==9.6.3)
+  if flag(liquid) && impl(ghc ==9.4.7)
     ghc-options:   -fplugin=LiquidHaskell
-    build-depends: liquidhaskell ==0.9.6.3
+    build-depends: liquidhaskell ==0.9.4.7.0
                    , liquid-prelude
 
 common all

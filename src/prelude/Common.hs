@@ -51,6 +51,7 @@ import Relude.Extra (safeToEnum)
 {-@ type Pop = {x:Int | x >= 0 && x<= 64} @-}
 {-@ type Index = {x:Int | x >= 0 && x<= 63} @-}
 
+
 {-|
     The 'Square' type represents the index of a square on the board.
 -}

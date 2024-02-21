@@ -3,8 +3,7 @@ tests : True
 benchmarks : True
 write-ghc-environment-files: always
 
-flags: +optimizations +stan
-optimization: 2
+flags: +stan
 
 source-repository-package
     type: git
