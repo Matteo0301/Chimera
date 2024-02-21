@@ -198,14 +198,14 @@ jobs:
         run: |
           $CABAL v2-build $ARG_COMPILER $ARG_TESTS $ARG_BENCH all --write-ghc-environment-files=always
       - name: build with liquidhaskell
-        run: cabal build all --flags="+liquid"
+        run: $CABAL build all --flags="+liquid"
       - name: tests
         run: |
           $CABAL v2-test $ARG_COMPILER $ARG_TESTS $ARG_BENCH all --test-show-details=direct
       - name: doctest
         run: |
-          cabal repl --build-depends=QuickCheck --build-depends=template-haskell --with-ghc=doctest Chimera:magic-bitboards
-          cabal repl --build-depends=QuickCheck --build-depends=template-haskell --with-ghc=doctest Chimera:prelude
+          $CABAL repl --build-depends=QuickCheck --build-depends=template-haskell --with-ghc=doctest Chimera:magic-bitboards
+          $CABAL repl --build-depends=QuickCheck --build-depends=template-haskell --with-ghc=doctest Chimera:prelude
       - name: cabal check
         run: |
           cd ${PKGDIR_Chimera} || false
