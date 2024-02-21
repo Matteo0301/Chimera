@@ -166,6 +166,13 @@ jobs:
           echo "package Chimera" >> cabal.project
           echo "    ghc-options: -Werror=missing-methods" >> cabal.project
           cat >> cabal.project <<EOF
+          source-repository-package
+              type: git
+              location: https://github.com/Matteo0301/mucheck.git
+              
+          source-repository-package
+              type: git
+              location: https://github.com/Matteo0301/mucheck-tasty.git
           EOF
           $HCPKG list --simple-output --names-only | perl -ne 'for (split /\s+/) { print "constraints: $_ installed\n" unless /^(Chimera)$/; }' >> cabal.project.local
           cat cabal.project
