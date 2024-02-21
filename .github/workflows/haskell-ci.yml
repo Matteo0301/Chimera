@@ -198,7 +198,8 @@ jobs:
         run: |
           $CABAL v2-build $ARG_COMPILER $ARG_TESTS $ARG_BENCH all --write-ghc-environment-files=always
       - name: build with liquidhaskell
-        run: $CABAL build all --flags="+liquid"
+        run: |
+          $CABAL v2-build $ARG_COMPILER --disable-tests --disable-benchmarks --flags="+liquid" all
       - name: tests
         run: |
           $CABAL v2-test $ARG_COMPILER $ARG_TESTS $ARG_BENCH all --test-show-details=direct
